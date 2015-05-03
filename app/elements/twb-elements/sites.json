@@ -1,0 +1,32 @@
+[
+    {
+      "id": 1,
+      "name": "SoFreakingBoring",
+      "url": "https://www.sofreakingboring.com",
+      "img_thumb": "/images/sfb_thumb.png",
+      "img": "/images/sfb.png",
+      "upTime": 99.9,
+      "responseTime": 410,
+      "speedIndex": 3100
+    },
+    {
+      "id": 2,
+      "name": "Polymer Project",
+      "url": "https://www.polymer-project.org",
+      "img_thumb": "/images/polymer_thumb.png",
+      "img": "/images/polymer.png",
+      "upTime": 100,
+      "responseTime": 200,
+      "speedIndex": 6200
+    },
+    {
+      "id": 3,
+      "name": "Gala",
+      "url": "http://www.gala.fr",
+      "img_thumb": "/images/gala_thumb.png",
+      "img": "/images/gala.png",
+      "upTime": 99.8,
+      "responseTime": 320,
+      "speedIndex": 4300
+    }
+]

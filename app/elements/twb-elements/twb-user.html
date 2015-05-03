@@ -1,0 +1,25 @@
+<polymer-element name="twb-user">
+  <template>
+  </template>
+  <script>
+  (function() {
+    var userid;
+    var username;
+    var token;
+    var avatar;
+
+    Polymer('twb-user',{
+      ready: function() {
+        this.userid   = userid;
+        this.username = username;
+        this.token    = token;
+        this.avatar   = avatar;
+      },
+
+      attributeChanged: function(attrName, oldVal, newVal) {
+        console.log(attrName, 'old: ' + oldVal, 'new:', newVal);
+      }
+    });
+  })();
+  </script>
+</polymer-element>

@@ -1,0 +1,46 @@
+<link rel="import" href="twb-app.html">
+<link rel="import" href="twb-signin.html">
+<link rel="import" href="twb-user.html">
+
+<polymer-element name="twb-wrapper" vertical layout>
+<template>
+
+  <twb-user id="currentUser"></twb-user>
+  <twb-api id="twbApi"></twb-api>
+
+  <more-route-selector>
+    <core-animated-pages id="pages" fit transitions="cross-fade-all">
+      <twb-app name="app" fit route="home"></twb-app>
+      <twb-signin name="signin" fit route="users"></twb-signin>
+    </core-animated-pages>
+  </more-route-selector>
+
+</template>
+<script>
+(function() {
+
+  Polymer('twb-wrapper', {
+    selected : "signin",
+
+    ready: function() {
+      _this = this;
+      
+      this.$.pages.querySelector('twb-signin').addEventListener('signedin', function(e) {
+        window.location = urlFor('home');
+      });
+
+      this.$.pages.querySelector('twb-signin').addEventListener('signedup', function(e) {
+        window.location = urlFor('home');
+      });
+
+      this.$.pages.querySelector('twb-app').addEventListener('signedout', function(e) {
+        window.location = urlFor('home');
+      });
+    }
+
+
+  });
+
+})();
+</script>
+</polymer-element>

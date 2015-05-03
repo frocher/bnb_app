@@ -1,0 +1,243 @@
+<link rel="import" href="twb-user.html">
+
+<polymer-element name="twb-signin" attributes="token" vertical layout>
+<template>
+<link rel="stylesheet" href="twb-shared.css">
+<link rel="stylesheet" href="twb-signin.css">
+
+<twb-user id="currentUser"></twb-user>
+
+<core-ajax id="signin-ajax"
+    url="/auth/sign_in"
+    method="POST"
+    handleAs="json"
+    params='{"email":"{{user.email}}", "password":"{{user.password}}", "user[remember_me]":"{{user.rememberMe}}"}'
+    on-core-response="{{handleSigninResponse}}"
+    on-core-error="{{handleSigninError}}"></core-ajax>
+
+<core-ajax id="signup-ajax"
+    url="/auth/"
+    method="POST"
+    handleAs="json"
+    params='{"name":"{{user.name}}", "email":"{{user.email}}", "password":"{{user.password}}", "password_confirmation":"{{user.password_confirmation}}", "confirm_success_url":"{{homeUrl()}}"}'
+    on-core-response="{{handleSignupResponse}}"
+    on-core-error="{{handleSignupError}}"></core-ajax>
+
+<core-ajax id="forgot-ajax"
+    url="/users/password.json"
+    method="POST"
+    handleAs="json"
+    params='{"user[email]":"{{user.email}}"}'
+    on-core-response="{{handleForgotResponse}}"
+    on-core-error="{{handleForgotError}}"></core-ajax>
+
+<more-route-selector>
+  <core-animated-pages id="pages" flex transitions="cross-fade-all hero-transition">
+    <section name="signin" route="signin">
+      <form id="signin-form">
+        <h2>Sign in</h2>
+
+        <div class="field">
+          <paper-input-decorator floatingLabel="true" label="Your e-mail">
+            <input autofocus="autofocus" type="email" value="{{user.email}}">
+          </paper-input-decorator>
+        </div>
+
+        <div class="field">
+          <paper-input-decorator floatingLabel="true" label="Your password">
+            <input autocomplete="off" type="password" value="{{user.password}}">
+          </paper-input-decorator>
+        </div>
+
+        <div class="field">
+          <paper-toggle-button id="user_remember_me" style="vertical-align:middle" on-change="{{rememberChanged}}"></paper-toggle-button>
+          <label for="user_remember_me">remember me</label>
+          <input type="hidden" value="{{user.rememberMe}}">
+        </div>
+
+        <div class="actions" horizontal end-justified layout>
+          <paper-button class="colored" on-tap="{{signinSubmitTapped}}">Log in</paper-button>
+        </div>
+      </form>
+
+      <div class="devise-links">
+        <a href="{{urlFor('signup')}}">Sign up</a><br>
+        <a href="{{urlFor('forgot')}}">Forgot your password?</a>
+      </div>
+
+    </section>
+
+    <section name="signup" route="signup">
+      <form id="signup-form">
+        <h2>Sign up</h2>
+
+        <div class="field">
+          <paper-input-decorator id="signup-name" floatingLabel="true" label="Full name">
+            <input autofocus="autofocus" type="text" value="{{user.name}}">
+          </paper-input-decorator>
+        </div>
+
+        <div class="field">
+          <paper-input-decorator id="signup-email" floatingLabel="true" label="Your e-mail" error="{{errors.email[0]}}">
+            <input autofocus="autofocus" type="email" value="{{user.email}}">
+          </paper-input-decorator>
+        </div>
+
+
+        <div class="field">
+          <paper-input-decorator id="signup-password" floatingLabel="true" label="Password">
+            <input autocomplete="off" type="password" value="{{user.password}}">
+          </paper-input-decorator>
+        </div>
+
+        <div class="field">
+          <paper-input-decorator id="signup-password_confirmation" floatingLabel="true" label="Retype password">
+            <input autocomplete="off" type="password" value="{{user.password_confirmation}}">
+          </paper-input-decorator>
+        </div>
+
+        <div class="actions" horizontal end-justified layout>
+          <paper-button class="colored" on-tap="{{signupSubmitTapped}}">Sign me up</paper-button>
+        </div>
+      </form>
+
+      <div class="devise-links">
+        <a href="{{urlFor('signin')}}">Sign in</a><br>
+        <a href="{{urlFor('forgot')}}">Forgot your password?</a>
+      </div>
+
+    </section>
+
+    <section name="forgot" route="forgot">
+      <form id="forgot-form">
+        <h2>Password forgotten</h2>
+
+        <div class="field">
+          <paper-input-decorator id="forgot-email" floatingLabel="true" label="E-mail">
+            <input type="email" value="{{user.email}}">
+          </paper-input-decorator>
+        </div>
+
+        <div class="actions" horizontal end-justified layout>
+          <paper-button class="colored" on-tap="{{forgotSubmitTapped}}">Reset password</paper-button>
+        </div>
+      </form>
+
+      <div class="devise-links">
+        <a href="{{urlFor('signup')}}">Sign up</a><br>
+        <a href="{{urlFor('signin')}}">Sign in</a><br>
+      </div>    
+    </section>
+  </core-animated-pages>  
+</more-route-selector>
+
+<paper-toast id="error-toast" text="{{errorMessage}}"></paper-toast>
+
+</template>
+<script>
+(function() {
+
+  Polymer('twb-signin', {
+
+    ready: function() {
+      this.errorMessage = "";
+      this.errors = {};
+      this.user = {name:'', email:'', password:'', password_confirmation:'', remberMe: false};
+    },
+
+    rememberChanged: function(event, detail, sender) {
+      if (this.user.rememberMe == 0) {
+        this.user.rememberMe = 1;
+      }
+      else {
+        this.user.rememberMe = 0;
+      }
+    },
+
+    signinSubmitTapped: function(event, detail, sender) {
+      var ajax = this.$["signin-ajax"];
+      ajax.go();
+    },
+
+    handleSigninResponse: function(event, response) {
+      initUser(response.response);
+      this.fire('signedin');
+    },
+
+    handleSigninError: function(event, response) {
+      var errorObject = JSON.parse(response.xhr.response);
+      this.errorMessage = errorObject.error;
+      var toast = this.$["error-toast"];
+      toast.show();
+    },
+
+    signupSubmitTapped: function(event, detail, sender) {
+      this.$["signup-name"].isInvalid = false;
+      this.$["signup-email"].isInvalid = false;
+      this.$["signup-password"].isInvalid = false;
+      this.$["signup-password_confirmation"].isInvalid = false;
+
+      var ajax = this.$["signup-ajax"];
+      ajax.go();
+    },
+
+    handleSignupResponse: function(event, response) {
+      initUser(response.response);
+      this.fire('signedup');
+    },
+
+    handleSignupError: function(event, response) {
+      var errorObject = JSON.parse(response.xhr.response);
+      this.errors = errorObject.errors;
+      for (var prop in this.errors) {
+        if (this.errors.hasOwnProperty(prop)) {
+          var objId = "signup-" + prop;
+          this.$[objId].isInvalid = true;
+          this.$[objId].error = this.errors[prop][0];
+        }
+      }
+    },
+
+    homeUrl: function() {
+      return MoreRouting.getRoute('home');
+    },
+
+
+    forgotSubmitTapped: function(event, detail, sender) {
+      this.$["forgot-email"].isInvalid = false;
+      var ajax = this.$["forgot-ajax"];
+      ajax.go();
+    },
+
+    handleForgotResponse: function(event, response) {
+      this.fire('forgotten');
+    },
+
+    handleForgotError: function(event, response) {
+      var errorObject = JSON.parse(response.xhr.response);
+      this.errors = errorObject.errors;
+      for (var prop in this.errors) {
+        if (this.errors.hasOwnProperty(prop)) {
+          var objId = "forgot-" + prop;
+          this.$[objId].isInvalid = true;
+          this.$[objId].error = this.errors[prop][0];
+        }
+      }
+    },
+
+    initUser: function(response) {
+      var currentUser      = this.$.currentUser;
+      currentUser.userid   = response.id;
+      currentUser.username = response.name;
+      currentUser.token    = response.authentication_token;
+      currentUser.url      = response.avatar_url;
+
+      this.user.password = "";
+      this.user.password_confirmation = "";
+    }
+  });
+
+})();
+
+</script>
+</polymer-element>
