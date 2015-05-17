@@ -10,6 +10,8 @@
 
   <more-route-selector>
     <core-animated-pages id="pages" fit transitions="cross-fade-all">
+      <section name="splash" fit>
+      </section>
       <twb-app name="app" fit route="home"></twb-app>
       <twb-signin name="signin" fit route="users"></twb-signin>
     </core-animated-pages>
@@ -20,10 +22,16 @@
 (function() {
 
   Polymer('twb-wrapper', {
-    selected : "signin",
 
     ready: function() {
       _this = this;
+
+      if (!MoreRouting.isCurrentUrl("/users")) {
+        var user = this.$["currentUser"];
+        if (user.token == undefined) {
+          MoreRouting.navigateTo('/users/signin');
+        }
+      }
       
       this.$.pages.querySelector('twb-signin').addEventListener('signedin', function(e) {
         window.location = urlFor('home');

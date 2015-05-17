@@ -1,4 +1,6 @@
 <link rel="import" href="twb-user.html">
+<link rel="import" href="twb-forgot-password.html">
+<link rel="import" href="twb-edit-password.html">
 
 <polymer-element name="twb-signin" attributes="token" vertical layout>
 <template>
@@ -23,15 +25,8 @@
     on-core-response="{{handleSignupResponse}}"
     on-core-error="{{handleSignupError}}"></core-ajax>
 
-<core-ajax id="forgot-ajax"
-    url="/users/password.json"
-    method="POST"
-    handleAs="json"
-    params='{"user[email]":"{{user.email}}"}'
-    on-core-response="{{handleForgotResponse}}"
-    on-core-error="{{handleForgotError}}"></core-ajax>
 
-<more-route-selector>
+<more-route-selector selectedParams="{{params}}">
   <core-animated-pages id="pages" flex transitions="cross-fade-all hero-transition">
     <section name="signin" route="signin">
       <form id="signin-form">
@@ -109,25 +104,18 @@
     </section>
 
     <section name="forgot" route="forgot">
-      <form id="forgot-form">
-        <h2>Password forgotten</h2>
-
-        <div class="field">
-          <paper-input-decorator id="forgot-email" floatingLabel="true" label="E-mail">
-            <input type="email" value="{{user.email}}">
-          </paper-input-decorator>
-        </div>
-
-        <div class="actions" horizontal end-justified layout>
-          <paper-button class="colored" on-tap="{{forgotSubmitTapped}}">Reset password</paper-button>
-        </div>
-      </form>
+      <twb-forgot-password></twb-forgot-password>
 
       <div class="devise-links">
         <a href="{{urlFor('signup')}}">Sign up</a><br>
         <a href="{{urlFor('signin')}}">Sign in</a><br>
       </div>    
     </section>
+
+    <section name="editPassword" route="editPassword">
+      <twb-edit-password></twb-edit-password>
+    </section>
+
   </core-animated-pages>  
 </more-route-selector>
 
@@ -142,6 +130,7 @@
     ready: function() {
       this.errorMessage = "";
       this.errors = {};
+      this.successMessage = "";
       this.user = {name:'', email:'', password:'', password_confirmation:'', remberMe: false};
     },
 
@@ -166,7 +155,7 @@
 
     handleSigninError: function(event, response) {
       var errorObject = JSON.parse(response.xhr.response);
-      this.errorMessage = errorObject.error;
+      this.errorMessage = errorObject.errors[0];
       var toast = this.$["error-toast"];
       toast.show();
     },
@@ -199,31 +188,10 @@
     },
 
     homeUrl: function() {
-      return MoreRouting.getRoute('home');
+      return MoreRouting.urlFor('home');
     },
 
 
-    forgotSubmitTapped: function(event, detail, sender) {
-      this.$["forgot-email"].isInvalid = false;
-      var ajax = this.$["forgot-ajax"];
-      ajax.go();
-    },
-
-    handleForgotResponse: function(event, response) {
-      this.fire('forgotten');
-    },
-
-    handleForgotError: function(event, response) {
-      var errorObject = JSON.parse(response.xhr.response);
-      this.errors = errorObject.errors;
-      for (var prop in this.errors) {
-        if (this.errors.hasOwnProperty(prop)) {
-          var objId = "forgot-" + prop;
-          this.$[objId].isInvalid = true;
-          this.$[objId].error = this.errors[prop][0];
-        }
-      }
-    },
 
     initUser: function(response) {
       var currentUser      = this.$.currentUser;
