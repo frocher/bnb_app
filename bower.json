@@ -1,14 +1,15 @@
 {
-  "name": "tstyo",
-  "version": "0.0.0",
+  "name": "twb_app",
+  "version": "0.0.1",
   "dependencies": {
-    "core-elements": "Polymer/core-elements#^0.5.1",
-    "paper-elements": "Polymer/paper-elements#^0.5.1",
-    "polymer": "Polymer/polymer#^0.5.4",
-    "more-routing": "Polymore/more-routing#^0.5.0"
+    "iron-elements": "PolymerElements/iron-elements#^1.0.0",
+    "paper-elements": "PolymerElements/paper-elements#^1.0.0",
+    "platinum-elements": "PolymerElements/platinum-elements#^1.0.0",
+    "platinum-elements": "PolymerElements/neon-animation#^1.0.0",
+    "more-routing": "Polymore/more-routing#^1.0.0"
 
   },
   "devDependencies": {
-    "web-component-tester": "Polymer/web-component-tester#^2.2.3"
+    "web-component-tester": "*"
   }
 }

@@ -2,26 +2,43 @@
 <link rel="import" href="twb-signin.html">
 <link rel="import" href="twb-user.html">
 
-<polymer-element name="twb-wrapper" vertical layout>
-<template>
+<dom-module id="twb-wrapper">
+  <style>
+    :host {
+      @apply(--layout-vertical);
+    }
 
-  <twb-user id="currentUser"></twb-user>
-  <twb-api id="twbApi"></twb-api>
+    .pages {
+      @apply(--layout-fit);
+    }
 
-  <more-route-selector>
-    <core-animated-pages id="pages" fit transitions="cross-fade-all">
-      <section name="splash" fit>
-      </section>
-      <twb-app name="app" fit route="home"></twb-app>
-      <twb-signin name="signin" fit route="users"></twb-signin>
-    </core-animated-pages>
-  </more-route-selector>
+    .page {
+      @apply(--layout-fit);
+    }
+  </style>
+  <template>
 
-</template>
+    <twb-user id="currentUser"></twb-user>
+    <twb-api id="twbApi"></twb-api>
+
+    <more-route-selector>
+      <neon-animated-pages id="pages" class="pages" transitions="cross-fade-all">
+        <section name="splash" class="page" route="splash">
+        </section>
+        <twb-app name="app" class="page" route="home"></twb-app>
+        <twb-signin name="signin" class="page" route="users"></twb-signin>
+      </neon-animated-pages>
+    </more-route-selector>
+
+  </template>
+</dom-module>
+
 <script>
 (function() {
 
-  Polymer('twb-wrapper', {
+  Polymer({
+
+    is: 'twb-wrapper', 
 
     ready: function() {
       _this = this;
@@ -51,4 +68,4 @@
 
 })();
 </script>
-</polymer-element>
+
