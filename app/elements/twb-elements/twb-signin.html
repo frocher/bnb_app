@@ -2,130 +2,143 @@
 <link rel="import" href="twb-forgot-password.html">
 <link rel="import" href="twb-edit-password.html">
 
-<polymer-element name="twb-signin" attributes="token" vertical layout>
-<template>
-<link rel="stylesheet" href="twb-shared.css">
-<link rel="stylesheet" href="twb-signin.css">
+<dom-module id="twb-signin" attributes="token">
+  <link rel="stylesheet" href="twb-shared.css">
+  <link rel="stylesheet" href="twb-signin.css">
 
-<twb-user id="currentUser"></twb-user>
+  <style>
+    .actions {
+      @apply(--layout-horizontal --layout-end-justified);
+    }
+  </style>
 
-<core-ajax id="signin-ajax"
-    url="/auth/sign_in"
-    method="POST"
-    handleAs="json"
-    params='{"email":"{{user.email}}", "password":"{{user.password}}", "user[remember_me]":"{{user.rememberMe}}"}'
-    on-core-response="{{handleSigninResponse}}"
-    on-core-error="{{handleSigninError}}"></core-ajax>
+  <template>
 
-<core-ajax id="signup-ajax"
-    url="/auth/"
-    method="POST"
-    handleAs="json"
-    params='{"name":"{{user.name}}", "email":"{{user.email}}", "password":"{{user.password}}", "password_confirmation":"{{user.password_confirmation}}", "confirm_success_url":"{{homeUrl()}}"}'
-    on-core-response="{{handleSignupResponse}}"
-    on-core-error="{{handleSignupError}}"></core-ajax>
+    <twb-user id="currentUser"></twb-user>
 
+    <iron-ajax id="signin-ajax"
+        url="/auth/sign_in"
+        method="POST"
+        handleAs="json"
+        params='{"email":"{{user.email}}", "password":"{{user.password}}", "user[remember_me]":"{{user.rememberMe}}"}'
+        on-core-response="{{handleSigninResponse}}"
+        on-core-error="{{handleSigninError}}"></iron-ajax>
 
-<more-route-selector selectedParams="{{params}}">
-  <core-animated-pages id="pages" flex transitions="cross-fade-all hero-transition">
-    <section name="signin" route="signin">
-      <form id="signin-form">
-        <h2>Sign in</h2>
-
-        <div class="field">
-          <paper-input-decorator floatingLabel="true" label="Your e-mail">
-            <input autofocus="autofocus" type="email" value="{{user.email}}">
-          </paper-input-decorator>
-        </div>
-
-        <div class="field">
-          <paper-input-decorator floatingLabel="true" label="Your password">
-            <input autocomplete="off" type="password" value="{{user.password}}">
-          </paper-input-decorator>
-        </div>
-
-        <div class="field">
-          <paper-toggle-button id="user_remember_me" style="vertical-align:middle" on-change="{{rememberChanged}}"></paper-toggle-button>
-          <label for="user_remember_me">remember me</label>
-          <input type="hidden" value="{{user.rememberMe}}">
-        </div>
-
-        <div class="actions" horizontal end-justified layout>
-          <paper-button class="colored" on-tap="{{signinSubmitTapped}}">Log in</paper-button>
-        </div>
-      </form>
-
-      <div class="devise-links">
-        <a href="{{urlFor('signup')}}">Sign up</a><br>
-        <a href="{{urlFor('forgot')}}">Forgot your password?</a>
-      </div>
-
-    </section>
-
-    <section name="signup" route="signup">
-      <form id="signup-form">
-        <h2>Sign up</h2>
-
-        <div class="field">
-          <paper-input-decorator id="signup-name" floatingLabel="true" label="Full name">
-            <input autofocus="autofocus" type="text" value="{{user.name}}">
-          </paper-input-decorator>
-        </div>
-
-        <div class="field">
-          <paper-input-decorator id="signup-email" floatingLabel="true" label="Your e-mail" error="{{errors.email[0]}}">
-            <input autofocus="autofocus" type="email" value="{{user.email}}">
-          </paper-input-decorator>
-        </div>
+    <iron-ajax id="signup-ajax"
+        url="/auth/"
+        method="POST"
+        handleAs="json"
+        params='{"name":"{{user.name}}", "email":"{{user.email}}", "password":"{{user.password}}", "password_confirmation":"{{user.password_confirmation}}", "confirm_success_url":"{{homeUrl()}}"}'
+        on-core-response="{{handleSignupResponse}}"
+        on-core-error="{{handleSignupError}}"></iron-ajax>
 
 
-        <div class="field">
-          <paper-input-decorator id="signup-password" floatingLabel="true" label="Password">
-            <input autocomplete="off" type="password" value="{{user.password}}">
-          </paper-input-decorator>
-        </div>
+    <more-route-selector selectedParams="{{params}}">
+      <neon-animated-pages id="pages" flex transitions="cross-fade-all hero-transition">
+        <section name="signin" route="signin">
+          <form id="signin-form">
+            <h2>Sign in</h2>
 
-        <div class="field">
-          <paper-input-decorator id="signup-password_confirmation" floatingLabel="true" label="Retype password">
-            <input autocomplete="off" type="password" value="{{user.password_confirmation}}">
-          </paper-input-decorator>
-        </div>
+            <paper-input-container>
+              <label>Your e-mail</label>
+              <input is="iron-input" autofocus="autofocus" type="email" bind-value="{{user.email}}">
+            </paper-input-container>
 
-        <div class="actions" horizontal end-justified layout>
-          <paper-button class="colored" on-tap="{{signupSubmitTapped}}">Sign me up</paper-button>
-        </div>
-      </form>
+            <paper-input-container>
+              <label>Your password</label>
+              <input is="iron-input" autocomplete="off" type="password" value="{{user.password}}">
+            </paper-input-container>
 
-      <div class="devise-links">
-        <a href="{{urlFor('signin')}}">Sign in</a><br>
-        <a href="{{urlFor('forgot')}}">Forgot your password?</a>
-      </div>
+            <div class="field">
+              <paper-toggle-button id="user_remember_me" style="vertical-align:middle" on-change="{{rememberChanged}}"></paper-toggle-button>
+              <label for="user_remember_me">remember me</label>
+              <input type="hidden" value="{{user.rememberMe}}">
+            </div>
 
-    </section>
+            <div class="actions">
+              <paper-button class="colored" on-tap="{{signinSubmitTapped}}">Log in</paper-button>
+            </div>
+          </form>
 
-    <section name="forgot" route="forgot">
-      <twb-forgot-password></twb-forgot-password>
+          <div class="devise-links">
+            <a href="{{urlFor('signup')}}">Sign up</a><br>
+            <a href="{{urlFor('forgot')}}">Forgot your password?</a>
+          </div>
 
-      <div class="devise-links">
-        <a href="{{urlFor('signup')}}">Sign up</a><br>
-        <a href="{{urlFor('signin')}}">Sign in</a><br>
-      </div>    
-    </section>
+        </section>
 
-    <section name="editPassword" route="editPassword">
-      <twb-edit-password></twb-edit-password>
-    </section>
+        <section name="signup" route="signup">
+          <form id="signup-form">
+            <h2>Sign up</h2>
 
-  </core-animated-pages>  
-</more-route-selector>
+            <div class="field">
+              <paper-input-container id="signup-name">
+                <label>Full name</label>
+                <input is="iron-input" autofocus="autofocus" type="text" value="{{user.name}}">
+              </paper-input-container>
+            </div>
 
-<paper-toast id="error-toast" text="{{errorMessage}}"></paper-toast>
+            <div class="field">
+              <paper-input-container id="signup-email">
+                <label>Your e-mail</label>
+                <input is="iron-input" autofocus="autofocus" type="email" value="{{user.email}}">
+              </paper-input-container>
+            </div>
 
-</template>
+
+            <div class="field">
+              <paper-input-container id="signup-password">
+                <label>Password</label>
+                <input is="iron-input" autocomplete="off" type="password" value="{{user.password}}">
+              </paper-input-container>
+            </div>
+
+            <div class="field">
+              <paper-input-container id="signup-password_confirmation">
+                <label>Retype password</label>
+                <input autocomplete="off" type="password" value="{{user.password_confirmation}}">
+              </paper-input-container>
+            </div>
+
+            <div class="actions" horizontal end-justified layout>
+              <paper-button class="colored" on-tap="{{signupSubmitTapped}}">Sign me up</paper-button>
+            </div>
+          </form>
+
+          <div class="devise-links">
+            <a href="{{urlFor('signin')}}">Sign in</a><br>
+            <a href="{{urlFor('forgot')}}">Forgot your password?</a>
+          </div>
+
+        </section>
+
+        <section name="forgot" route="forgot">
+          <twb-forgot-password></twb-forgot-password>
+
+          <div class="devise-links">
+            <a href="{{urlFor('signup')}}">Sign up</a><br>
+            <a href="{{urlFor('signin')}}">Sign in</a><br>
+          </div>    
+        </section>
+
+        <section name="editPassword" route="editPassword">
+          <twb-edit-password></twb-edit-password>
+        </section>
+
+      </core-animated-pages>  
+    </more-route-selector>
+
+    <paper-toast id="error-toast" text="{{errorMessage}}"></paper-toast>
+
+  </template>
+</dom-module>
+
 <script>
 (function() {
 
-  Polymer('twb-signin', {
+  Polymer({
+
+    is: 'twb-signin', 
 
     ready: function() {
       this.errorMessage = "";
@@ -208,4 +221,3 @@
 })();
 
 </script>
-</polymer-element>
