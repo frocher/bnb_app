@@ -53,7 +53,7 @@
             <paper-checkbox class="colored" checked="{{user.rememberMe}}">remember me</paper-checkbox>
 
             <div class="actions">
-              <paper-button class="colored" on-tap="signinSubmitTappe">Log in</paper-button>
+              <paper-button class="colored" on-tap="signinSubmitTapped">Log in</paper-button>
             </div>
           </form>
 
@@ -155,7 +155,7 @@
 
     signinSubmitTapped: function(event, detail, sender) {
       var ajax = this.$["signin-ajax"];
-      ajax.go();
+      ajax.generateRequest();
     },
 
     handleSigninResponse: function(event, response) {
