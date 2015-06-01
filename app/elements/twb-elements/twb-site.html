@@ -1,49 +1,54 @@
-<polymer-element name="twb-site" attributes="site" vertical layout>
-<template>
+<dom-module id="twb-site" attributes="site">
   <link rel="stylesheet" href="twb-site.css">
-
-  <div class="site" flex hero hero-id="site-{{site.id}}">
-    <h2>Hello {{site.name}}</h2>
-    <div horizontal layout wrap>
-      <div class="box bg-green">
-        <div class="inner">
-            <h3>{{site.upTime}}<span style="font-size:smaller">%</span></h3>
-            <p>
-              up time
-            </p>
+  <style>
+    :host {
+      @apply(--layout-vertical);
+    }
+  </style>
+  <template>
+    <div class="site" flex hero hero-id="site-{{site.id}}">
+      <h2>Hello {{site.name}}</h2>
+      <div horizontal layout wrap>
+        <div class="box bg-green">
+          <div class="inner">
+              <h3>{{site.upTime}}<span style="font-size:smaller">%</span></h3>
+              <p>
+                up time
+              </p>
+          </div>
         </div>
-      </div>
-      <div class="box bg-yellow">
-        <div class="inner">
-            <h3>{{site.responseTime}}<span style="font-size:smaller">ms</span></h3>
-            <p>
-              response time
-            </p>
+        <div class="box bg-yellow">
+          <div class="inner">
+              <h3>{{site.responseTime}}<span style="font-size:smaller">ms</span></h3>
+              <p>
+                response time
+              </p>
+          </div>
         </div>
-      </div>
-      <div class="box bg-red">
-        <div class="inner">
-            <h3>{{site.speedIndex}}</h3>
-            <p>
-              speed index
-            </p>
+        <div class="box bg-red">
+          <div class="inner">
+              <h3>{{site.speedIndex}}</h3>
+              <p>
+                speed index
+              </p>
+          </div>
         </div>
+        <div flex></div>
+        <img src="{{site.img}}"/>
       </div>
-      <div flex></div>
-      <img src="{{site.img}}"/>
     </div>
-  </div>
 
-  </core-selector>
+    </core-selector>
 
-</template>
+  </template>
+</dom-module>
+
 <script>
 (function() {
 
-  Polymer('twb-site', {
-
+  Polymer({
+    is: 'twb-site'
   });
 
 })();
 </script>
-</polymer-element>

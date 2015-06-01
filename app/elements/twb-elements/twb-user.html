@@ -1,25 +1,26 @@
-<polymer-element name="twb-user">
-  <template>
-  </template>
-  <script>
-  (function() {
-    var userid;
-    var username;
-    var token;
-    var avatar;
+<dom-module id="twb-user">
+<template></template>
+</dom-module>
 
-    Polymer('twb-user',{
-      ready: function() {
-        this.userid   = userid;
-        this.username = username;
-        this.token    = token;
-        this.avatar   = avatar;
-      },
+<script>
+(function() {
+  var userid;
+  var username;
+  var token;
+  var avatar;
 
-      attributeChanged: function(attrName, oldVal, newVal) {
-        console.log(attrName, 'old: ' + oldVal, 'new:', newVal);
-      }
-    });
-  })();
-  </script>
-</polymer-element>
+  Polymer({
+    is: 'twb-user',
+    ready: function() {
+      this.userid   = userid;
+      this.username = username;
+      this.token    = token;
+      this.avatar   = avatar;
+    },
+
+    attributeChanged: function(attrName, oldVal, newVal) {
+      console.log(attrName, 'old: ' + oldVal, 'new:', newVal);
+    }
+  });
+})();
+</script>

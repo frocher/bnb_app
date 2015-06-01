@@ -1,27 +1,33 @@
-<polymer-element name="twb-sites" attributes="sites site" horizontal layout>
-<template>
+<dom-module id="twb-sites" attributes="sites site">
+
   <link rel="stylesheet" href="twb-sites.css">
+  <style>
+    :host {
+      @apply(--layout-horizontal);
+    }
+  </style>
+  <template>
 
-  <core-selector selected="{{selected}}" layout horizontal wrap>
-
-    <template repeat="{{item, i in sites}}">
-      <div class="site-item" hero-id="site-{{item.id}}" hero>
-        <img src="{{item.img_thumb}}"/>
-        <div style="text-align:center">
-          <span class="label label-success">{{item.upTime}}%</span>
-          <span class="label label-warning">{{item.responseTime}}ms</span>
-          <span class="label label-danger">{{item.speedIndex}}</span>
+    <core-selector selected="{{selected}}" layout horizontal wrap>
+      <template repeat="{{item, i in sites}}">
+        <div class="site-item" hero-id="site-{{item.id}}" hero>
+          <img src="{{item.img_thumb}}"/>
+          <div style="text-align:center">
+            <span class="label label-success">{{item.upTime}}%</span>
+            <span class="label label-warning">{{item.responseTime}}ms</span>
+            <span class="label label-danger">{{item.speedIndex}}</span>
+          </div>
         </div>
-      </div>
-    </template>
+      </template>
 
-  </core-selector>
+    </core-selector>
 
-</template>
+  </template>
+</dom-module>
 <script>
 (function() {
-
-  Polymer('twb-sites', {
+  Polymer({
+    is: 'twb-sites',
 
     selectedChanged: function() {
       this.site = this.sites[this.selected];
@@ -30,4 +36,3 @@
 
 })();
 </script>
-</polymer-element>

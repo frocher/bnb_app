@@ -1,45 +1,46 @@
-<polymer-element name="twb-api">
+<dom-module id="twb-api">
   <template>
 
-  <core-ajax id="signin-ajax"
+  <iron-ajax id="signin-ajax"
       url="/api/v1/users/sign_in.json"
       method="POST"
       handleAs="json"
       params='{"user[email]":"{{user.email}}", "user[password]":"{{user.password}}", "user[remember_me]":"{{user.rememberMe}}"}'
-      on-core-response="{{handleSigninResponse}}"
-      on-core-error="{{handleSigninError}}"></core-ajax>
+      on-core-response="handleSigninResponse"
+      on-core-error="handleSigninError"></iron-ajax>
 
-  <core-ajax id="signup-ajax"
+  <iron-ajax id="signup-ajax"
       url="/api/v1/users.json"
       method="POST"
       handleAs="json"
       params='{"user[name]":"{{user.name}}", "user[email]":"{{user.email}}", "user[password]":"{{user.password}}", "user[password_confirmation]":"{{user.password_confirmation}}"}'
-      on-core-response="{{handleSignupResponse}}"
-      on-core-error="{{handleSignupError}}"></core-ajax>
+      on-core-response="handleSignupResponse"
+      on-core-error="handleSignupError"></iron-ajax>
 
-  <core-ajax id="forgot-ajax"
+  <iron-ajax id="forgot-ajax"
       url="/api/v1/users/password.json"
       method="POST"
       handleAs="json"
       params='{"user[email]":"{{user.email}}"}'
-      on-core-response="{{handleForgotResponse}}"
-      on-core-error="{{handleForgotError}}"></core-ajax>
+      on-core-response="handleForgotResponse"
+      on-core-error="handleForgotError"></iron-ajax>
 
   </template>
-  <script>
-  (function() {
-    var token;
+</dom-module>
 
-    Polymer('twb-api',{
-      ready: function() {
-        this.token = token;
-      },
+<script>
+(function() {
+  var token;
 
-      signin: function(email, password, response, error) {
-      }
+  Polymer({
+    is: 'twb-api', 
 
+    ready: function() {
+      this.token = token;
+    },
 
-    });
-  })();
-  </script>
-</polymer-element>
+    signin: function(email, password, response, error) {
+    }
+  });
+})();
+</script>

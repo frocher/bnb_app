@@ -3,52 +3,63 @@
 <link rel="import" href="twb-sites.html">
 <link rel="import" href="twb-site.html">
 
-<polymer-element name="twb-app" vertical layout>
-<template>
+<dom-module id="twb-app">
+  <style>
+    :host {
+      @apply(--layout-vertical);
+    }
+  </style>
   <link rel="stylesheet" href="twb-app.css">
 
-  <core-ajax auto handleAs="json" url="/components/twb-elements/sites.json" response="{{sites}}"></core-ajax>
-  <core-ajax id="signout-ajax" handleAs="json" url="/users/sign_out.json" method="DELETE" on-core-response="{{handleSignoutResponse}}"></core-ajax>
+  <template>
 
-  <core-toolbar>
-    <paper-icon-button icon="arrow-back" class="{{selected=='sites' ? 'hide' : 'show'}}" on-tap="{{back}}"></paper-icon-button>
-    <paper-dropdown-menu label="This month">
-      <paper-dropdown class="dropdown">
-        <core-menu class="menu">
-          <paper-item label="item1">This month</paper-item>
-          <paper-item label="item2">This week</paper-item>
-          <paper-item label="item3">This day</paper-item>
-          <paper-item label="item4">Custom...</paper-item>
-        </core-menu>
-      </paper-dropdown>
-    </paper-dropdown-menu>
-    <div flex></div>
-    <paper-icon-button icon="add"></paper-icon-button>
-    <paper-icon-button icon="search"></paper-icon-button>
-    <paper-menu-button>
-      <paper-icon-button icon="more-vert"></paper-icon-button>
-      <paper-dropdown class="dropdown" halign="right">
-        <core-menu class="menu">
-          <paper-item on-tap="{{signoutTapped}}">Logout</paper-item>
-        </core-menu>
-      </paper-dropdown>
-    </paper-menu-button>
-  </core-toolbar>
+    <iron-ajax auto handleAs="json" url="/components/twb-elements/sites.json" response="{{sites}}"></iron-ajax>
+    <iron-ajax id="signout-ajax" handleAs="json" url="/users/sign_out.json" method="DELETE" on-core-response="handleSignoutResponse"></iron-ajax>
 
-  <core-animated-pages id="pages" flex selected="{{selected}}" transitions="cross-fade-all hero-transition">
-    <twb-sites name="sites" sites="{{sites}}" site="{{site}}" on-core-activate="{{siteSelect}}">
-    </twb-sites>
+    <paper-toolbar>
+      <paper-icon-button icon="arrow-back" class="{{selected=='sites' ? 'hide' : 'show'}}" on-tap="back"></paper-icon-button>
+      <paper-dropdown-menu label="This month">
+        <paper-dropdown class="dropdown">
+          <paper-menu class="menu">
+            <paper-item label="item1">This month</paper-item>
+            <paper-item label="item2">This week</paper-item>
+            <paper-item label="item3">This day</paper-item>
+            <paper-item label="item4">Custom...</paper-item>
+          </paper-menu>
+        </paper-dropdown>
+      </paper-dropdown-menu>
+      <div flex></div>
+      <paper-icon-button icon="add"></paper-icon-button>
+      <paper-icon-button icon="search"></paper-icon-button>
+      <paper-menu-button>
+        <paper-icon-button icon="more-vert"></paper-icon-button>
+        <paper-dropdown class="dropdown" halign="right">
+          <paper-menu class="menu">
+            <paper-item on-tap="signoutTapped">Logout</paper-item>
+          </core-menu>
+        </paper-dropdown>
+      </paper-menu-button>
+    </paper-toolbar>
 
-    <twb-site name="site" site="{{site}}"></twb-site>
+    <neon-animated-pages id="pages" flex selected="{{selected}}" transitions="cross-fade-all hero-transition">
+      <twb-sites name="sites" sites="{{sites}}" site="{{site}}" on-core-activate="siteSelect">
+      </twb-sites>
 
-  </core-animated-pages>
+      <twb-site name="site" site="{{site}}"></twb-site>
+
+    </neon-animated-pages>
 
 
-</template>
+  </template>
+</dom-module>
+
 <script>
 (function() {
 
-  Polymer('twb-app', {
+  Polymer({
+
+    is: 'twb-app', 
+
     selected : "sites",
 
     siteSelect: function() {
@@ -74,4 +85,3 @@
 
 })();
 </script>
-</polymer-element>
