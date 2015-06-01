@@ -21,19 +21,6 @@ form {
   background: #fafafa;
   border: 1px solid #ebebeb;
   box-shadow: rgba(0,0,0,0.14902) 0px 1px 1px 0px,rgba(0,0,0,0.09804) 0px 1px 2px 0px;
-
-  input {
-    background-color: #fafafa !important;
-  }
-
-  input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px #fafafa inset;
-  }
-}
-
-
-paper-button.colored {
-  color: #4285f4;
 }
 
 
