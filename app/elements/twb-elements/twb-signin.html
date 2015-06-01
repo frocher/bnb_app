@@ -21,16 +21,16 @@
         method="POST"
         handleAs="json"
         params='{"email":"{{user.email}}", "password":"{{user.password}}", "user[remember_me]":"{{user.rememberMe}}"}'
-        on-core-response="{{handleSigninResponse}}"
-        on-core-error="{{handleSigninError}}"></iron-ajax>
+        on-core-response="handleSigninResponse"
+        on-core-error="handleSigninError"></iron-ajax>
 
     <iron-ajax id="signup-ajax"
         url="/auth/"
         method="POST"
         handleAs="json"
         params='{"name":"{{user.name}}", "email":"{{user.email}}", "password":"{{user.password}}", "password_confirmation":"{{user.password_confirmation}}", "confirm_success_url":"{{homeUrl()}}"}'
-        on-core-response="{{handleSignupResponse}}"
-        on-core-error="{{handleSignupError}}"></iron-ajax>
+        on-core-response="handleSignupResponse"
+        on-core-error="handleSignupError"></iron-ajax>
 
 
     <more-route-selector selectedParams="{{params}}">
@@ -56,7 +56,7 @@
             </div>
 
             <div class="actions">
-              <paper-button class="colored" on-tap="{{signinSubmitTapped}}">Log in</paper-button>
+              <paper-button class="colored" on-tap="signinSubmitTappe">Log in</paper-button>
             </div>
           </form>
 
@@ -101,7 +101,7 @@
             </div>
 
             <div class="actions" horizontal end-justified layout>
-              <paper-button class="colored" on-tap="{{signupSubmitTapped}}">Sign me up</paper-button>
+              <paper-button class="colored" on-tap="signupSubmitTapped">Sign me up</paper-button>
             </div>
           </form>
 
