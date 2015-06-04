@@ -41,9 +41,7 @@
     <more-route-selector selectedParams="{{params}}">
       <neon-animated-pages id="pages" flex transitions="cross-fade-all hero-transition">
         <section name="signin" route="signin">
-          <form id="signin-form">
-            <h2>Sign in</h2>
-
+          <twb-auth-form id="signin-form" title="Sign in" buttons="{{signinButtons}}">
             <paper-input-container>
               <label>Your e-mail</label>
               <input is="iron-input" autofocus="autofocus" type="email" bind-value="{{user.email}}">
@@ -59,67 +57,40 @@
             <div class="actions">
               <paper-button class="colored" on-tap="signinSubmitTapped">Log in</paper-button>
             </div>
-          </form>
-
-          <div class="devise-links">
-            <twb-anchor text="Sign up" path="signup"></twb-anchor>
-            <twb-anchor text="Forgot your password" path="forgot"></twb-anchor>
-          </div>
-
+          </twb-auth-form>
         </section>
 
         <section name="signup" route="signup">
-          <form id="signup-form">
-            <h2>Sign up</h2>
+          <twb-auth-form id="signup-form" title="Sign up" buttons="{{signupButtons}}">
 
-            <div class="field">
-              <paper-input-container id="signup-name">
-                <label>Full name</label>
-                <input is="iron-input" autofocus="autofocus" type="text" value="{{user.name}}">
-              </paper-input-container>
-            </div>
+            <paper-input-container id="signup-name">
+              <label>Full name</label>
+              <input is="iron-input" autofocus="autofocus" type="text" value="{{user.name}}">
+            </paper-input-container>
 
-            <div class="field">
-              <paper-input-container id="signup-email">
-                <label>Your e-mail</label>
-                <input is="iron-input" autofocus="autofocus" type="email" value="{{user.email}}">
-              </paper-input-container>
-            </div>
+            <paper-input-container id="signup-email">
+              <label>Your e-mail</label>
+              <input is="iron-input" autofocus="autofocus" type="email" value="{{user.email}}">
+            </paper-input-container>
 
+            <paper-input-container id="signup-password">
+              <label>Password</label>
+              <input is="iron-input" autocomplete="off" type="password" value="{{user.password}}">
+            </paper-input-container>
 
-            <div class="field">
-              <paper-input-container id="signup-password">
-                <label>Password</label>
-                <input is="iron-input" autocomplete="off" type="password" value="{{user.password}}">
-              </paper-input-container>
-            </div>
-
-            <div class="field">
-              <paper-input-container id="signup-password_confirmation">
-                <label>Retype password</label>
-                <input autocomplete="off" type="password" value="{{user.password_confirmation}}">
-              </paper-input-container>
-            </div>
+            <paper-input-container id="signup-password_confirmation">
+              <label>Retype password</label>
+              <input autocomplete="off" type="password" value="{{user.password_confirmation}}">
+            </paper-input-container>
 
             <div class="actions" horizontal end-justified layout>
               <paper-button class="colored" on-tap="signupSubmitTapped">Sign me up</paper-button>
             </div>
-          </form>
-
-          <div class="devise-links">
-            <a href="{{urlFor('signin')}}">Sign in</a><br>
-            <a href="{{urlFor('forgot')}}">Forgot your password?</a>
-          </div>
-
+          </twb-auth-form>
         </section>
 
         <section name="forgot" route="forgot">
           <twb-forgot-password></twb-forgot-password>
-
-          <div class="devise-links">
-            <a href="{{urlFor('signup')}}">Sign up</a><br>
-            <a href="{{urlFor('signin')}}">Sign in</a><br>
-          </div>    
         </section>
 
         <section name="editPassword" route="editPassword">
@@ -146,6 +117,9 @@
       this.errors = {};
       this.successMessage = "";
       this.user = {name:'', email:'', password:'', password_confirmation:'', remberMe: false};
+
+      this.signinButtons = [{text:'Sign up', path:'signup'}, {text:'Forgot your password', path:'forgot'}];
+      this.signupButtons = [{text:'Sign in', path:'signin'}, {text:'Forgot your password', path:'forgot'}];
     },
 
     rememberChanged: function(event, detail, sender) {
