@@ -1,0 +1,43 @@
+<dom-module id="twb-anchor">
+<style>
+  .anchor {
+    cursor:pointer;
+    color: #4285f4;
+    text-decoration: none;
+  }
+
+  .anchor:hover {
+    text-decoration: underline;
+  }
+
+</style>
+<template>
+  <span class="anchor">[[text]]</span>
+</template>
+</dom-module>
+<script>
+(function() {
+
+  Polymer({
+    is: 'twb-anchor', 
+
+    properties: {
+      text: String,
+      path: String,
+      params: Object
+    },
+
+    listeners: {
+      'tap': '_onTap',
+    },
+      
+    _onTap: function() {
+      MoreRouting.navigateTo(this.path, this.params);
+      event.stopPropagation();
+    }
+
+  });
+
+})();
+
+</script>

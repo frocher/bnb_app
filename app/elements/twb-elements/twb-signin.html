@@ -11,6 +11,10 @@
       @apply(--layout-horizontal);
       @apply(--layout-end-justified);
     }
+
+    .devise-links {
+      @apply(--layout-vertical);
+    }
   </style>
 
   <template>
@@ -58,8 +62,8 @@
           </form>
 
           <div class="devise-links">
-            <a href="{{urlFor('signup')}}">Sign up</a><br>
-            <a href="{{urlFor('forgot')}}">Forgot your password?</a>
+            <twb-anchor text="Sign up" path="signup"></twb-anchor>
+            <twb-anchor text="Forgot your password" path="forgot"></twb-anchor>
           </div>
 
         </section>
