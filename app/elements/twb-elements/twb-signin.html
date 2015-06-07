@@ -13,7 +13,7 @@
     <iron-ajax id="signin-ajax"
         url="/auth/sign_in"
         method="POST"
-        handleAs="json"
+        handle-as="json"
         params='{"email":"{{user.email}}", "password":"{{user.password}}", "user[remember_me]":"{{user.rememberMe}}"}'
         on-response="handleSigninResponse"
         on-error="handleSigninError"></iron-ajax>
@@ -21,7 +21,8 @@
     <iron-ajax id="signup-ajax"
         url="/auth/"
         method="POST"
-        handleAs="json"
+        handle-as="json"
+
         params='{"name":"{{user.name}}", "email":"{{user.email}}", "password":"{{user.password}}", "password_confirmation":"{{user.password_confirmation}}", "confirm_success_url":"{{homeUrl()}}"}'
         on-response="handleSignupResponse"
         on-error="handleSignupError"></iron-ajax>
@@ -64,10 +65,8 @@
             <input is="iron-input" autocomplete="off" type="password" value="{{user.password}}">
           </paper-input-container>
 
-          <paper-input-container id="signup-password_confirmation">
-            <label>Retype password</label>
-            <input autocomplete="off" type="password" value="{{user.password_confirmation}}">
-          </paper-input-container>
+          <paper-input id="signup-password_confirmation" label="Retype password" autocomplete="off" type="password" bind-value="{{user.password_confirmation}}">
+          </paper-input>
 
           <div class="actions">
             <paper-button class="colored" on-tap="signupSubmitTapped">Sign me up</paper-button>
@@ -105,15 +104,6 @@
       this.signupButtons = [{text:'Sign in', path:'signin'}, {text:'Forgot your password', path:'forgot'}];
     },
 
-    rememberChanged: function(event, detail, sender) {
-      if (this.user.rememberMe == 0) {
-        this.user.rememberMe = 1;
-      }
-      else {
-        this.user.rememberMe = 0;
-      }
-    },
-
     signinSubmitTapped: function(event, detail, sender) {
       var ajax = this.$["signin-ajax"];
       ajax.generateRequest();
@@ -124,21 +114,21 @@
       this.fire('signedin');
     },
 
-    handleSigninError: function(event, response) {
-      var errorObject = JSON.parse(response.xhr.response);
+    handleSigninError: function(event, error) {
+      var errorObject = error.request.xhr.response;
       this.errorMessage = errorObject.errors[0];
       var toast = this.$["error-toast"];
       toast.show();
     },
 
     signupSubmitTapped: function(event, detail, sender) {
-      this.$["signup-name"].isInvalid = false;
-      this.$["signup-email"].isInvalid = false;
-      this.$["signup-password"].isInvalid = false;
-      this.$["signup-password_confirmation"].isInvalid = false;
+      this.$["signup-name"].invalid = false;
+      this.$["signup-email"].invalid = false;
+      this.$["signup-password"].invalid = false;
+      this.$["signup-password_confirmation"].invalid = false;
 
       var ajax = this.$["signup-ajax"];
-      ajax.go();
+      ajax.generateRequest();
     },
 
     handleSignupResponse: function(event, response) {
@@ -146,14 +136,16 @@
       this.fire('signedup');
     },
 
-    handleSignupError: function(event, response) {
-      var errorObject = JSON.parse(response.xhr.response);
+    handleSignupError: function(event, error) {
+      var errorObject = error.request.xhr.response;
       this.errors = errorObject.errors;
       for (var prop in this.errors) {
         if (this.errors.hasOwnProperty(prop)) {
           var objId = "signup-" + prop;
-          this.$[objId].isInvalid = true;
-          this.$[objId].error = this.errors[prop][0];
+          if (this.$[objId] !== undefined) {
+            this.$[objId].invalid = true;
+            this.$[objId].errorMessage = this.errors[prop][0];
+          }
         }
       }
     },
