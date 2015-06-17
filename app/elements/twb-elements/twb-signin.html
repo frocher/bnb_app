@@ -14,7 +14,6 @@
         url="/auth/sign_in"
         method="POST"
         handle-as="json"
-        params='{"email":"{{user.email}}", "password":"{{user.password}}", "user[remember_me]":"{{user.rememberMe}}"}'
         on-response="handleSigninResponse"
         on-error="handleSigninError"></iron-ajax>
 
@@ -22,8 +21,6 @@
         url="/auth/"
         method="POST"
         handle-as="json"
-
-        params='{"name":"{{user.name}}", "email":"{{user.email}}", "password":"{{user.password}}", "password_confirmation":"{{user.password_confirmation}}", "confirm_success_url":"{{homeUrl()}}"}'
         on-response="handleSignupResponse"
         on-error="handleSignupError"></iron-ajax>
 
@@ -31,17 +28,14 @@
     <more-route-selector selectedParams="{{params}}">
       <neon-animated-pages id="pages" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
         <twb-auth-form id="signin-form" name="signin" route="signin" title="Sign in" buttons="{{signinButtons}}">
-          <paper-input-container>
-            <label>Your e-mail</label>
-            <input is="iron-input" autofocus="autofocus" type="email" bind-value="{{user.email}}">
-          </paper-input-container>
 
-          <paper-input-container>
-            <label>Your password</label>
-            <input is="iron-input" autocomplete="off" type="password" value="{{user.password}}">
-          </paper-input-container>
+          <paper-input id="signin-email" label="E-mail" type="email" value="{{params.email}}">
+          </paper-input>
 
-          <paper-checkbox class="colored" checked="{{user.rememberMe}}">remember me</paper-checkbox>
+          <paper-input id="signin-password" label="Password" autocomplete="off" type="password" value="{{params.password}}">
+          </paper-input>
+
+          <paper-checkbox class="colored" checked="{{params.rememberMe}}">remember me</paper-checkbox>
 
           <div class="actions">
             <paper-button class="colored" on-tap="signinSubmitTapped">Log in</paper-button>
@@ -50,22 +44,16 @@
 
         <twb-auth-form id="signup-form" name="signup" route="signup" title="Sign up" buttons="{{signupButtons}}">
 
-          <paper-input-container id="signup-name">
-            <label>Full name</label>
-            <input is="iron-input" autofocus="autofocus" type="text" value="{{user.name}}">
-          </paper-input-container>
+          <paper-input id="signup-name" autofocus="autofocus" label="Full name" type="text" value="{{params.name}}">
+          </paper-input>
 
-          <paper-input-container id="signup-email">
-            <label>Your e-mail</label>
-            <input is="iron-input" autofocus="autofocus" type="email" value="{{user.email}}">
-          </paper-input-container>
+          <paper-input id="signup-email" label="E-mail" type="email" value="{{params.email}}">
+          </paper-input>
 
-          <paper-input-container id="signup-password">
-            <label>Password</label>
-            <input is="iron-input" autocomplete="off" type="password" value="{{user.password}}">
-          </paper-input-container>
+          <paper-input id="signup-password" label="Password" autocomplete="off" type="password" value="{{params.password}}">
+          </paper-input>
 
-          <paper-input id="signup-password_confirmation" label="Retype password" autocomplete="off" type="password" bind-value="{{user.password_confirmation}}">
+          <paper-input id="signup-password_confirmation" label="Retype password" autocomplete="off" type="password" value="{{params.password_confirmation}}">
           </paper-input>
 
           <div class="actions">
@@ -82,7 +70,7 @@
       </neon-animated-pages>  
     </more-route-selector>
 
-    <paper-toast id="error-toast" text="{{errorMessage}}"></paper-toast>
+    <paper-toast id="error-toast"></paper-toast>
 
   </template>
 </dom-module>
@@ -95,10 +83,9 @@
     is: 'twb-signin', 
 
     ready: function() {
-      this.errorMessage = "";
       this.errors = {};
-      this.successMessage = "";
-      this.user = {name:'', email:'', password:'', password_confirmation:'', remberMe: false};
+    
+      this.params = { name:"", email:"", password:"", password_confirmation: "", confirm_success_url: this.homeUrl() };
 
       this.signinButtons = [{text:'Sign up', path:'signup'}, {text:'Forgot your password', path:'forgot'}];
       this.signupButtons = [{text:'Sign in', path:'signin'}, {text:'Forgot your password', path:'forgot'}];
@@ -106,19 +93,18 @@
 
     signinSubmitTapped: function(event, detail, sender) {
       var ajax = this.$["signin-ajax"];
+      ajax.params = this.params;
       ajax.generateRequest();
     },
 
     handleSigninResponse: function(event, response) {
-      initUser(response.response);
+      this.initUser(response.response);
       this.fire('signedin');
     },
 
     handleSigninError: function(event, error) {
       var errorObject = error.request.xhr.response;
-      this.errorMessage = errorObject.errors[0];
-      var toast = this.$["error-toast"];
-      toast.show();
+      this.showToast(errorObject.errors[0]);
     },
 
     signupSubmitTapped: function(event, detail, sender) {
@@ -128,33 +114,44 @@
       this.$["signup-password_confirmation"].invalid = false;
 
       var ajax = this.$["signup-ajax"];
+      ajax.params = this.params;
       ajax.generateRequest();
     },
 
     handleSignupResponse: function(event, response) {
-      initUser(response.response);
-      this.fire('signedup');
+      this.initUser(response.response.data);
+      this.showToast("Sign up successful. An activation email has been sent to you.");
     },
 
     handleSignupError: function(event, error) {
       var errorObject = error.request.xhr.response;
-      this.errors = errorObject.errors;
-      for (var prop in this.errors) {
-        if (this.errors.hasOwnProperty(prop)) {
-          var objId = "signup-" + prop;
-          if (this.$[objId] !== undefined) {
-            this.$[objId].invalid = true;
-            this.$[objId].errorMessage = this.errors[prop][0];
-          }
-        }
+
+      if (errorObject === null) {
+        this.showToast("Error : can't sign up");
       }
+      else {
+        this.errors = errorObject.errors;
+        for (var prop in this.errors) {
+          if (this.errors.hasOwnProperty(prop)) {
+            var objId = "signup-" + prop;
+            if (this.$[objId] !== undefined) {
+              this.$[objId].invalid = true;
+              this.$[objId].errorMessage = this.errors[prop][0];
+            }
+          }
+        }       
+      }
+    },
+
+    showToast: function(message) {
+      var toast = this.$["error-toast"];
+      toast.text = message;
+      toast.show();
     },
 
     homeUrl: function() {
       return MoreRouting.urlFor('home');
     },
-
-
 
     initUser: function(response) {
       var currentUser      = this.$.currentUser;
