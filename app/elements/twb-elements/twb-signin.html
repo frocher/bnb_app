@@ -98,7 +98,8 @@
     },
 
     handleSigninResponse: function(event, response) {
-      this.initUser(response.response);
+      var token = response.xhr.getResponseHeader('access-token');
+      this.initUser(response.response.data, token);
       this.fire('signedin');
     },
 
@@ -119,7 +120,6 @@
     },
 
     handleSignupResponse: function(event, response) {
-      this.initUser(response.response.data);
       this.showToast("Sign up successful. An activation email has been sent to you.");
     },
 
@@ -150,18 +150,21 @@
     },
 
     homeUrl: function() {
-      return MoreRouting.urlFor('home');
+      var full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+      return full + '/' + MoreRouting.urlFor('home');
     },
 
-    initUser: function(response) {
+    initUser: function(response, token) {
       var currentUser      = this.$.currentUser;
       currentUser.userid   = response.id;
       currentUser.username = response.name;
-      currentUser.token    = response.authentication_token;
+      currentUser.email    = response.email;
+      currentUser.admin    = response.admin;
       currentUser.url      = response.avatar_url;
+      currentUser.token    = token;
 
-      this.user.password = "";
-      this.user.password_confirmation = "";
+      this.params.password = "";
+      this.params.password_confirmation = "";
     }
   });
 

@@ -50,15 +50,15 @@
       }
       
       this.$.pages.querySelector('twb-signin').addEventListener('signedin', function(e) {
-        window.location = urlFor('home');
+        MoreRouting.navigateTo('home');
       });
 
       this.$.pages.querySelector('twb-signin').addEventListener('signedup', function(e) {
-        window.location = urlFor('home');
+        MoreRouting.navigateTo('home');
       });
 
       this.$.pages.querySelector('twb-app').addEventListener('signedout', function(e) {
-        window.location = urlFor('home');
+        MoreRouting.navigateTo('home');
       });
     }
 
