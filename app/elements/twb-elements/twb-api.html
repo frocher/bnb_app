@@ -36,18 +36,35 @@ Polymer({
   },
 
   signin: function(params, successCallback, errorCallback, callbackObj) {
-    var url = this._getRequestUrl("/auth/sign_in", params);
+    var options = this._generateOptions("/auth/sign_in", "POST", params);
+    this._sendRequest(options, successCallback, errorCallback, callbackObj);
+  },
+
+  signup: function(params, successCallback, errorCallback, callbackObj) {
+    var options = this._generateOptions("/auth/", "POST", params);
+    this._sendRequest(options, successCallback, errorCallback, callbackObj);
+  },
+
+  signout: function() {
+    sessionStorage.removeItem('accessToken');
+  },
+
+  _generateOptions: function(url, method, params) {
+    var requestUrl = this._getRequestUrl(url, params);
 
     var options = {
-      url: url,
-      method: "POST",
+      url: requestUrl,
+      method: method,
       headers: {},
       body: "",
       async: true,
       handleAs: "json",
       withCredentials: false
     };
+    return options;
+  },
 
+  _sendRequest: function(options, successCallback, errorCallback, callbackObj) {
     var req = document.createElement('iron-request');
     req.completes.then(
       this._handleSuccess.bind(this, req, successCallback, callbackObj)
@@ -56,10 +73,6 @@ Polymer({
     );
 
     req.send(options);
-  },
-
-  signout: function() {
-    sessionStorage.removeItem('accessToken');
   },
 
   _handleSuccess: function(request, callback, callbackObj) {

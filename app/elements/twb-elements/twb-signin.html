@@ -11,21 +11,6 @@
     <twb-user id="currentUser"></twb-user>
     <twb-api id="api"></twb-api>
 
-    <iron-ajax id="signin-ajax"
-        url="/auth/sign_in"
-        method="POST"
-        handle-as="json"
-        on-response="handleSigninResponse"
-        on-error="handleSigninError"></iron-ajax>
-
-    <iron-ajax id="signup-ajax"
-        url="/auth/"
-        method="POST"
-        handle-as="json"
-        on-response="handleSignupResponse"
-        on-error="handleSignupError"></iron-ajax>
-
-
     <more-route-selector selectedParams="{{params}}">
       <neon-animated-pages id="pages" class="flex" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
         <neon-animatable route="signin">
@@ -76,9 +61,6 @@
   
       </neon-animated-pages>  
     </more-route-selector>
-
-    <paper-toast id="error-toast"></paper-toast>
-
   </template>
 </dom-module>
 
@@ -101,10 +83,6 @@
     signinSubmitTapped: function(event, detail, sender) {
       var api = this.$.api;
       api.signin(this.params, this.handleSigninResponse, this.handleSigninError, this);
-
-      //var ajax = this.$["signin-ajax"];
-      //ajax.params = this.params;
-      //ajax.generateRequest();
     },
 
     handleSigninResponse: function(data) {
@@ -124,29 +102,26 @@
       this.$["signup-password"].invalid = false;
       this.$["signup-password_confirmation"].invalid = false;
 
-      var ajax = this.$["signup-ajax"];
-      ajax.params = this.params;
-      ajax.generateRequest();
+      var api = this.$.api;
+      api.signup(this.params, this.handleSignupResponse, this.handleSignupError, this);
     },
 
-    handleSignupResponse: function(event, response) {
+    handleSignupResponse: function(data) {
       this.showToast("Sign up successful. An activation email has been sent to you.");
     },
 
-    handleSignupError: function(event, error) {
-      var errorObject = error.request.xhr.response;
-
-      if (errorObject === null) {
+    handleSignupError: function(error) {
+      if (error === null) {
         this.showToast("Error : can't sign up");
       }
       else {
-        this.errors = errorObject.errors;
-        for (var prop in this.errors) {
-          if (this.errors.hasOwnProperty(prop)) {
+        var errors = error.errors;
+        for (var prop in errors) {
+          if (errors.hasOwnProperty(prop)) {
             var objId = "signup-" + prop;
             if (this.$[objId] !== undefined) {
               this.$[objId].invalid = true;
-              this.$[objId].errorMessage = this.errors[prop][0];
+              this.$[objId].errorMessage = errors[prop][0];
             }
           }
         }       
@@ -154,9 +129,7 @@
     },
 
     showToast: function(message) {
-      var toast = this.$["error-toast"];
-      toast.text = message;
-      toast.show();
+      this.fire('message', {message: message});
     },
 
     homeUrl: function() {

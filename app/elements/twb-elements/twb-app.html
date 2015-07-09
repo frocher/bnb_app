@@ -33,7 +33,7 @@
     <paper-toolbar>
       <paper-icon-button icon="arrow-back" class="hide" on-tap="back"></paper-icon-button>
       <div>
-        <paper-button id="periodBtn" on-tap="periodBtnTapped"><span>This month</span></paper-button>
+        <paper-button id="periodBtn" on-tap="periodBtnTapped"><span id="periodSpan">This month</span></paper-button>
         <paper-dropdown-menu id="periodDropdown">
           <paper-menu selected="{{currentPeriod}}">
             <paper-item on-tap="periodTapped" data-period="month">This&nbsp;month</paper-item>
@@ -93,6 +93,7 @@
 
     periodTapped: function(e) {
       // TODO
+      this.$.periodSpan.innerHTML = e.currentTarget.innerHTML;
       alert('todo' + e.currentTarget.dataset.period);
     },
 

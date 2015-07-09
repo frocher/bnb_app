@@ -29,6 +29,7 @@
         <twb-signin name="signin" class="page" route="users"></twb-signin>
       </neon-animated-pages>
     </more-route-selector>
+    <paper-toast id="message-toast"></paper-toast>
 
   </template>
 </dom-module>
@@ -38,6 +39,10 @@
 
   Polymer({
     is: 'twb-wrapper', 
+
+    listeners: {
+      message: 'handleMessage'
+    },
 
     ready: function() {
       _this = this;
@@ -60,6 +65,12 @@
       this.$.pages.querySelector('twb-app').addEventListener('signedout', function(e) {
         MoreRouting.navigateTo('/users/signin');
       });
+    },
+
+    handleMessage: function(e) {
+      var toast = this.$["message-toast"];
+      toast.text = e.detail.message;
+      toast.show();
     }
 
 
