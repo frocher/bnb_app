@@ -49,13 +49,21 @@ Polymer({
     sessionStorage.removeItem('accessToken');
   },
 
-  _generateOptions: function(url, method, params) {
-    var requestUrl = this._getRequestUrl(url, params);
+  forgotPassword: function(params, successCallback, errorCallback, callbackObj) {
+    var options = this._generateOptions("/auth/password", "POST", params);
+    this._sendRequest(options, successCallback, errorCallback, callbackObj);
+  },
 
+  updatePassword: function(params, headers, successCallback, errorCallback, callbackObj) {
+    var options = this._generateOptions("/auth/password", "PUT", params, headers);
+    this._sendRequest(options, successCallback, errorCallback, callbackObj);
+  },
+
+  _generateOptions: function(url, method, params, headers) {
     var options = {
-      url: requestUrl,
+      url: this._getRequestUrl(url, params),
       method: method,
-      headers: {},
+      headers: this._getRequestHeaders(headers),
       body: "",
       async: true,
       handleAs: "json",
@@ -85,34 +93,46 @@ Polymer({
     callback.apply (callbackObj, [request.xhr.response]);
   },
 
+  _getRequestHeaders: function(headers) {
+    var resu = {};
+    var header;
+
+    if (headers instanceof Object) {
+      for (header in headers) {
+        resu[header] = headers[header].toString();
+      }
+    }
+
+    return resu;
+  },
 
   _getQueryString: function(params) {
-      var queryParts = [];
-      var param;
-      var value;
+    var queryParts = [];
+    var param;
+    var value;
 
-      for (param in params) {
-        value = params[param];
-        param = window.encodeURIComponent(param);
+    for (param in params) {
+      value = params[param];
+      param = window.encodeURIComponent(param);
 
-        if (value !== null) {
-          param += '=' + window.encodeURIComponent(value);
-        }
-
-        queryParts.push(param);
+      if (value !== null) {
+        param += '=' + window.encodeURIComponent(value);
       }
 
-      return queryParts.join('&');
-    },
-
-    _getRequestUrl: function(url, params) {
-      var queryString = this._getQueryString(params);
-
-      if (queryString) {
-        return url + '?' + queryString;
-      }
-
-      return url;
+      queryParts.push(param);
     }
+
+    return queryParts.join('&');
+  },
+
+  _getRequestUrl: function(url, params) {
+    var queryString = this._getQueryString(params);
+
+    if (queryString) {
+      return url + '?' + queryString;
+    }
+
+    return url;
+  }
 });
 </script>
