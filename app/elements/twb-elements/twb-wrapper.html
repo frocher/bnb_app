@@ -19,7 +19,7 @@
   <template>
 
     <twb-user id="currentUser"></twb-user>
-    <twb-api id="twbApi"></twb-api>
+    <twb-api id="api"></twb-api>
 
     <more-route-selector>
       <neon-animated-pages id="pages" class="pages" transitions="cross-fade-all">
@@ -43,8 +43,8 @@
       _this = this;
 
       if (!MoreRouting.isCurrentUrl("/users")) {
-        var user = this.$["currentUser"];
-        if (user.token == undefined) {
+        var api = this.$.api;
+        if (!api.isLogged()) {
           MoreRouting.navigateTo('/users/signin');
         }
       }
@@ -58,7 +58,7 @@
       });
 
       this.$.pages.querySelector('twb-app').addEventListener('signedout', function(e) {
-        MoreRouting.navigateTo('home');
+        MoreRouting.navigateTo('/users/signin');
       });
     }
 

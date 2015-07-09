@@ -6,6 +6,7 @@
     "paper-elements": "PolymerElements/paper-elements#^1.0.0",
     "platinum-elements": "PolymerElements/platinum-elements#^1.0.0",
     "platinum-elements": "PolymerElements/neon-animation#^1.0.0",
+    "paper-dropdown-menu" : "git://github.com/GabiAxel/paper-dropdown-menu.git",
     "more-routing": "Polymore/more-routing#^1.0.0"
 
   },

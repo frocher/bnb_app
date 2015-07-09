@@ -4,10 +4,7 @@
   <iron-ajax id="signin-ajax"
       url="/api/v1/users/sign_in.json"
       method="POST"
-      handleAs="json"
-      params='{"user[email]":"{{user.email}}", "user[password]":"{{user.password}}", "user[remember_me]":"{{user.rememberMe}}"}'
-      on-core-response="handleSigninResponse"
-      on-core-error="handleSigninError"></iron-ajax>
+      handle-as="json"></iron-ajax>
 
   <iron-ajax id="signup-ajax"
       url="/api/v1/users.json"
@@ -29,18 +26,80 @@
 </dom-module>
 
 <script>
-(function() {
-  var token;
 
-  Polymer({
-    is: 'twb-api', 
+Polymer({
+  is: 'twb-api', 
 
-    ready: function() {
-      this.token = token;
+
+  isLogged: function() {
+    return sessionStorage.getItem('accessToken') !== null;
+  },
+
+  signin: function(params, successCallback, errorCallback, callbackObj) {
+    var url = this._getRequestUrl("/auth/sign_in", params);
+
+    var options = {
+      url: url,
+      method: "POST",
+      headers: {},
+      body: "",
+      async: true,
+      handleAs: "json",
+      withCredentials: false
+    };
+
+    var req = document.createElement('iron-request');
+    req.completes.then(
+      this._handleSuccess.bind(this, req, successCallback, callbackObj)
+    ).catch(
+      this._handleError.bind(this, req, errorCallback, callbackObj)
+    );
+
+    req.send(options);
+  },
+
+  signout: function() {
+    sessionStorage.removeItem('accessToken');
+  },
+
+  _handleSuccess: function(request, callback, callbackObj) {
+    var accessToken = request.xhr.getResponseHeader('access-token');
+    sessionStorage.setItem('accessToken', accessToken);
+    callback.apply (callbackObj, [request.xhr.response]);
+  },
+
+  _handleError: function(request, callback, callbackObj, error) {
+    callback.apply (callbackObj, [request.xhr.response]);
+  },
+
+
+  _getQueryString: function(params) {
+      var queryParts = [];
+      var param;
+      var value;
+
+      for (param in params) {
+        value = params[param];
+        param = window.encodeURIComponent(param);
+
+        if (value !== null) {
+          param += '=' + window.encodeURIComponent(value);
+        }
+
+        queryParts.push(param);
+      }
+
+      return queryParts.join('&');
     },
 
-    signin: function(email, password, response, error) {
+    _getRequestUrl: function(url, params) {
+      var queryString = this._getQueryString(params);
+
+      if (queryString) {
+        return url + '?' + queryString;
+      }
+
+      return url;
     }
-  });
-})();
+});
 </script>

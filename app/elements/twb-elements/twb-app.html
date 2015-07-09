@@ -8,37 +8,52 @@
     :host {
       @apply(--layout-vertical);
     }
+
+    .right paper-dropdown-overlay {
+      left: auto;
+      right: 0;
+    }
+
+    #periodBtn span {
+      text-transform: none;
+    }
+
+    paper-dropdown-menu paper-menu paper-item {
+      cursor: pointer;
+    }
+
   </style>
   <link rel="stylesheet" href="twb-app.css">
 
   <template>
 
+    <twb-api id="api"></twb-api>
     <iron-ajax auto handleAs="json" url="/components/twb-elements/sites.json" response="{{sites}}"></iron-ajax>
-    <iron-ajax id="signout-ajax" handleAs="json" url="/users/sign_out.json" method="DELETE" on-core-response="handleSignoutResponse"></iron-ajax>
 
     <paper-toolbar>
-      <paper-icon-button icon="arrow-back" class="{{selected=='sites' ? 'hide' : 'show'}}" on-tap="back"></paper-icon-button>
-      <paper-dropdown-menu label="This month">
-        <paper-dropdown class="dropdown">
-          <paper-menu class="menu">
-            <paper-item label="item1">This month</paper-item>
-            <paper-item label="item2">This week</paper-item>
-            <paper-item label="item3">This day</paper-item>
-            <paper-item label="item4">Custom...</paper-item>
+      <paper-icon-button icon="arrow-back" class="hide" on-tap="back"></paper-icon-button>
+      <div>
+        <paper-button id="periodBtn" on-tap="periodBtnTapped"><span>This month</span></paper-button>
+        <paper-dropdown-menu id="periodDropdown">
+          <paper-menu selected="{{currentPeriod}}">
+            <paper-item on-tap="periodTapped" data-period="month">This&nbsp;month</paper-item>
+            <paper-item on-tap="periodTapped" data-period="week">This week</paper-item>
+            <paper-item on-tap="periodTapped" data-period="day">This day</paper-item>
+            <paper-item on-tap="periodTapped" data-period="custom">Custom...</paper-item>
           </paper-menu>
-        </paper-dropdown>
-      </paper-dropdown-menu>
+        </paper-dropdown-menu>
+      </div>
       <div flex></div>
-      <paper-icon-button icon="add"></paper-icon-button>
-      <paper-icon-button icon="search"></paper-icon-button>
-      <paper-menu-button>
-        <paper-icon-button icon="more-vert"></paper-icon-button>
-        <paper-dropdown class="dropdown" halign="right">
+      <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
+      <paper-icon-button icon="search" on-tap="filterTapped"></paper-icon-button>
+      <div>
+        <paper-icon-button icon="more-vert" on-tap="moreTapped"></paper-icon-button>
+        <paper-dropdown-menu id="moreDropdown" class="right">
           <paper-menu class="menu">
             <paper-item on-tap="signoutTapped">Logout</paper-item>
           </paper-menu>
-        </paper-dropdown>
-      </paper-menu-button>
+        </paper-dropdown-menu>
+      </div>
     </paper-toolbar>
 
     <neon-animated-pages id="pages" flex selected="{{selected}}" transitions="cross-fade-all hero-transition">
@@ -71,12 +86,32 @@
       this.selected = "sites";
     },
 
-    signoutTapped: function() {
-      var ajax = this.$["signout-ajax"];
-      ajax.go();
+    periodBtnTapped: function() {
+      var dropdown = this.$.periodDropdown;
+      dropdown.open();
     },
 
-    handleSignoutResponse: function() {
+    periodTapped: function(e) {
+      // TODO
+      alert('todo' + e.currentTarget.dataset.period);
+    },
+
+    addTapped: function() {
+      alert('Todo');
+    },
+
+    filterTapped: function() {
+      alert('todo filter');
+    },
+
+    moreTapped: function() {
+      var dropdown = this.$.moreDropdown;
+      dropdown.open();
+    },
+
+
+    signoutTapped: function() {
+      this.$.api.signout();
       this.fire('signedout');
     }
 

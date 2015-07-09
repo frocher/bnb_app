@@ -9,6 +9,7 @@
   <template>
 
     <twb-user id="currentUser"></twb-user>
+    <twb-api id="api"></twb-api>
 
     <iron-ajax id="signin-ajax"
         url="/auth/sign_in"
@@ -26,47 +27,53 @@
 
 
     <more-route-selector selectedParams="{{params}}">
-      <neon-animated-pages id="pages" entry-animation="slide-from-right-animation" exit-animation="slide-left-animation">
-        <twb-auth-form id="signin-form" name="signin" route="signin" title="Sign in" buttons="{{signinButtons}}">
+      <neon-animated-pages id="pages" class="flex" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
+        <neon-animatable route="signin">
+          <twb-auth-form id="signin-form" name="signin" title="Sign in" buttons="{{signinButtons}}">
 
-          <paper-input id="signin-email" label="E-mail" type="email" value="{{params.email}}">
-          </paper-input>
+            <paper-input id="signin-email" label="E-mail" type="email" value="{{params.email}}">
+            </paper-input>
 
-          <paper-input id="signin-password" label="Password" autocomplete="off" type="password" value="{{params.password}}">
-          </paper-input>
+            <paper-input id="signin-password" label="Password" autocomplete="off" type="password" value="{{params.password}}">
+            </paper-input>
 
-          <paper-checkbox class="colored" checked="{{params.rememberMe}}">remember me</paper-checkbox>
+            <paper-checkbox class="colored" checked="{{params.rememberMe}}">remember me</paper-checkbox>
 
-          <div class="actions">
-            <paper-button class="colored" on-tap="signinSubmitTapped">Log in</paper-button>
-          </div>
-        </twb-auth-form>
+            <div class="actions">
+              <paper-button class="colored" on-tap="signinSubmitTapped">Log in</paper-button>
+            </div>
+          </twb-auth-form>
+        </neon-animatable>
+  
+        <neon-animatable route="signup">
+          <twb-auth-form id="signup-form" name="signup" title="Sign up" buttons="{{signupButtons}}">
 
-        <twb-auth-form id="signup-form" name="signup" route="signup" title="Sign up" buttons="{{signupButtons}}">
+            <paper-input id="signup-name" autofocus="autofocus" label="Full name" type="text" value="{{params.name}}">
+            </paper-input>
 
-          <paper-input id="signup-name" autofocus="autofocus" label="Full name" type="text" value="{{params.name}}">
-          </paper-input>
+            <paper-input id="signup-email" label="E-mail" type="email" value="{{params.email}}">
+            </paper-input>
 
-          <paper-input id="signup-email" label="E-mail" type="email" value="{{params.email}}">
-          </paper-input>
+            <paper-input id="signup-password" label="Password" autocomplete="off" type="password" value="{{params.password}}">
+            </paper-input>
 
-          <paper-input id="signup-password" label="Password" autocomplete="off" type="password" value="{{params.password}}">
-          </paper-input>
+            <paper-input id="signup-password_confirmation" label="Retype password" autocomplete="off" type="password" value="{{params.password_confirmation}}">
+            </paper-input>
 
-          <paper-input id="signup-password_confirmation" label="Retype password" autocomplete="off" type="password" value="{{params.password_confirmation}}">
-          </paper-input>
-
-          <div class="actions">
-            <paper-button class="colored" on-tap="signupSubmitTapped">Sign me up</paper-button>
-          </div>
-        </twb-auth-form>
-
-        <twb-forgot-password name="forgot" route="forgot"></twb-forgot-password>
-
-        <section name="editPassword" route="editPassword">
+            <div class="actions">
+              <paper-button class="colored" on-tap="signupSubmitTapped">Sign me up</paper-button>
+            </div>
+          </twb-auth-form>
+        </neon-animatable>
+  
+        <neon-animatable route="forgot">
+          <twb-forgot-password name="forgot"></twb-forgot-password>
+        </neon-animatable>
+  
+        <neon-animatable route="editPassword">
           <twb-edit-password></twb-edit-password>
-        </section>
-
+        </neon-animatable>
+  
       </neon-animated-pages>  
     </more-route-selector>
 
@@ -92,20 +99,23 @@
     },
 
     signinSubmitTapped: function(event, detail, sender) {
-      var ajax = this.$["signin-ajax"];
-      ajax.params = this.params;
-      ajax.generateRequest();
+      var api = this.$.api;
+      api.signin(this.params, this.handleSigninResponse, this.handleSigninError, this);
+
+      //var ajax = this.$["signin-ajax"];
+      //ajax.params = this.params;
+      //ajax.generateRequest();
     },
 
-    handleSigninResponse: function(event, response) {
-      var token = response.xhr.getResponseHeader('access-token');
-      this.initUser(response.response.data, token);
+    handleSigninResponse: function(data) {
+      this.initUser(data);
       this.fire('signedin');
+
+      this.params.password = "";
     },
 
-    handleSigninError: function(event, error) {
-      var errorObject = error.request.xhr.response;
-      this.showToast(errorObject.errors[0]);
+    handleSigninError: function(error) {
+      this.showToast(error.errors[0]);
     },
 
     signupSubmitTapped: function(event, detail, sender) {
