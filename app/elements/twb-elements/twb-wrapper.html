@@ -47,6 +47,9 @@
         if (!TwbService.isLogged()) {
           MoreRouting.navigateTo('/users/signin');
         }
+        else {
+          // TODO : load stores
+        }
       }
       
       this.$.pages.querySelector('twb-signin').addEventListener('signedin', function(e) {
