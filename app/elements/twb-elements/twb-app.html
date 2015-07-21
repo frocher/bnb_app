@@ -27,9 +27,6 @@
 
   <template>
 
-    <twb-api id="api"></twb-api>
-    <iron-ajax auto handleAs="json" url="/components/twb-elements/sites.json" response="{{sites}}"></iron-ajax>
-
     <paper-toolbar>
       <paper-icon-button icon="arrow-back" class="hide" on-tap="back"></paper-icon-button>
       <div>
@@ -112,7 +109,7 @@
 
 
     signoutTapped: function() {
-      this.$.api.signout();
+      TwbService.signout();
       this.fire('signedout');
     }
 

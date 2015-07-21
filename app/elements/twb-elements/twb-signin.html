@@ -1,4 +1,3 @@
-<link rel="import" href="twb-user.html">
 <link rel="import" href="twb-forgot-password.html">
 <link rel="import" href="twb-edit-password.html">
 
@@ -7,9 +6,6 @@
   </style>
 
   <template>
-
-    <twb-user id="currentUser"></twb-user>
-    <twb-api id="api"></twb-api>
 
     <more-route-selector selectedParams="{{params}}">
       <neon-animated-pages id="pages" class="flex" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
@@ -81,8 +77,7 @@
     },
 
     signinSubmitTapped: function(event, detail, sender) {
-      var api = this.$.api;
-      api.signin(this.params, this.handleSigninResponse, this.handleSigninError, this);
+      TwbService.signin(this.params, this.handleSigninResponse, this.handleSigninError, this);
     },
 
     handleSigninResponse: function(data) {
@@ -102,8 +97,7 @@
       this.$["signup-password"].invalid = false;
       this.$["signup-password_confirmation"].invalid = false;
 
-      var api = this.$.api;
-      api.signup(this.params, this.handleSignupResponse, this.handleSignupError, this);
+      TwbService.signup(this.params, this.handleSignupResponse, this.handleSignupError, this);
     },
 
     handleSignupResponse: function(data) {
@@ -137,14 +131,12 @@
       return full + '/' + MoreRouting.urlFor('home');
     },
 
-    initUser: function(response, token) {
-      var currentUser      = this.$.currentUser;
-      currentUser.userid   = response.id;
-      currentUser.username = response.name;
-      currentUser.email    = response.email;
-      currentUser.admin    = response.admin;
-      currentUser.url      = response.avatar_url;
-      currentUser.token    = token;
+    initUser: function(data) {
+      TwbUserStore.userId   = data.id;
+      TwbUserStore.username = response.name;
+      TwbUserStore.email    = response.email;
+      TwbUserStore.admin    = response.admin;
+      TwbUserStore.avatar   = response.avatar_url;
 
       this.params.password = "";
       this.params.password_confirmation = "";

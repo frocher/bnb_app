@@ -1,6 +1,5 @@
 <link rel="import" href="twb-app.html">
 <link rel="import" href="twb-signin.html">
-<link rel="import" href="twb-user.html">
 
 <dom-module id="twb-wrapper">
   <style>
@@ -17,9 +16,6 @@
     }
   </style>
   <template>
-
-    <twb-user id="currentUser"></twb-user>
-    <twb-api id="api"></twb-api>
 
     <more-route-selector>
       <neon-animated-pages id="pages" class="pages" transitions="cross-fade-all">
@@ -48,8 +44,7 @@
       _this = this;
 
       if (!MoreRouting.isCurrentUrl("/users")) {
-        var api = this.$.api;
-        if (!api.isLogged()) {
+        if (!TwbService.isLogged()) {
           MoreRouting.navigateTo('/users/signin');
         }
       }
