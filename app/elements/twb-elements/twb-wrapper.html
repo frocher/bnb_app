@@ -48,21 +48,35 @@
           MoreRouting.navigateTo('/users/signin');
         }
         else {
-          // TODO : load stores
+          this.loadSites();
         }
       }
       
       this.$.pages.querySelector('twb-signin').addEventListener('signedin', function(e) {
+        this.loadSites();
         MoreRouting.navigateTo('home');
       });
 
       this.$.pages.querySelector('twb-signin').addEventListener('signedup', function(e) {
+        this.loadSites();
         MoreRouting.navigateTo('home');
       });
 
       this.$.pages.querySelector('twb-app').addEventListener('signedout', function(e) {
         MoreRouting.navigateTo('/users/signin');
       });
+    },
+
+    loadSites: function() {
+      TwbService.loadSites({}, this.handleLoadSitesResponse, this.handleLoadSitesError, this);
+    },
+
+    handleLoadSitesResponse: function(data) {
+      TwbSiteStore.sites = data;
+    },
+
+    handleLoadSitesError: function(error) {
+      this.showToast(error.errors[0]);
     },
 
     handleMessage: function(e) {
