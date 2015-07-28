@@ -153,10 +153,8 @@ gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
 // Watch Files For Changes & Reload
 gulp.task('serve', ['styles', 'elements'], function () {
-  var proxyOptionsApi = url.parse('http://localhost:3000/api');
+  var proxyOptionsApi = url.parse('http://localhost:3000');
   proxyOptionsApi.route = '/api';
-  var proxyOptionsAuth = url.parse('http://localhost:3000/auth');
-  proxyOptionsAuth.route = '/auth';
 
   browserSync({
     notify: false,
@@ -167,7 +165,7 @@ gulp.task('serve', ['styles', 'elements'], function () {
     // https: true,
     server: {
       baseDir: ['.tmp', 'app'],
-      middleware: [proxy(proxyOptionsApi), proxy(proxyOptionsAuth)],
+      middleware: [proxy(proxyOptionsApi)],
       routes: {
         '/bower_components': 'bower_components'
       }
