@@ -41,7 +41,7 @@ TwbService._generateOptions = function _generateOptions(url, method, params, hea
   var options = {
     url: TwbService._getRequestUrl(url, params),
     method: method,
-    headers: TwbService._getRequestHeaders(headers),
+    headers: {'access-token' : TwbService._getAccessToken()} || TwbService._getRequestHeaders(headers),
     body: "",
     async: true,
     handleAs: "json",
@@ -52,18 +52,18 @@ TwbService._generateOptions = function _generateOptions(url, method, params, hea
 
 TwbService._sendRequest = function _sendRequest(options, successCallback, errorCallback, callbackObj) {
   var req = document.createElement('iron-request');
-  req.completes.then(
-    TwbService._handleSuccess.bind(this, req, successCallback, callbackObj)
-  ).catch(
-    TwbService._handleError.bind(this, req, errorCallback, callbackObj)
-  );
-
+  _this = this;
+  req.completes.then( function(result) {
+    _this._handleSuccess(req, successCallback, callbackObj);
+  }, function(err) {
+    _this._handleSuccess(req, errorCallback, callbackObj);
+  });
   req.send(options);
 };
 
 TwbService._handleSuccess = function _handleSuccess(request, callback, callbackObj) {
   var accessToken = request.xhr.getResponseHeader('access-token');
-  sessionStorage.setItem('accessToken', accessToken);
+  TwbService._setAccessToken(accessToken);
   callback.apply (callbackObj, [request.xhr.response]);
 };
 
@@ -111,6 +111,14 @@ TwbService._getRequestUrl = function _getRequestUrl(url, params) {
   }
 
   return url;
+};
+
+TwbService._getAccessToken = function _getAccessToken() {
+  return sessionStorage.getItem('accessToken');
+};
+
+TwbService._setAccessToken = function _setAccessToken(token) {
+  sessionStorage.setItem('accessToken', token);
 };
 
 })(window);

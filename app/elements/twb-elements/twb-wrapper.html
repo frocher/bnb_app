@@ -53,12 +53,12 @@
       }
       
       this.$.pages.querySelector('twb-signin').addEventListener('signedin', function(e) {
-        this.loadSites();
+        _this.loadSites();
         MoreRouting.navigateTo('home');
       });
 
       this.$.pages.querySelector('twb-signin').addEventListener('signedup', function(e) {
-        this.loadSites();
+        _this.loadSites();
         MoreRouting.navigateTo('home');
       });
 

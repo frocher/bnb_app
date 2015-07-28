@@ -133,10 +133,10 @@
 
     initUser: function(data) {
       TwbUserStore.userId   = data.id;
-      TwbUserStore.username = response.name;
-      TwbUserStore.email    = response.email;
-      TwbUserStore.admin    = response.admin;
-      TwbUserStore.avatar   = response.avatar_url;
+      TwbUserStore.username = data.name;
+      TwbUserStore.email    = data.email;
+      TwbUserStore.admin    = data.admin;
+      TwbUserStore.avatar   = data.avatar_url;
 
       this.params.password = "";
       this.params.password_confirmation = "";
