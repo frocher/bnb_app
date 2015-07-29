@@ -1,0 +1,83 @@
+<dom-module id="twb-sites-toolbar">
+  <style>
+    .right paper-dropdown-overlay {
+      left: auto;
+      right: 0;
+    }
+
+    #periodBtn span {
+      text-transform: none;
+    }
+
+
+    .dropdown-content paper-item {
+      cursor: pointer;
+    }
+  </style>
+  <template>
+    <paper-toolbar>
+      <paper-menu-button>
+        <paper-button id="periodBtn" on-tap="periodBtnTapped" class="dropdown-trigger">
+          <span id="periodSpan">This month</span>
+          <iron-icon icon="arrow-drop-down"></iron-icon>
+        </paper-button>
+        <paper-menu selected="{{currentPeriod}}" class="dropdown-content">
+          <paper-item on-tap="periodTapped" data-period="month">This&nbsp;month</paper-item>
+          <paper-item on-tap="periodTapped" data-period="week">This week</paper-item>
+          <paper-item on-tap="periodTapped" data-period="day">This day</paper-item>
+          <paper-item on-tap="periodTapped" data-period="custom">Custom...</paper-item>
+        </paper-menu>
+      </paper-menu-button>
+      <div class="flex"></div>
+      <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
+      <paper-icon-button icon="search" on-tap="filterTapped"></paper-icon-button>
+      <paper-menu-button>
+        <paper-icon-button icon="more-vert" on-tap="moreTapped" class="dropdown-trigger"></paper-icon-button>
+        <paper-menu class="dropdown-content">
+          <paper-item on-tap="signoutTapped">Logout</paper-item>
+        </paper-menu>
+      </paper-menu-button>
+    </paper-toolbar>
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+    is: 'twb-sites-toolbar',
+
+        periodBtnTapped: function() {
+      var dropdown = this.$.periodDropdown;
+      dropdown.open();
+    },
+
+    periodTapped: function(e) {
+      // TODO
+      this.$.periodSpan.innerHTML = e.currentTarget.innerHTML;
+      alert('todo ' + e.currentTarget.dataset.period);
+    },
+
+    addTapped: function() {
+      MoreRouting.navigateTo('/add-site');
+    },
+
+    filterTapped: function() {
+      alert('todo filter');
+    },
+
+    moreTapped: function() {
+      var dropdown = this.$.moreDropdown;
+      dropdown.open();
+    },
+
+    signoutTapped: function() {
+      TwbService.signout();
+      this.fire('signedout');
+    }
+  });
+
+})();
+</script>
+

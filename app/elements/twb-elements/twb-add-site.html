@@ -1,0 +1,31 @@
+<dom-module id="twb-add-site">
+  <style>
+    :host {
+      @apply(--layout-vertical);
+    }
+
+    #card {
+      margin: 16px;
+      padding: 10px 22px 10px 22px;
+      background-color: #fff;
+    }
+
+  </style>
+  <template>
+    <paper-material id="card">
+      <h2>Add new site</h2>
+      <content></content>
+    </paper-material>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+    is: 'twb-add-site'
+  });
+
+})();
+</script>
+

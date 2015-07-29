@@ -4,7 +4,11 @@
 
 
 <more-route name="splash" path="/loading"></more-route>
-<more-route name="home" path="/"></more-route>
+<more-route name="home" path="/">
+  <more-route name="sites" path="/sites"></more-route>
+  <more-route name="site" path="/site"></more-route>
+  <more-route name="add-site" path="/add-site"></more-route>
+</more-route>
 <more-route name="users" path="/users">
   <more-route name="signin" path="/signin"></more-route>
   <more-route name="signup" path="/signup"></more-route>

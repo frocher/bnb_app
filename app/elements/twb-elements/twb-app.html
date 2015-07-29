@@ -1,5 +1,7 @@
 <link rel="import" href="twb-sites.html">
 <link rel="import" href="twb-site.html">
+<link rel="import" href="twb-sites-toolbar.html">
+<link rel="import" href="twb-add-site.html">
 
 <dom-module id="twb-app">
   <style>
@@ -7,57 +9,31 @@
       @apply(--layout-vertical);
     }
 
-    .right paper-dropdown-overlay {
-      left: auto;
-      right: 0;
-    }
-
-    #periodBtn span {
-      text-transform: none;
-    }
-
-    paper-dropdown-menu paper-menu paper-item {
-      cursor: pointer;
-    }
 
   </style>
   <link rel="stylesheet" href="twb-app.css">
 
   <template>
 
-    <paper-toolbar>
-      <paper-icon-button icon="arrow-back" class="hide" on-tap="back"></paper-icon-button>
-      <div>
-        <paper-button id="periodBtn" on-tap="periodBtnTapped"><span id="periodSpan">This month</span></paper-button>
-        <paper-dropdown-menu id="periodDropdown">
-          <paper-menu selected="{{currentPeriod}}">
-            <paper-item on-tap="periodTapped" data-period="month">This&nbsp;month</paper-item>
-            <paper-item on-tap="periodTapped" data-period="week">This week</paper-item>
-            <paper-item on-tap="periodTapped" data-period="day">This day</paper-item>
-            <paper-item on-tap="periodTapped" data-period="custom">Custom...</paper-item>
-          </paper-menu>
-        </paper-dropdown-menu>
-      </div>
-      <div flex></div>
-      <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
-      <paper-icon-button icon="search" on-tap="filterTapped"></paper-icon-button>
-      <div>
-        <paper-icon-button icon="more-vert" on-tap="moreTapped"></paper-icon-button>
-        <paper-dropdown-menu id="moreDropdown" class="right">
-          <paper-menu class="menu">
-            <paper-item on-tap="signoutTapped">Logout</paper-item>
-          </paper-menu>
-        </paper-dropdown-menu>
-      </div>
-    </paper-toolbar>
+    <more-route-selector>
+      <neon-animated-pages id="tools">
+        <twb-sites-toolbar route="home"></twb-sites-toolbar>
+        <paper-toolbar route="add-site">
+          <paper-icon-button icon="close" on-tap="back"></paper-icon-button>
+          <span class="title">New site</span>
+          <span class="flex"></span>
+          <paper-button>Create</paper-button>
+        </paper-toolbar>
+      </neon-animated-pages>
+    </more-route-selector>
 
-    <neon-animated-pages id="pages" flex selected="{{selected}}" transitions="cross-fade-all hero-transition">
-      <twb-sites name="sites" sites="{{sites}}" site="{{site}}" on-core-activate="siteSelect">
-      </twb-sites>
-
-      <twb-site name="site" site="{{site}}"></twb-site>
-
-    </neon-animated-pages>
+    <more-route-selector>
+      <neon-animated-pages id="pages" flex transitions="cross-fade-all hero-transition">
+        <twb-sites name="sites" sites="{{sites}}" site="{{site}}" on-core-activate="siteSelect" route="home"></twb-sites>
+        <twb-site name="site" site="{{site}}" route="site"></twb-site>
+        <twb-add-site name="addSite" route="add-site"></twb-add-site>
+      </neon-animated-pages>
+    </more-route-selector>
 
 
   </template>
@@ -70,46 +46,15 @@
 
     is: 'twb-app', 
 
-    selected : "sites",
 
     siteSelect: function() {
-      this.selected = "site";
     },
 
     back: function() {
       //this.site = null;
-      this.selected = "sites";
-    },
-
-    periodBtnTapped: function() {
-      var dropdown = this.$.periodDropdown;
-      dropdown.open();
-    },
-
-    periodTapped: function(e) {
-      // TODO
-      this.$.periodSpan.innerHTML = e.currentTarget.innerHTML;
-      alert('todo' + e.currentTarget.dataset.period);
-    },
-
-    addTapped: function() {
-      alert('Todo');
-    },
-
-    filterTapped: function() {
-      alert('todo filter');
-    },
-
-    moreTapped: function() {
-      var dropdown = this.$.moreDropdown;
-      dropdown.open();
-    },
-
-
-    signoutTapped: function() {
-      TwbService.signout();
-      this.fire('signedout');
+      MoreRouting.navigateTo('/');
     }
+
 
 
   });
