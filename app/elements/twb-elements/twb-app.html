@@ -1,6 +1,9 @@
+<link rel="import" href="twb-signin.html">
+<link rel="import" href="twb-signup.html">
+<link rel="import" href="twb-forgot-password.html">
+<link rel="import" href="twb-edit-password.html">
 <link rel="import" href="twb-sites.html">
 <link rel="import" href="twb-site.html">
-<link rel="import" href="twb-sites-toolbar.html">
 <link rel="import" href="twb-add-site.html">
 
 <dom-module id="twb-app">
@@ -9,32 +12,31 @@
       @apply(--layout-vertical);
     }
 
+    #pages {
+      @apply(--layout-fit);
+    }
 
+    .page {
+      @apply(--layout-fit);
+    }
   </style>
-  <link rel="stylesheet" href="twb-app.css">
 
   <template>
 
-    <more-route-selector>
-      <neon-animated-pages id="tools">
-        <twb-sites-toolbar route="home"></twb-sites-toolbar>
-        <paper-toolbar route="add-site">
-          <paper-icon-button icon="close" on-tap="back"></paper-icon-button>
-          <span class="title">New site</span>
-          <span class="flex"></span>
-          <paper-button>Create</paper-button>
-        </paper-toolbar>
-      </neon-animated-pages>
-    </more-route-selector>
+    <more-route-selector id="routeSelector">
+      <iron-pages id="pages">
+        <section name="splash" class="page" route="splash"></section>
+        <twb-signin name="signin" class="page" route="signin"></twb-signin>
+        <twb-signup name="signup" class="page" route="signup"></twb-signup>
+        <twb-forgot-password class="page" name="forgot" route="forgot"></twb-forgot-password>
+        <twb-edit-password class="page" route="editPassword"></twb-edit-password>
 
-    <more-route-selector>
-      <neon-animated-pages id="pages" flex transitions="cross-fade-all hero-transition">
-        <twb-sites name="sites" sites="{{sites}}" site="{{site}}" on-core-activate="siteSelect" route="home"></twb-sites>
-        <twb-site name="site" site="{{site}}" route="site"></twb-site>
-        <twb-add-site name="addSite" route="add-site"></twb-add-site>
-      </neon-animated-pages>
+        <twb-sites name="sites" class="page" sites="{{sites}}" site="{{site}}" on-activate="siteSelect" route="home"></twb-sites>
+        <twb-site name="site" class="page" ite="{{site}}" route="site"></twb-site>
+        <twb-add-site name="addSite" class="page" route="add-site"></twb-add-site>
+      </iron-pages>
     </more-route-selector>
-
+    <paper-toast id="message-toast"></paper-toast>
 
   </template>
 </dom-module>
@@ -46,13 +48,67 @@
 
     is: 'twb-app', 
 
+    listeners: {
+      message: 'handleMessage',
+      signedout : 'handleSignedOut'
+    },
+
+    ready: function() {
+      var _this = this;
+
+      if (TwbService.isLogged() && TwbSiteStore.sites === null) {
+        this.loadSites();
+      }
+      
+      this.$.routeSelector.addEventListener('more-route-change', function(e) {
+        var path = e.detail.newPath;
+        if (_this._isPathProtected(path) && !TwbService.isLogged()) {
+          MoreRouting.navigateTo('signin');
+        }
+      });
+
+      this.$.pages.querySelector('twb-signin').addEventListener('signedin', function(e) {
+        _this.loadSites();
+        MoreRouting.navigateTo('home');
+      });
+
+    },
+
+    loadSites: function() {
+      TwbService.loadSites({}, this.handleLoadSitesResponse, this.handleLoadSitesError, this);
+    },
+
+    handleLoadSitesResponse: function(data) {
+      TwbSiteStore.sites = data;
+    },
+
+    handleLoadSitesError: function(error) {
+      this.showToast(error.errors[0]);
+    },
+
+    handleMessage: function(e) {
+      this.showToast(e.detail.message);
+    },
+
+    handleSignedOut: function(e) {
+      // TODO : invalidate credentials
+      MoreRouting.navigateTo('/users/signin');
+    },
 
     siteSelect: function() {
     },
 
-    back: function() {
-      //this.site = null;
-      MoreRouting.navigateTo('/');
+    showToast: function(message) {
+      var toast = this.$["message-toast"];
+      toast.text = message;
+      toast.show();
+    },
+
+    _isPathProtected: function(path) {
+      if (path !== null) {
+        return path !== "/signin" && path !== "/signup" && path !== "/forgot" && path !== "/editPassword";
+      }
+      return false;
     }
 
 

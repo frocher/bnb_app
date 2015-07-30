@@ -1,62 +1,22 @@
-<link rel="import" href="twb-forgot-password.html">
-<link rel="import" href="twb-edit-password.html">
-
 <dom-module id="twb-signin">
   <style>
   </style>
 
   <template>
+    <twb-auth-form id="signin-form" name="signin" title="Sign in" buttons="{{signinButtons}}">
 
-    <more-route-selector selectedParams="{{params}}">
-      <neon-animated-pages id="pages" class="flex" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-        <neon-animatable route="signin">
-          <twb-auth-form id="signin-form" name="signin" title="Sign in" buttons="{{signinButtons}}">
+      <paper-input id="signin-email" label="E-mail" type="email" value="{{params.email}}">
+      </paper-input>
 
-            <paper-input id="signin-email" label="E-mail" type="email" value="{{params.email}}">
-            </paper-input>
+      <paper-input id="signin-password" label="Password" autocomplete="off" type="password" value="{{params.password}}">
+      </paper-input>
 
-            <paper-input id="signin-password" label="Password" autocomplete="off" type="password" value="{{params.password}}">
-            </paper-input>
+      <paper-checkbox class="colored" checked="{{params.rememberMe}}">remember me</paper-checkbox>
 
-            <paper-checkbox class="colored" checked="{{params.rememberMe}}">remember me</paper-checkbox>
-
-            <div class="actions">
-              <paper-button class="colored" on-tap="signinSubmitTapped">Log in</paper-button>
-            </div>
-          </twb-auth-form>
-        </neon-animatable>
-  
-        <neon-animatable route="signup">
-          <twb-auth-form id="signup-form" name="signup" title="Sign up" buttons="{{signupButtons}}">
-
-            <paper-input id="signup-name" autofocus="autofocus" label="Full name" type="text" value="{{params.name}}">
-            </paper-input>
-
-            <paper-input id="signup-email" label="E-mail" type="email" value="{{params.email}}">
-            </paper-input>
-
-            <paper-input id="signup-password" label="Password" autocomplete="off" type="password" value="{{params.password}}">
-            </paper-input>
-
-            <paper-input id="signup-password_confirmation" label="Retype password" autocomplete="off" type="password" value="{{params.password_confirmation}}">
-            </paper-input>
-
-            <div class="actions">
-              <paper-button class="colored" on-tap="signupSubmitTapped">Sign me up</paper-button>
-            </div>
-          </twb-auth-form>
-        </neon-animatable>
-  
-        <neon-animatable route="forgot">
-          <twb-forgot-password name="forgot"></twb-forgot-password>
-        </neon-animatable>
-  
-        <neon-animatable route="editPassword">
-          <twb-edit-password></twb-edit-password>
-        </neon-animatable>
-  
-      </neon-animated-pages>  
-    </more-route-selector>
+      <div class="actions">
+        <paper-button class="colored" on-tap="signinSubmitTapped">Log in</paper-button>
+      </div>
+    </twb-auth-form>
   </template>
 </dom-module>
 
@@ -68,12 +28,8 @@
     is: 'twb-signin', 
 
     ready: function() {
-      this.errors = {};
-    
-      this.params = { name:"", email:"", password:"", password_confirmation: "", confirm_success_url: this.homeUrl() };
-
+      this.params = { name:"", email:"", password:"" };
       this.signinButtons = [{text:'Sign up', path:'signup'}, {text:'Forgot your password', path:'forgot'}];
-      this.signupButtons = [{text:'Sign in', path:'signin'}, {text:'Forgot your password', path:'forgot'}];
     },
 
     signinSubmitTapped: function(event, detail, sender) {
@@ -91,44 +47,8 @@
       this.showToast(error.errors[0]);
     },
 
-    signupSubmitTapped: function(event, detail, sender) {
-      this.$["signup-name"].invalid = false;
-      this.$["signup-email"].invalid = false;
-      this.$["signup-password"].invalid = false;
-      this.$["signup-password_confirmation"].invalid = false;
-
-      TwbService.signup(this.params, this.handleSignupResponse, this.handleSignupError, this);
-    },
-
-    handleSignupResponse: function(data) {
-      this.showToast("Sign up successful. An activation email has been sent to you.");
-    },
-
-    handleSignupError: function(error) {
-      if (error === null) {
-        this.showToast("Error : can't sign up");
-      }
-      else {
-        var errors = error.errors;
-        for (var prop in errors) {
-          if (errors.hasOwnProperty(prop)) {
-            var objId = "signup-" + prop;
-            if (this.$[objId] !== undefined) {
-              this.$[objId].invalid = true;
-              this.$[objId].errorMessage = errors[prop][0];
-            }
-          }
-        }       
-      }
-    },
-
     showToast: function(message) {
       this.fire('message', {message: message});
-    },
-
-    homeUrl: function() {
-      var full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
-      return full + '/' + MoreRouting.urlFor('home');
     },
 
     initUser: function(data) {

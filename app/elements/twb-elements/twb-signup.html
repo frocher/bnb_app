@@ -1,0 +1,83 @@
+<dom-module id="twb-signup">
+  <style>
+  </style>
+
+  <template>
+
+    <twb-auth-form id="signup-form" name="signup" title="Sign up" buttons="{{signupButtons}}">
+
+      <paper-input id="signup-name" autofocus="autofocus" label="Full name" type="text" value="{{params.name}}">
+      </paper-input>
+
+      <paper-input id="signup-email" label="E-mail" type="email" value="{{params.email}}">
+      </paper-input>
+
+      <paper-input id="signup-password" label="Password" autocomplete="off" type="password" value="{{params.password}}">
+      </paper-input>
+
+      <paper-input id="signup-password_confirmation" label="Retype password" autocomplete="off" type="password" value="{{params.password_confirmation}}">
+      </paper-input>
+
+      <div class="actions">
+        <paper-button class="colored" on-tap="signupSubmitTapped">Sign me up</paper-button>
+      </div>
+    </twb-auth-form>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+
+    is: 'twb-signup',
+
+    ready: function() {
+      this.params = { name:"", email:"", password:"", password_confirmation: "", confirm_success_url: this.homeUrl() };
+      this.signupButtons = [{text:'Sign in', path:'signin'}, {text:'Forgot your password', path:'forgot'}];
+    },
+
+    signupSubmitTapped: function(event, detail, sender) {
+      this.$["signup-name"].invalid = false;
+      this.$["signup-email"].invalid = false;
+      this.$["signup-password"].invalid = false;
+      this.$["signup-password_confirmation"].invalid = false;
+
+      TwbService.signup(this.params, this.handleSignupResponse, this.handleSignupError, this);
+    },
+
+    handleSignupResponse: function(data) {
+      this.showToast("Sign up successful. An activation email has been sent to you.");
+    },
+
+    handleSignupError: function(error) {
+      if (error === null) {
+        this.showToast("Error : can't sign up");
+      }
+      else {
+        var errors = error.errors;
+        for (var prop in errors) {
+          if (errors.hasOwnProperty(prop)) {
+            var objId = "signup-" + prop;
+            if (this.$[objId] !== undefined) {
+              this.$[objId].invalid = true;
+              this.$[objId].errorMessage = errors[prop][0];
+            }
+          }
+        }       
+      }
+    },
+
+    showToast: function(message) {
+      this.fire('message', {message: message});
+    },
+
+    homeUrl: function() {
+      var full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+      return full + '/' + MoreRouting.urlFor('home');
+    }
+  });
+
+})();
+
+</script>

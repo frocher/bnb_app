@@ -4,18 +4,24 @@
       @apply(--layout-vertical);
     }
 
-    #card {
-      margin: 16px;
+    #content {
       padding: 10px 22px 10px 22px;
       background-color: #fff;
     }
 
   </style>
   <template>
-    <paper-material id="card">
-      <h2>Add new site</h2>
-      <content></content>
-    </paper-material>
+    <paper-header-panel class="flex">
+      <paper-toolbar>
+        <paper-icon-button icon="close" on-tap="closeTapped"></paper-icon-button>
+        <span class="title">New site</span>
+        <span class="flex"></span>
+        <paper-button on-tap="createTapped">Create</paper-button>
+      </paper-toolbar>
+      <div id="content" class="fit">
+        <h2>hello</h2>
+      </div>
+    </paper-header-panel>
   </template>
 </dom-module>
 
@@ -23,7 +29,20 @@
 (function() {
 
   Polymer({
-    is: 'twb-add-site'
+    is: 'twb-add-site',
+
+    closeTapped: function() {
+      //this.site = null;
+      MoreRouting.navigateTo('/');
+    },
+
+    createTapped: function() {
+      //this.site = null;
+      alert('todo');
+      MoreRouting.navigateTo('/');
+    },
+
+
   });
 
 })();

@@ -58,7 +58,7 @@ TwbService._getCredentials = function _getCredentials() {
 
 TwbService._sendRequest = function _sendRequest(options, successCallback, errorCallback, callbackObj) {
   var req = document.createElement('iron-request');
-  _this = this;
+  var _this = this;
   req.completes.then( function(result) {
     _this._handleSuccess(req, successCallback, callbackObj);
   }, function(err) {

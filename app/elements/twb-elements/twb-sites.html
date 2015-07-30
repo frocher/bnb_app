@@ -42,22 +42,64 @@
     .label-danger {
     background-color: #d9534f;
     }
+
+    #periodBtn span {
+      text-transform: none;
+    }
+
+
+    .dropdown-content paper-item {
+      cursor: pointer;
+    }
+
+    .content {
+      height:2000px;
+    }
+
   </style>
   <template>
+    <paper-header-panel class="flex">
+      <paper-toolbar>
+        <paper-menu-button>
+          <paper-button id="periodBtn" on-tap="periodBtnTapped" class="dropdown-trigger">
+            <span id="periodSpan">This month</span>
+            <iron-icon icon="arrow-drop-down"></iron-icon>
+          </paper-button>
+          <paper-menu selected="{{currentPeriod}}" class="dropdown-content">
+            <paper-item on-tap="periodTapped" data-period="month">This&nbsp;month</paper-item>
+            <paper-item on-tap="periodTapped" data-period="week">This week</paper-item>
+            <paper-item on-tap="periodTapped" data-period="day">This day</paper-item>
+            <paper-item on-tap="periodTapped" data-period="custom">Custom...</paper-item>
+          </paper-menu>
+        </paper-menu-button>
+        <div class="flex"></div>
+        <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
+        <paper-icon-button icon="search" on-tap="filterTapped"></paper-icon-button>
+        <paper-menu-button>
+          <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+          <paper-menu class="dropdown-content">
+            <paper-item on-tap="signoutTapped">Logout</paper-item>
+          </paper-menu>
+        </paper-menu-button>
+      </paper-toolbar>
+      <div class="content">
+        <h1>Hello</h1>
+        <iron-selector selected="{{selected}}" layout horizontal wrap>
+          <template repeat="{{item, i in sites}}">
+            <div class="site-item" hero-id="site-{{item.id}}" hero>
+              <img src="{{item.img_thumb}}"/>
+              <div style="text-align:center">
+                <span class="label label-success">{{item.upTime}}%</span>
+                <span class="label label-warning">{{item.responseTime}}ms</span>
+                <span class="label label-danger">{{item.speedIndex}}</span>
+              </div>
+            </div>
+          </template>
 
-    <iron-selector selected="{{selected}}" layout horizontal wrap>
-      <template repeat="{{item, i in sites}}">
-        <div class="site-item" hero-id="site-{{item.id}}" hero>
-          <img src="{{item.img_thumb}}"/>
-          <div style="text-align:center">
-            <span class="label label-success">{{item.upTime}}%</span>
-            <span class="label label-warning">{{item.responseTime}}ms</span>
-            <span class="label label-danger">{{item.speedIndex}}</span>
-          </div>
-        </div>
-      </template>
+        </iron-selector>
+      </div>
+    </paper-header-panel>
 
-    </iron-selector>
 
   </template>
 </dom-module>
@@ -65,6 +107,30 @@
 (function() {
   Polymer({
     is: 'twb-sites',
+
+    periodBtnTapped: function() {
+      var dropdown = this.$.periodDropdown;
+      dropdown.open();
+    },
+
+    periodTapped: function(e) {
+      // TODO
+      this.$.periodSpan.innerHTML = e.currentTarget.innerHTML;
+      alert('todo ' + e.currentTarget.dataset.period);
+    },
+
+    addTapped: function() {
+      MoreRouting.navigateTo('/add-site');
+    },
+
+    filterTapped: function() {
+      alert('todo filter');
+    },
+
+    signoutTapped: function() {
+      TwbService.signout();
+      this.fire('signedout');
+    },
 
     selectedChanged: function() {
       this.site = this.sites[this.selected];
