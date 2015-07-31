@@ -23,19 +23,17 @@
 
   <template>
 
-    <more-route-selector id="routeSelector">
-      <iron-pages id="pages">
-        <section name="splash" class="page" route="splash"></section>
-        <twb-signin name="signin" class="page" route="signin"></twb-signin>
-        <twb-signup name="signup" class="page" route="signup"></twb-signup>
-        <twb-forgot-password class="page" name="forgot" route="forgot"></twb-forgot-password>
-        <twb-edit-password class="page" route="editPassword"></twb-edit-password>
+    <iron-pages id="pages" attr-for-selected="data-route" selected="{{route}}">
+      <section             name="splash"       class="page" data-route="splash"></section>
+      <twb-signin          name="signin"       class="page" data-route="signin"></twb-signin>
+      <twb-signup          name="signup"       class="page" data-route="signup"></twb-signup>
+      <twb-forgot-password name="forgot"       class="page" data-route="forgot"></twb-forgot-password>
+      <twb-edit-password   name="editPassword" class="page" data-route="edit-password"></twb-edit-password>
+      <twb-sites           name="sites"        class="page" data-route="home"></twb-sites>
+      <twb-site            name="site"         class="page" data-route="site"></twb-site>
+      <twb-add-site        name="addSite"      class="page" data-route="add-site"></twb-add-site>
+    </iron-pages>
 
-        <twb-sites name="sites" class="page" sites="{{sites}}" site="{{site}}" on-activate="siteSelect" route="home"></twb-sites>
-        <twb-site name="site" class="page" ite="{{site}}" route="site"></twb-site>
-        <twb-add-site name="addSite" class="page" route="add-site"></twb-add-site>
-      </iron-pages>
-    </more-route-selector>
     <paper-toast id="message-toast"></paper-toast>
 
   </template>
@@ -56,20 +54,15 @@
     ready: function() {
       var _this = this;
 
+      this._initRoutes();
+
       if (TwbService.isLogged() && TwbSiteStore.sites === null) {
         this.loadSites();
       }
       
-      this.$.routeSelector.addEventListener('more-route-change', function(e) {
-        var path = e.detail.newPath;
-        if (_this._isPathProtected(path) && !TwbService.isLogged()) {
-          MoreRouting.navigateTo('signin');
-        }
-      });
-
       this.$.pages.querySelector('twb-signin').addEventListener('signedin', function(e) {
         _this.loadSites();
-        MoreRouting.navigateTo('home');
+        page('/');
       });
 
     },
@@ -92,7 +85,7 @@
 
     handleSignedOut: function(e) {
       // TODO : invalidate credentials
-      MoreRouting.navigateTo('/users/signin');
+      page('/signin');
     },
 
     siteSelect: function() {
@@ -102,6 +95,58 @@
       var toast = this.$["message-toast"];
       toast.text = message;
       toast.show();
+    },
+
+    _initRoutes: function() {
+      var _this = this;
+
+      page('/signin', function () {
+        _this.route = 'signin';
+      });
+
+      page('/signup', function () {
+        _this.route = 'signup';
+      });
+
+      page('/forgot', function () {
+        _this.route = 'forgot';
+      });
+
+      page('/editPassword', function () {
+        _this.route = 'editPassword';
+      });
+
+      page('/', function () {
+        if (!TwbService.isLogged()) {
+          page.redirect('/signin');
+        }
+        else {
+          _this.route = 'home';
+        }
+      });
+
+      page('/site/:id', function () {
+        if (!TwbService.isLogged()) {
+          page.redirect('/signin');
+        }
+        else {
+          // TODO : load site
+          _this.route = 'site';
+        }
+      });
+
+      page('/addsite', function () {
+        if (!TwbService.isLogged()) {
+          page.redirect('/signin');
+        }
+        else {
+          _this.route = 'addSite';
+        }
+      });
+
+      page({
+        hashbang: true
+      });
     },
 
     _isPathProtected: function(path) {

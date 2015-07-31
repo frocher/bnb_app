@@ -73,8 +73,7 @@
     },
 
     homeUrl: function() {
-      var full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
-      return full + '/' + MoreRouting.urlFor('home');
+      return TwbTools.getFullPath('home');
     }
   });
 
