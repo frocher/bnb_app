@@ -19,9 +19,21 @@
         <paper-button on-tap="createTapped">Create</paper-button>
       </paper-toolbar>
       <div id="content" class="fit">
-        <h2>hello</h2>
+        <paper-input id="name" label="Site name" value="{{params.name}}"></paper-input>
+        <paper-input id="url" label="URL" value="{{params.url}}"></paper-input>
+
+        <paper-dialog id="discardDlg" modal>
+          <p>Discard new site.</p>
+          <div class="buttons">
+            <paper-button dialog-dismiss>Cancel</paper-button>
+            <paper-button dialog-confirm autofocus on-tap="closePage">Discard</paper-button>
+          </div>
+        </paper-dialog>
+
       </div>
     </paper-header-panel>
+
+
   </template>
 </dom-module>
 
@@ -31,17 +43,62 @@
   Polymer({
     is: 'twb-add-site',
 
+    ready: function() {
+      this.clearFields();
+    },
+
     closeTapped: function() {
-      //this.site = null;
+      if (this.params.name !== '' || this.params.url !== '') {
+        this.$.discardDlg.open();
+      }
+      else {
+        this.closePage();
+      }
+
+    },
+
+    closePage: function() {
+      this.clearFields();
       page('/');
     },
 
     createTapped: function() {
-      //this.site = null;
-      alert('todo');
-      page('/');
+      this.$['name'].invalid = false;
+      this.$['url'].invalid = false;
+
+      TwbService.createSite(this.params, this.handleResponse, this.handleError, this);
     },
 
+    handleResponse: function(data) {
+      alert('todo');
+      this.closePage();
+    },
+
+    handleError: function(error) {
+      if (error === null) {
+        this.showToast("Error : can't create site");
+      }
+      else {
+        var errors = error.errors;
+        for (var prop in errors) {
+          if (errors.hasOwnProperty(prop)) {
+            var objId = prop;
+            if (this.$[objId] !== undefined) {
+              this.$[objId].invalid = true;
+              this.$[objId].errorMessage = errors[prop][0];
+            }
+          }
+        }       
+      }
+    },
+
+    showToast: function(message) {
+      this.fire('message', {message: message});
+    },
+
+    clearFields: function() {
+      this.params = { name:'', url:'' };      
+    }
 
   });
 

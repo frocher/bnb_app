@@ -5,10 +5,10 @@
   <template>
     <twb-auth-form id="signin-form" name="signin" title="Sign in" buttons="{{signinButtons}}">
 
-      <paper-input id="signin-email" label="E-mail" type="email" value="{{params.email}}">
+      <paper-input label="E-mail" type="email" value="{{params.email}}">
       </paper-input>
 
-      <paper-input id="signin-password" label="Password" autocomplete="off" type="password" value="{{params.password}}">
+      <paper-input label="Password" autocomplete="off" type="password" value="{{params.password}}">
       </paper-input>
 
       <paper-checkbox class="colored" checked="{{params.rememberMe}}">remember me</paper-checkbox>
@@ -24,7 +24,6 @@
 (function() {
 
   Polymer({
-
     is: 'twb-signin', 
 
     ready: function() {

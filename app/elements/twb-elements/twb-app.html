@@ -56,8 +56,8 @@
 
       this._initRoutes();
 
-      if (TwbService.isLogged() && TwbSiteStore.sites === null) {
-        this.loadSites();
+      if (TwbService.isLogged()) {
+        this._initData();
       }
       
       this.$.pages.querySelector('twb-signin').addEventListener('signedin', function(e) {
@@ -95,6 +95,12 @@
       var toast = this.$['message-toast'];
       toast.text = message;
       toast.show();
+    },
+
+    _initData : function() {
+      if (TwbSiteStore.sites === null) {
+        this.loadSites();
+      }
     },
 
     _initRoutes: function() {
