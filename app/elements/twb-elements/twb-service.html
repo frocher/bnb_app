@@ -3,19 +3,19 @@
 (function(scope) {
 var TwbService = scope.TwbService = scope.TwbService || {};
 
-TwbService.BASE_URL = "/api/";
+TwbService.BASE_URL = '/api/';
 
 TwbService.isLogged = function isLogged() {
   return sessionStorage.getItem('accessToken') !== null;
 };
 
 TwbService.signin = function signin(params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions("/auth/sign_in", "POST", params);
+  var options = TwbService._generateOptions('/auth/sign_in', 'POST', params);
   TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
 };
 
 TwbService.signup = function signup(params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions("/auth/", "POST", params);
+  var options = TwbService._generateOptions('/auth/', 'POST', params);
   TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
 };
 
@@ -25,17 +25,17 @@ TwbService.signout = function signout() {
 };
 
 TwbService.forgotPassword = function forgotPassword(params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions("/auth/password", "POST", params);
+  var options = TwbService._generateOptions('/auth/password', 'POST', params);
   TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
 };
 
 TwbService.updatePassword = function updatePassword(params, headers, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions("/auth/password", "PUT", params, headers);
+  var options = TwbService._generateOptions('/auth/password', 'PUT', params, headers);
   TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
 };
 
 TwbService.loadSites = function loadSites(params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions("/sites", "GET", params);
+  var options = TwbService._generateOptions('/sites', 'GET', params);
   TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
 };
 
@@ -44,9 +44,9 @@ TwbService._generateOptions = function _generateOptions(url, method, params, hea
     url: TwbService._getRequestUrl(url, params),
     method: method,
     headers: TwbService._getCredentials() || TwbService._getRequestHeaders(headers),
-    body: "",
+    body: '',
     async: true,
-    handleAs: "json",
+    handleAs: 'json',
     withCredentials: false
   };
   return options;

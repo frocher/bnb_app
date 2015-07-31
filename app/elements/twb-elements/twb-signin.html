@@ -28,11 +28,11 @@
     is: 'twb-signin', 
 
     ready: function() {
-      this.params = { name:"", email:"", password:"" };
+      this.params = { name:'', email:'', password:'' };
       this.signinButtons = [{text:'Sign up', path:'signup'}, {text:'Forgot your password', path:'forgot'}];
     },
 
-    signinSubmitTapped: function(event, detail, sender) {
+    signinSubmitTapped: function() {
       TwbService.signin(this.params, this.handleSigninResponse, this.handleSigninError, this);
     },
 
@@ -40,7 +40,7 @@
       this.initUser(data);
       this.fire('signedin');
 
-      this.params.password = "";
+      this.params.password = '';
     },
 
     handleSigninError: function(error) {
@@ -58,8 +58,8 @@
       TwbUserStore.admin    = data.admin;
       TwbUserStore.avatar   = data.avatar_url;
 
-      this.params.password = "";
-      this.params.password_confirmation = "";
+      this.params.password = '';
+      this.params.password_confirmation = '';
     }
   });
 

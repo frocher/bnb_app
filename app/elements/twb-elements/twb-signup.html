@@ -33,21 +33,21 @@
     is: 'twb-signup',
 
     ready: function() {
-      this.params = { name:"", email:"", password:"", password_confirmation: "", confirm_success_url: this.homeUrl() };
+      this.params = { name:'', email:'', password:'', password_confirmation:'', confirm_success_url: this.homeUrl() };
       this.signupButtons = [{text:'Sign in', path:'signin'}, {text:'Forgot your password', path:'forgot'}];
     },
 
-    signupSubmitTapped: function(event, detail, sender) {
-      this.$["signup-name"].invalid = false;
-      this.$["signup-email"].invalid = false;
-      this.$["signup-password"].invalid = false;
-      this.$["signup-password_confirmation"].invalid = false;
+    signupSubmitTapped: function() {
+      this.$['signup-name'].invalid = false;
+      this.$['signup-email'].invalid = false;
+      this.$['signup-password'].invalid = false;
+      this.$['signup-password_confirmation'].invalid = false;
 
       TwbService.signup(this.params, this.handleSignupResponse, this.handleSignupError, this);
     },
 
     handleSignupResponse: function(data) {
-      this.showToast("Sign up successful. An activation email has been sent to you.");
+      this.showToast('Sign up successful. An activation email has been sent to you.');
     },
 
     handleSignupError: function(error) {
@@ -58,7 +58,7 @@
         var errors = error.errors;
         for (var prop in errors) {
           if (errors.hasOwnProperty(prop)) {
-            var objId = "signup-" + prop;
+            var objId = 'signup-' + prop;
             if (this.$[objId] !== undefined) {
               this.$[objId].invalid = true;
               this.$[objId].errorMessage = errors[prop][0];

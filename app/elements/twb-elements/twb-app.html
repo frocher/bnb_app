@@ -92,7 +92,7 @@
     },
 
     showToast: function(message) {
-      var toast = this.$["message-toast"];
+      var toast = this.$['message-toast'];
       toast.text = message;
       toast.show();
     },
@@ -135,28 +135,19 @@
         }
       });
 
-      page('/addsite', function () {
+      page('/add-site', function () {
         if (!TwbService.isLogged()) {
           page.redirect('/signin');
         }
         else {
-          _this.route = 'addSite';
+          _this.route = 'add-site';
         }
       });
 
       page({
         hashbang: true
       });
-    },
-
-    _isPathProtected: function(path) {
-      if (path !== null) {
-        return path !== "/signin" && path !== "/signup" && path !== "/forgot" && path !== "/editPassword";
-      }
-      return false;
     }
-
-
 
   });
 
