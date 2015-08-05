@@ -1,8 +1,9 @@
 html, body {
   height: 100%;
   margin: 0;
-  background-color: #E5E5E5;
-  font-family: 'RobotoDraft', sans-serif;
+  background: #fafafa;
+  font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: #333;
 }
 
 a {
