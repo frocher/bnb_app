@@ -53,8 +53,26 @@
     }
 
     .content {
-      height:2000px;
+      @apply(--layout-wrap);
+      @apply(--layout-center-justified);
+      @apply(--layout-horizontal);
     }
+
+    .card {
+      background-color: #fff;
+      width: 320px;
+      margin: 16px;
+    }
+
+    .card .card-content {
+      margin: 16px;
+    }
+
+    .card .card-content h2 {
+      font-size: 24px;
+      font-weight: normal;
+    }
+
 
   </style>
   <template>
@@ -83,20 +101,14 @@
         </paper-menu-button>
       </paper-toolbar>
       <div class="content">
-        <h1>Hello</h1>
-        <iron-selector selected="{{selected}}" layout horizontal wrap>
-          <template repeat="{{item, i in sites}}">
-            <div class="site-item" hero-id="site-{{item.id}}" hero>
-              <img src="{{item.img_thumb}}"/>
-              <div style="text-align:center">
-                <span class="label label-success">{{item.upTime}}%</span>
-                <span class="label label-warning">{{item.responseTime}}ms</span>
-                <span class="label label-danger">{{item.speedIndex}}</span>
-              </div>
+        <template is="dom-repeat" items="[[sites]]" as="item" sort="sortSites">
+          <paper-material class="card">
+            <img src="http://placehold.it/320x180">
+            <div class="card-content">
+              <h2>[[item.name]]</h2>
             </div>
-          </template>
-
-        </iron-selector>
+          </paper-material>
+        </template>
       </div>
     </paper-header-panel>
 
@@ -107,6 +119,15 @@
 (function() {
   Polymer({
     is: 'twb-sites',
+
+    properties: {
+      sites: {
+        type: Array,
+        value: function() {
+          return [];
+        }
+      }
+    },
 
     periodBtnTapped: function() {
       var dropdown = this.$.periodDropdown;
@@ -130,6 +151,12 @@
     signoutTapped: function() {
       TwbService.signout();
       this.fire('signedout');
+    },
+
+    sortSites: function(first, second) {
+      var a = first.name.toUpperCase();
+      var b = second.name.toUpperCase();
+      return a.localeCompare(b);
     },
 
     selectedChanged: function() {

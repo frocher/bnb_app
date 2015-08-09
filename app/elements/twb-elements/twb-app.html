@@ -24,14 +24,14 @@
   <template>
 
     <iron-pages id="pages" attr-for-selected="data-route" selected="{{route}}">
-      <section             name="splash"       class="page" data-route="splash"></section>
-      <twb-signin          name="signin"       class="page" data-route="signin"></twb-signin>
-      <twb-signup          name="signup"       class="page" data-route="signup"></twb-signup>
-      <twb-forgot-password name="forgot"       class="page" data-route="forgot"></twb-forgot-password>
-      <twb-edit-password   name="editPassword" class="page" data-route="edit-password"></twb-edit-password>
-      <twb-sites           name="sites"        class="page" data-route="home"></twb-sites>
-      <twb-site            name="site"         class="page" data-route="site"></twb-site>
-      <twb-add-site        name="addSite"      class="page" data-route="add-site"></twb-add-site>
+      <section             id="splash"       class="page" data-route="splash"></section>
+      <twb-signin          id="signin"       class="page" data-route="signin"></twb-signin>
+      <twb-signup          id="signup"       class="page" data-route="signup"></twb-signup>
+      <twb-forgot-password id="forgot"       class="page" data-route="forgot"></twb-forgot-password>
+      <twb-edit-password   id="editPassword" class="page" data-route="edit-password"></twb-edit-password>
+      <twb-sites           id="sites"        class="page" data-route="home"></twb-sites>
+      <twb-site            id="site"         class="page" data-route="site"></twb-site>
+      <twb-add-site        id="addSite"      class="page" data-route="add-site"></twb-add-site>
     </iron-pages>
 
     <paper-toast id="message-toast"></paper-toast>
@@ -68,6 +68,7 @@
 
     handleLoadSitesResponse: function(data) {
       TwbSiteStore.sites = data;
+      this.$.sites.sites = TwbSiteStore.sites;
     },
 
     handleLoadSitesError: function(error) {
