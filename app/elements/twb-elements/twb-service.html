@@ -48,7 +48,7 @@ TwbService._generateOptions = function _generateOptions(url, method, params, hea
   var options = {
     url: TwbService._getRequestUrl(url, params),
     method: method,
-    headers: TwbService._getCredentials() || TwbService._getRequestHeaders(headers),
+    headers: _.extend(TwbService._getCredentials(), TwbService._getRequestHeaders(headers)),
     body: '',
     async: true,
     handleAs: 'json',
@@ -58,7 +58,13 @@ TwbService._generateOptions = function _generateOptions(url, method, params, hea
 };
 
 TwbService._getCredentials = function _getCredentials() {
-  return {'access-token' : TwbService._getAccessToken(), 'client' : TwbService._getClient(), 'uid' : TwbService._getUid(), 'token-type' : 'Bearer'};
+  var token = TwbService._getAccessToken();
+  if (token !== null && token != "null") {
+    return {'access-token' : token, 'client' : TwbService._getClient(), 'uid' : TwbService._getUid(), 'token-type' : 'Bearer'};
+  }
+  else {
+    return {};
+  }
 };
 
 TwbService._sendRequest = function _sendRequest(options, successCallback, errorCallback, callbackObj) {

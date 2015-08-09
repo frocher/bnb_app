@@ -48,6 +48,7 @@
 
     listeners: {
       message: 'handleMessage',
+      signedin: 'handleSignedIn', 
       signedout : 'handleSignedOut'
     },
 
@@ -59,12 +60,6 @@
       if (TwbService.isLogged()) {
         this._initData();
       }
-      
-      this.$.pages.querySelector('twb-signin').addEventListener('signedin', function(e) {
-        _this.loadSites();
-        page('/');
-      });
-
     },
 
     loadSites: function() {
@@ -81,6 +76,11 @@
 
     handleMessage: function(e) {
       this.showToast(e.detail.message);
+    },
+
+    handleSignedIn: function(e) {
+      this.loadSites();
+      page('/');
     },
 
     handleSignedOut: function(e) {
@@ -118,8 +118,8 @@
         _this.route = 'forgot';
       });
 
-      page('/editPassword', function () {
-        _this.route = 'editPassword';
+      page('/edit-password', function () {
+        _this.route = 'edit-password';
       });
 
       page('/', function () {
