@@ -1,4 +1,4 @@
-<dom-module id="twb-add-site">
+<dom-module id="twb-add-page">
   <style>
     :host {
       @apply(--layout-vertical);
@@ -14,16 +14,16 @@
     <paper-header-panel class="flex">
       <paper-toolbar>
         <paper-icon-button icon="close" on-tap="closeTapped"></paper-icon-button>
-        <span class="title">New site</span>
+        <span class="title">New page</span>
         <span class="flex"></span>
         <paper-button on-tap="createTapped">Create</paper-button>
       </paper-toolbar>
       <div id="content" class="fit">
-        <paper-input id="name" label="Site name" value="{{params.name}}"></paper-input>
+        <paper-input id="name" label="Page name" value="{{params.name}}"></paper-input>
         <paper-input id="url" label="URL" value="{{params.url}}"></paper-input>
 
         <paper-dialog id="discardDlg" modal>
-          <p>Discard new site.</p>
+          <p>Discard new page.</p>
           <div class="buttons">
             <paper-button dialog-dismiss>Cancel</paper-button>
             <paper-button dialog-confirm autofocus on-tap="closePage">Discard</paper-button>
@@ -41,7 +41,7 @@
 (function() {
 
   Polymer({
-    is: 'twb-add-site',
+    is: 'twb-add-page',
 
     ready: function() {
       this.clearFields();
@@ -66,17 +66,17 @@
       this.$['name'].invalid = false;
       this.$['url'].invalid = false;
 
-      TwbService.createSite(this.params, this.handleResponse, this.handleError, this);
+      TwbService.createPage(this.params, this.handleResponse, this.handleError, this);
     },
 
     handleResponse: function(data) {
-      TwbSiteStore.sites.push(data);
+      TwbPageStore.pages.push(data);
       this.closePage();
     },
 
     handleError: function(error) {
       if (error === null) {
-        this.showToast("Error : can't create site");
+        this.showToast("Error : can't create page");
       }
       else {
         var errors = error.errors;

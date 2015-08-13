@@ -1,11 +1,11 @@
-<dom-module id="twb-sites">
+<dom-module id="twb-pages">
 
   <style>
     :host {
       @apply(--layout-horizontal);
     }
 
-    .site-item {
+    .page-item {
       display: block;
       width: 200px;
       height: 160px;
@@ -101,7 +101,7 @@
         </paper-menu-button>
       </paper-toolbar>
       <div class="content">
-        <template is="dom-repeat" items="[[sites]]" as="item" sort="sortSites">
+        <template is="dom-repeat" items="[[pages]]" as="item" sort="sortPages">
           <paper-material class="card">
             <img src="http://placehold.it/320x180">
             <div class="card-content">
@@ -118,10 +118,10 @@
 <script>
 (function() {
   Polymer({
-    is: 'twb-sites',
+    is: 'twb-pages',
 
     properties: {
-      sites: {
+      pages: {
         type: Array,
         value: function() {
           return [];
@@ -141,7 +141,7 @@
     },
 
     addTapped: function() {
-      page('/add-site');
+      page('/add-page');
     },
 
     filterTapped: function() {
@@ -153,14 +153,14 @@
       this.fire('signedout');
     },
 
-    sortSites: function(first, second) {
+    sortPages: function(first, second) {
       var a = first.name.toUpperCase();
       var b = second.name.toUpperCase();
       return a.localeCompare(b);
     },
 
     selectedChanged: function() {
-      this.site = this.sites[this.selected];
+      this.page = this.pages[this.selected];
     }
   });
 

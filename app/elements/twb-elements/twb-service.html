@@ -34,13 +34,13 @@ TwbService.updatePassword = function updatePassword(params, headers, successCall
   TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
 };
 
-TwbService.loadSites = function loadSites(params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions('/sites', 'GET', params);
+TwbService.loadPages = function loadPages(params, successCallback, errorCallback, callbackObj) {
+  var options = TwbService._generateOptions('/pages', 'GET', params);
   TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
 };
 
-TwbService.createSite = function createSite(params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions('/sites', 'POST', params);
+TwbService.createPage = function createPage(params, successCallback, errorCallback, callbackObj) {
+  var options = TwbService._generateOptions('/pages', 'POST', params);
   TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
 };
 

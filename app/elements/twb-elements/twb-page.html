@@ -1,17 +1,17 @@
-<dom-module id="twb-site" attributes="site">
-  <link rel="stylesheet" href="twb-site.css">
+<dom-module id="twb-page">
+  <link rel="stylesheet" href="twb-page.css">
   <style>
     :host {
       @apply(--layout-vertical);
     }
   </style>
   <template>
-    <div class="site" flex hero hero-id="site-{{site.id}}">
-      <h2>Hello {{site.name}}</h2>
+    <div class="page" flex hero hero-id="page-{{page.id}}">
+      <h2>Hello {{page.name}}</h2>
       <div horizontal layout wrap>
         <div class="box bg-green">
           <div class="inner">
-              <h3>{{site.upTime}}<span style="font-size:smaller">%</span></h3>
+              <h3>{{page.upTime}}<span style="font-size:smaller">%</span></h3>
               <p>
                 up time
               </p>
@@ -19,7 +19,7 @@
         </div>
         <div class="box bg-yellow">
           <div class="inner">
-              <h3>{{site.responseTime}}<span style="font-size:smaller">ms</span></h3>
+              <h3>{{page.responseTime}}<span style="font-size:smaller">ms</span></h3>
               <p>
                 response time
               </p>
@@ -27,14 +27,14 @@
         </div>
         <div class="box bg-red">
           <div class="inner">
-              <h3>{{site.speedIndex}}</h3>
+              <h3>{{page.speedIndex}}</h3>
               <p>
                 speed index
               </p>
           </div>
         </div>
         <div flex></div>
-        <img src="{{site.img}}"/>
+        <img src="{{page.img}}"/>
       </div>
     </div>
 
@@ -47,7 +47,7 @@
 (function() {
 
   Polymer({
-    is: 'twb-site'
+    is: 'twb-page'
   });
 
 })();
