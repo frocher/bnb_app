@@ -43,6 +43,15 @@
   Polymer({
     is: 'twb-add-page',
 
+    properties: {
+      pages: {
+        type: Array,
+        value: function() {
+          return [];
+        }
+      }
+    },
+
     ready: function() {
       this.clearFields();
     },
@@ -70,7 +79,7 @@
     },
 
     handleResponse: function(data) {
-      TwbPageStore.pages.push(data);
+      this.push('pages', data);
       this.closePage();
     },
 

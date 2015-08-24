@@ -12,10 +12,6 @@
       @apply(--layout-vertical);
     }
 
-    #pages {
-      @apply(--layout-fit);
-    }
-
     .page {
       @apply(--layout-fit);
     }
@@ -23,15 +19,15 @@
 
   <template>
 
-    <iron-pages id="pages" attr-for-selected="data-route" selected="{{route}}">
+    <iron-pages class="page" attr-for-selected="data-route" selected="{{route}}">
       <section             id="splash"       class="page" data-route="splash"></section>
       <twb-signin          id="signin"       class="page" data-route="signin"></twb-signin>
       <twb-signup          id="signup"       class="page" data-route="signup"></twb-signup>
       <twb-forgot-password id="forgot"       class="page" data-route="forgot"></twb-forgot-password>
       <twb-edit-password   id="editPassword" class="page" data-route="edit-password"></twb-edit-password>
-      <twb-pages           id="pages"        class="page" data-route="home"></twb-pages>
+      <twb-pages           id="pages"        class="page" data-route="home" pages="{{pages}}"></twb-pages>
       <twb-page            id="page"         class="page" data-route="page"></twb-page>
-      <twb-add-page        id="addPage"      class="page" data-route="add-page"></twb-add-page>
+      <twb-add-page        id="addPage"      class="page" data-route="add-page" pages="{{pages}}"></twb-add-page>
     </iron-pages>
 
     <paper-toast id="message-toast"></paper-toast>
@@ -52,6 +48,15 @@
       signedout : 'handleSignedOut'
     },
 
+    properties: {
+      pages: {
+        type: Array,
+        value: function() {
+          return [];
+        }
+      }
+    },
+
     ready: function() {
       var _this = this;
 
@@ -67,8 +72,7 @@
     },
 
     handleLoadPagesResponse: function(data) {
-      TwbPageStore.pages = data;
-      this.$.pages.pages = TwbPageStore.pages;
+      this.pages = data;
     },
 
     handleLoadPagesError: function(error) {
@@ -99,9 +103,7 @@
     },
 
     _initData : function() {
-      if (TwbPageStore.pages === null) {
-        this.loadPages();
-      }
+      this.loadPages();
     },
 
     _initRoutes: function() {
