@@ -3,6 +3,14 @@
   <style>
     :host {
       @apply(--layout-horizontal);
+
+      --paper-card-header-image-text: {
+        width:288px;
+        background-color: rgba(0,0,0,0.4);
+      };
+
+      --paper-card-header-color: white;
+
     }
 
     .page-item {
@@ -19,28 +27,28 @@
     }
 
     .label {
-    display: inline;
-    padding: .2em .6em .3em;
-    font-size: 75%;
-    font-weight: 500;
-    line-height: 1;
-    color: #fff;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: .25em;
+      display: inline;
+      padding: .2em .6em .3em;
+      font-size: 75%;
+      font-weight: 500;
+      line-height: 1;
+      color: #fff;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: .25em;
     }
 
     .label-success {
-    background-color: #5cb85c;
+      background-color: #5cb85c;
     }
 
     .label-warning {
-    background-color: #f0ad4e;
+      background-color: #f0ad4e;
     }
 
     .label-danger {
-    background-color: #d9534f;
+      background-color: #d9534f;
     }
 
     #periodBtn span {
@@ -56,23 +64,23 @@
       @apply(--layout-wrap);
       @apply(--layout-center-justified);
       @apply(--layout-horizontal);
+      padding:24px;
     }
 
-    .card {
+
+    paper-card {
       background-color: #fff;
       width: 320px;
-      margin: 16px;
+      margin-bottom: 16px;
+      margin-right: 16px;
+
+      --paper-card-header-image-text: {
+        width:288px;
+        background-color: rgba(0,0,0,0.4);
+      };
     }
 
-    .card .card-content {
-      margin: 16px;
-    }
-
-    .card .card-content h2 {
-      font-size: 24px;
-      font-weight: normal;
-    }
-
+    
 
   </style>
   <template>
@@ -102,10 +110,9 @@
       </paper-toolbar>
       <div class="content">
         <template is="dom-repeat" items="{{pages}}" as="item" sort="sortPages">
-          <paper-material class="card">
-            <img src="http://placehold.it/320x240">
+          <paper-card heading="[[item.name]]" image="http://placehold.it/320x240">
             <div class="card-content">
-              <h2>[[item.name]]</h2>
+            Lorem ipsum dolor sit amet, nec ad conceptam interpretaris, mea ne solet repudiandae. Laudem nostrud ei vim.
             </div>
           </paper-material>
         </template>
