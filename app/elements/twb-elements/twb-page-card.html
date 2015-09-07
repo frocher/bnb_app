@@ -1,0 +1,122 @@
+
+<dom-module id="twb-page-card">
+  <style>
+  :host {
+    display: inline-block;
+    position: relative;
+    box-sizing: border-box;
+
+    border-radius: 2px;
+    background-color: #fff;
+    width: 320px;
+    margin-bottom: 16px;
+    margin-right: 16px;
+    cursor: pointer;
+  }
+
+  .header {
+    position: relative;
+    @apply(--paper-card-header);
+  }
+
+  .header img {
+    width: 100%;
+    pointer-events: none;
+  }
+
+  :host ::content h2 {
+    margin-top: 0;
+    margin-bottom: 2px;
+  }
+
+  :host ::content a {
+    color: #9e9e9e;
+    text-decoration: none;
+  }
+
+  .card-content a:hover {
+    text-decoration: underline;
+  }
+
+  .card-content {
+    padding: 16px;
+    position:relative;
+  }
+
+  .card-content .card-actions {
+    border-top: 1px solid #e8e8e8;
+    padding: 5px 16px;
+    position:relative;
+  }
+
+
+
+  </style>
+
+  <template>
+
+    <paper-material id="shadow" animated$="[[animatedShadow]]" elevation=[[elevation]] on-tap="cardTapped">
+      <div class="header">
+        <img src="[[_computeScreenshotUrl(page)]]"></img>
+      </div>
+
+      <div class="card-content">
+        <h2>[[page.name]]</h2>
+        <a href="#" on-tap="urlTapped" title="Open url in a new tab">[[page.url]]</a>
+      </div>
+
+    </paper-material>
+
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'twb-page-card',
+
+    properties: {
+
+      /**
+       * The page of the card.
+       */
+      page: {
+        type: Object,
+        value: null
+      },
+
+      /**
+       * The z-depth of the card, from 0-5.
+       */
+      elevation: {
+        type: Number,
+        value: 1
+      },
+
+      /**
+       * Set this to true to animate the card shadow when setting a new
+       * `z` value.
+       */
+      animatedShadow: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    cardTapped: function(e) {
+      this.fire('page-selected', {page: this.page});
+    },
+
+    urlTapped: function(e) {
+      window.open(this.page.url, '_blank');
+      e.stopPropagation();
+    },
+
+    _computeScreenshotUrl: function(item) {
+      return TwbService.BASE_URL + 'pages/' + item.id + '/screenshot?style=thumb';
+    }
+
+  });
+</script>

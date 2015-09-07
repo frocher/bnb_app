@@ -1,14 +1,83 @@
+<link rel="import" href="twb-period-dropdown.html">
+
 <dom-module id="twb-page">
-  <link rel="stylesheet" href="twb-page.css">
   <style>
     :host {
       @apply(--layout-vertical);
+
+      --paper-toolbar: {
+        background-size:cover;
+      };
+    }
+
+    .page {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+
+
+    .box {
+      border-radius: 2px;
+      width: 250px;
+      height: 120px;
+      margin-bottom: 15px;
+      margin-left: 10px;
+      margin-right: 10px;
+      overflow: hidden;
+    }
+
+
+    .box .inner {
+      padding: 10px;
+    }
+
+    .bg-green {
+      background-color: #4caf50;
+      color: #fff;
+    }
+
+    .bg-yellow {
+      background-color: #ffeb3b;
+      color: #000;
+    }
+
+    .bg-red {
+      background-color: #f44336;
+      color: #fff;
+    }
+
+    .box h3 {
+      font-size: 38px;
+      font-weight: bold;
+      margin: 0 0 10px 0;
+      white-space: nowrap;
+      padding: 0;
+    }
+
+    .box p {
+      font-size: 15px;
     }
   </style>
   <template>
-    <div class="page" flex hero hero-id="page-{{page.id}}">
-      <h2>Hello {{page.name}}</h2>
-      <div horizontal layout wrap>
+    <paper-header-panel mode="waterfall-tall" class="flex">
+      <paper-toolbar id="pageToolbar">
+        <div class="fit" style="height: 114px; opacity:0.3; overflow:hidden">
+          <img id="bkgImage"></img>
+        </div>
+
+        <paper-icon-button icon="arrow-back" on-tap="backTapped"></paper-icon-button>
+        
+        <span>
+          <span>[[page.name]]</span>
+          <span> stats for&nbsp;</span>
+          <twb-period-dropdown></twb-period-dropdown>
+        </span>
+        
+        
+      </paper-toolbar>
+      <div id="content" class="fit">
+
+        <h2>Hello</h2>
         <div class="box bg-green">
           <div class="inner">
               <h3>{{page.upTime}}<span style="font-size:smaller">%</span></h3>
@@ -33,12 +102,50 @@
               </p>
           </div>
         </div>
-        <div flex></div>
-        <img src="{{page.img}}"/>
-      </div>
-    </div>
-
-    </core-selector>
+        <div class="box bg-red">
+          <div class="inner">
+              <h3>{{page.speedIndex}}</h3>
+              <p>
+                speed index
+              </p>
+          </div>
+        </div>        <div class="box bg-red">
+          <div class="inner">
+              <h3>{{page.speedIndex}}</h3>
+              <p>
+                speed index
+              </p>
+          </div>
+        </div>        <div class="box bg-red">
+          <div class="inner">
+              <h3>{{page.speedIndex}}</h3>
+              <p>
+                speed index
+              </p>
+          </div>
+        </div>        <div class="box bg-red">
+          <div class="inner">
+              <h3>{{page.speedIndex}}</h3>
+              <p>
+                speed index
+              </p>
+          </div>
+        </div>        <div class="box bg-red">
+          <div class="inner">
+              <h3>{{page.speedIndex}}</h3>
+              <p>
+                speed index
+              </p>
+          </div>
+        </div>        <div class="box bg-red">
+          <div class="inner">
+              <h3>{{page.speedIndex}}</h3>
+              <p>
+                speed index
+              </p>
+          </div>
+        </div>      </div>
+    </paper-header-panel>
 
   </template>
 </dom-module>
@@ -47,7 +154,35 @@
 (function() {
 
   Polymer({
-    is: 'twb-page'
+    is: 'twb-page',
+
+    properties: {
+      page: {
+        type: Object,
+        value: null,
+        observer: '_pageChanged'
+      }
+    },
+
+   listeners: {
+      'page-changed': 'handlePageChanged'
+    },
+
+    _pageChanged: function(item) {
+      var url = this._computeScreenshotUrl(item);
+      this.$.bkgImage.src = url;
+    },
+
+    _computeScreenshotUrl: function(item) {
+      if (item) {
+        return TwbService.BASE_URL + 'pages/' + item.id + '/screenshot?style=medium';
+      }
+    },
+
+    backTapped: function(e) {
+      page('/');
+    }
+
   });
 
 })();

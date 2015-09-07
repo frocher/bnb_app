@@ -26,7 +26,7 @@
       <twb-forgot-password id="forgot"       class="page" data-route="forgot"></twb-forgot-password>
       <twb-edit-password   id="editPassword" class="page" data-route="edit-password"></twb-edit-password>
       <twb-pages           id="pages"        class="page" data-route="home" pages="{{pages}}"></twb-pages>
-      <twb-page            id="page"         class="page" data-route="page"></twb-page>
+      <twb-page            id="page"         class="page" data-route="page" page="{{currentPage}}"></twb-page>
       <twb-add-page        id="addPage"      class="page" data-route="add-page" pages="{{pages}}"></twb-add-page>
     </iron-pages>
 
@@ -43,9 +43,10 @@
     is: 'twb-app', 
 
     listeners: {
-      message: 'handleMessage',
-      signedin: 'handleSignedIn', 
-      signedout : 'handleSignedOut'
+      'message': 'handleMessage',
+      'signedin': 'handleSignedIn', 
+      'signedout': 'handleSignedOut',
+      'page-selected': 'handlePageSelected'
     },
 
     properties: {
@@ -54,6 +55,11 @@
         value: function() {
           return [];
         }
+      },
+
+      currentPage : {
+        type: Object,
+        value: null     
       }
     },
 
@@ -83,6 +89,11 @@
       this.showToast(e.detail.message);
     },
 
+    handlePageSelected: function(e) {
+      var path = '/page/' + e.detail.page.id;
+      page(path);
+    },
+
     handleSignedIn: function(e) {
       this.loadPages();
       page('/');
@@ -91,9 +102,6 @@
     handleSignedOut: function(e) {
       // TODO : invalidate credentials
       page('/signin');
-    },
-
-    pageSelect: function() {
     },
 
     showToast: function(message) {
@@ -134,12 +142,19 @@
         }
       });
 
-      page('/page/:id', function () {
+      page('/page/:id', function (context) {
         if (!TwbService.isLogged()) {
           page.redirect('/signin');
         }
         else {
-          // TODO : load page
+          // TODO : load page details
+          var id = context.params.id;
+          var found = _.select(_this.pages, function( item ) {
+            return item.id == id;
+          });
+          if (found.length > 0) {
+            _this.currentPage = found[0];
+          }
           _this.route = 'page';
         }
       });

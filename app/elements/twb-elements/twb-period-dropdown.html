@@ -1,0 +1,59 @@
+<dom-module id="twb-period-dropdown">
+  <style>
+  paper-menu-button {
+    height: 40px;
+  }
+
+    #periodBtn span {
+      text-transform: lowercase;
+    }
+
+    .dropdown-content paper-item {
+      cursor: pointer;
+    }
+
+    paper-menu-button {
+      margin-left: -1em;
+      padding: 0;
+    }
+  </style>
+  <template>
+    <paper-menu-button>
+      <paper-button id="periodBtn" class="dropdown-trigger">
+        <span id="periodSpan">This month</span>
+        <iron-icon icon="arrow-drop-down"></iron-icon>
+      </paper-button>
+      <paper-menu selected="{{currentPeriod}}" class="dropdown-content">
+        <paper-item on-tap="periodTapped" data-period="month">This&nbsp;month</paper-item>
+        <paper-item on-tap="periodTapped" data-period="week">This week</paper-item>
+        <paper-item on-tap="periodTapped" data-period="day">This day</paper-item>
+        <paper-item on-tap="periodTapped" data-period="custom">Custom...</paper-item>
+      </paper-menu>
+    </paper-menu-button>
+  
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+    is: 'twb-period-dropdown',
+
+    properties: {
+      currentPeriod: {
+        type: String,
+        value: null
+      }
+    },
+
+    periodTapped: function(e) {
+      // TODO
+      this.$.periodSpan.innerHTML = e.currentTarget.innerHTML;
+      alert('todo ' + e.currentTarget.dataset.period);
+    }
+
+  });
+
+})();
+</script>

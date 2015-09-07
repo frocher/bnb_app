@@ -1,3 +1,6 @@
+<link rel="import" href="twb-page-card.html">
+<link rel="import" href="twb-period-dropdown.html">
+
 <dom-module id="twb-pages">
 
   <style>
@@ -43,14 +46,7 @@
       background-color: #d9534f;
     }
 
-    #periodBtn span {
-      text-transform: none;
-    }
 
-
-    .dropdown-content paper-item {
-      cursor: pointer;
-    }
 
     .content {
       @apply(--layout-wrap);
@@ -60,44 +56,11 @@
     }
 
 
-    paper-card {
-      background-color: #fff;
-      width: 320px;
-      margin-bottom: 16px;
-      margin-right: 16px;
-      cursor: pointer;
-    }
-
-    .card-content h2 {
-      margin-top: 0;
-      margin-bottom: 2px;
-    }
-
-    .card-content a {
-      color: #9e9e9e;
-      text-decoration: none;
-    }
-
-    .card-content a:hover {
-      text-decoration: underline;
-    }
-
   </style>
   <template>
     <paper-header-panel class="flex">
       <paper-toolbar>
-        <paper-menu-button>
-          <paper-button id="periodBtn" on-tap="periodBtnTapped" class="dropdown-trigger">
-            <span id="periodSpan">This month</span>
-            <iron-icon icon="arrow-drop-down"></iron-icon>
-          </paper-button>
-          <paper-menu selected="{{currentPeriod}}" class="dropdown-content">
-            <paper-item on-tap="periodTapped" data-period="month">This&nbsp;month</paper-item>
-            <paper-item on-tap="periodTapped" data-period="week">This week</paper-item>
-            <paper-item on-tap="periodTapped" data-period="day">This day</paper-item>
-            <paper-item on-tap="periodTapped" data-period="custom">Custom...</paper-item>
-          </paper-menu>
-        </paper-menu-button>
+        <span>All pages stats for&nbsp;<twb-period-dropdown></twb-period-dropdown></span>
         <div class="flex"></div>
         <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
         <paper-icon-button icon="search" on-tap="filterTapped"></paper-icon-button>
@@ -110,12 +73,7 @@
       </paper-toolbar>
       <div class="content">
         <template is="dom-repeat" items="{{pages}}" as="item" sort="sortPages">
-          <paper-card image="[[computeScreenshotUrl(item)]]" on-tap="cardTapped">
-            <div class="card-content">
-              <h2>[[item.name]]</h2>
-              <a href="[[item.url]]" target="_blank">[[item.url]]</a>
-            </div>
-          </paper-material>
+          <twb-page-card page="[[item]]"></twb-page-card>
         </template>
       </div>
     </paper-header-panel>
@@ -137,21 +95,6 @@
       }
     },
 
-    computeScreenshotUrl: function(item) {
-      return TwbService.BASE_URL + 'pages/' + item.id + '/screenshot';
-    },
-
-    periodBtnTapped: function() {
-      var dropdown = this.$.periodDropdown;
-      dropdown.open();
-    },
-
-    periodTapped: function(e) {
-      // TODO
-      this.$.periodSpan.innerHTML = e.currentTarget.innerHTML;
-      alert('todo ' + e.currentTarget.dataset.period);
-    },
-
     addTapped: function() {
       page('/add-page');
     },
@@ -163,10 +106,6 @@
     signoutTapped: function() {
       TwbService.signout();
       this.fire('signedout');
-    },
-
-    cardTapped: function(e) {
-      alert(e.model.item.name);
     },
 
     sortPages: function(first, second) {
