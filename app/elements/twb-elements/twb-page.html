@@ -4,10 +4,6 @@
   <style>
     :host {
       @apply(--layout-vertical);
-
-      --paper-toolbar: {
-        background-size:cover;
-      };
     }
 
     .page {
@@ -59,21 +55,21 @@
     }
   </style>
   <template>
-    <paper-header-panel mode="waterfall-tall" class="flex">
+    <paper-header-panel class="flex">
       <paper-toolbar id="pageToolbar">
         <div class="fit" style="height: 114px; opacity:0.3; overflow:hidden">
           <img id="bkgImage"></img>
         </div>
 
         <paper-icon-button icon="arrow-back" on-tap="backTapped"></paper-icon-button>
-        
+
         <span>
           <span>[[page.name]]</span>
           <span> stats for&nbsp;</span>
           <twb-period-dropdown></twb-period-dropdown>
         </span>
-        
-        
+
+
       </paper-toolbar>
       <div id="content" class="fit">
 
@@ -164,19 +160,11 @@
       }
     },
 
-   listeners: {
-      'page-changed': 'handlePageChanged'
-    },
-
     _pageChanged: function(item) {
-      var url = this._computeScreenshotUrl(item);
-      this.$.bkgImage.src = url;
+      // TODO : replace data
     },
 
     _computeScreenshotUrl: function(item) {
-      if (item) {
-        return TwbService.BASE_URL + 'pages/' + item.id + '/screenshot?style=medium';
-      }
     },
 
     backTapped: function(e) {
