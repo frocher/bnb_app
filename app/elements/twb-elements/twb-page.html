@@ -56,6 +56,7 @@
   </style>
   <template>
     <paper-header-panel class="flex">
+
       <paper-toolbar id="pageToolbar">
         <div class="fit" style="height: 114px; opacity:0.3; overflow:hidden">
           <img id="bkgImage"></img>
@@ -68,9 +69,11 @@
           <span> stats for&nbsp;</span>
           <twb-period-dropdown></twb-period-dropdown>
         </span>
-
-
+        <div class="flex"></div>
+        <paper-icon-button icon="create" on-tap="editTapped" hidden?="{{!page.editable}"></paper-icon-button>
+        <paper-icon-button icon="delete" on-tap="deleteTapped" hidden?="{{!page.deletable}"></paper-icon-button>
       </paper-toolbar>
+
       <div id="content" class="fit">
 
         <h2>Hello</h2>
@@ -169,6 +172,14 @@
 
     backTapped: function(e) {
       page('/');
+    },
+
+    editTapped: function(e) {
+      this.fire('edit-page', {page: this.page});
+    },
+
+    deleteTapped: function(e) {
+      alert('todo');
     }
 
   });

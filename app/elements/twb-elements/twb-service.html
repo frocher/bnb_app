@@ -39,8 +39,18 @@ TwbService.loadPages = function loadPages(params, successCallback, errorCallback
   TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
 };
 
+TwbService.loadPage = function loadPage(id, params, successCallback, errorCallback, callbackObj) {
+  var options = TwbService._generateOptions('/page/' + id, 'GET', params);
+  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
+};
+
 TwbService.createPage = function createPage(params, successCallback, errorCallback, callbackObj) {
   var options = TwbService._generateOptions('/pages', 'POST', params);
+  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
+};
+
+TwbService.updatePage = function updatePage(id, params, successCallback, errorCallback, callbackObj) {
+  var options = TwbService._generateOptions('/page/' + id, 'PUT', params);
   TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
 };
 

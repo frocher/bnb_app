@@ -1,4 +1,4 @@
-<dom-module id="twb-add-page">
+<dom-module id="twb-edit-page">
   <style>
     :host {
       @apply(--layout-vertical);
@@ -14,16 +14,16 @@
     <paper-header-panel class="flex">
       <paper-toolbar>
         <paper-icon-button icon="close" on-tap="closeTapped"></paper-icon-button>
-        <span class="title">New page</span>
+        <span class="title">Edit page</span>
         <span class="flex"></span>
-        <paper-button on-tap="createTapped">Create</paper-button>
+        <paper-button on-tap="saveTapped">Save</paper-button>
       </paper-toolbar>
       <div id="content" class="fit">
-        <paper-input id="name" label="Page name" value="{{params.name}}"></paper-input>
-        <paper-input id="url" label="URL" value="{{params.url}}"></paper-input>
+        <paper-input id="name" label="Page name" value="[[page.name]]"></paper-input>
+        <paper-input id="url" label="URL" value="[[page.url]]"></paper-input>
 
         <paper-dialog id="discardDlg" modal>
-          <p>Discard new page.</p>
+          <p>Discard edit.</p>
           <div class="buttons">
             <paper-button dialog-dismiss>Cancel</paper-button>
             <paper-button dialog-confirm autofocus on-tap="closePage">Discard</paper-button>
@@ -40,51 +40,43 @@
 (function() {
 
   Polymer({
-    is: 'twb-add-page',
+    is: 'twb-edit-page',
 
     properties: {
-      pages: {
-        type: Array,
-        value: function() {
-          return [];
-        }
+      page: {
+        type: Object,
+        value: null
       }
     },
 
-    ready: function() {
-      this.clearFields();
-    },
-
     closeTapped: function() {
-      if (this.params.name !== '' || this.params.url !== '') {
+      if (this.$['name'].value !== this.page.name || this.$['url'].value !== this.page.url) {
         this.$.discardDlg.open();
       }
       else {
         this.closePage();
       }
-
     },
 
     closePage: function() {
-      this.clearFields();
-      page('/');
+      this.fire('show-page', {page: this.page});
     },
 
     createTapped: function() {
       this.$['name'].invalid = false;
       this.$['url'].invalid = false;
 
-      TwbService.createPage(this.params, this.handleResponse, this.handleError, this);
+      TwbService.updatePage(this.page.id, this.page, this.handleResponse, this.handleError, this);
     },
 
     handleResponse: function(data) {
-      this.push('pages', data);
+      this.showToast("Page has been updated");
       this.closePage();
     },
 
     handleError: function(error) {
       if (error === null) {
-        this.showToast("Error : can't create page");
+        this.showToast("Error : can't save page");
       }
       else {
         var errors = error.errors;
@@ -102,10 +94,6 @@
 
     showToast: function(message) {
       this.fire('message', {message: message});
-    },
-
-    clearFields: function() {
-      this.params = {name: '', url: ''};      
     }
 
   });

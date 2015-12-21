@@ -26,8 +26,9 @@
       <twb-forgot-password id="forgot"       class="page" data-route="forgot"></twb-forgot-password>
       <twb-edit-password   id="editPassword" class="page" data-route="edit-password"></twb-edit-password>
       <twb-pages           id="pages"        class="page" data-route="home" pages="{{pages}}"></twb-pages>
-      <twb-page            id="page"         class="page" data-route="page" page="{{currentPage}}"></twb-page>
       <twb-add-page        id="addPage"      class="page" data-route="add-page" pages="{{pages}}"></twb-add-page>
+      <twb-page            id="page"         class="page" data-route="page" page="{{currentPage}}"></twb-page>
+      <twb-edit-page       id="editPage"     class="page" data-route="edit-page" page="{{currentPage}}"></twb-edit-page>
     </iron-pages>
 
     <paper-toast id="message-toast"></paper-toast>
@@ -46,7 +47,8 @@
       'message': 'handleMessage',
       'signedin': 'handleSignedIn', 
       'signedout': 'handleSignedOut',
-      'page-selected': 'handlePageSelected'
+      'show-page': 'handleShowPage'
+      'edit-page': 'handleEditPage'
     },
 
     properties: {
@@ -89,8 +91,13 @@
       this.showToast(e.detail.message);
     },
 
-    handlePageSelected: function(e) {
+    handleShowPage: function(e) {
       var path = '/page/' + e.detail.page.id;
+      page(path);
+    },
+
+    handleEditPage: function(e) {
+      var path = '/edit-page/' + e.detail.page.id;
       page(path);
     },
 
@@ -112,6 +119,18 @@
 
     _initData : function() {
       this.loadPages();
+    },
+
+    _initCurrentPage: function(id) {
+      var id = context.params.id;
+      var found = _.select(this.pages, function( item ) {
+        return item.id == id;
+      });
+      if (found.length > 0) {
+        this.currentPage = found[0];
+        // TODO : load page details
+
+      }
     },
 
     _initRoutes: function() {
@@ -147,15 +166,18 @@
           page.redirect('/signin');
         }
         else {
-          // TODO : load page details
-          var id = context.params.id;
-          var found = _.select(_this.pages, function( item ) {
-            return item.id == id;
-          });
-          if (found.length > 0) {
-            _this.currentPage = found[0];
-          }
+          _this._initCurrentPage(context.params.id);
           _this.route = 'page';
+        }
+      });
+
+      page('/edit-page/:id', function () {
+        if (!TwbService.isLogged()) {
+          page.redirect('/signin');
+        }
+        else {
+          _this._initCurrentPage(context.params.id);
+          _this.route = 'edit-page';
         }
       });
 
