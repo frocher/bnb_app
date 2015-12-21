@@ -54,6 +54,11 @@ TwbService.updatePage = function updatePage(id, params, successCallback, errorCa
   TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
 };
 
+TwbService.deletePage = function deletePage(id, successCallback, errorCallback, callbackObj) {
+  var options = TwbService._generateOptions('/page/' + id, 'DELETE');
+  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
+};
+
 TwbService._generateOptions = function _generateOptions(url, method, params, headers) {
   var options = {
     url: TwbService._getRequestUrl(url, params),

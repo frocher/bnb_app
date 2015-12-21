@@ -143,7 +143,16 @@
                 speed index
               </p>
           </div>
-        </div>      </div>
+        </div>      
+
+        <paper-dialog id="deleteDlg" modal>
+          <p>Delete page ?</p>
+          <div class="buttons">
+            <paper-button dialog-dismiss>Cancel</paper-button>
+            <paper-button dialog-confirm autofocus on-tap="deletePage">Delete</paper-button>
+          </div>
+        </paper-dialog>
+    </div>
     </paper-header-panel>
 
   </template>
@@ -158,16 +167,8 @@
     properties: {
       page: {
         type: Object,
-        value: null,
-        observer: '_pageChanged'
+        value: null
       }
-    },
-
-    _pageChanged: function(item) {
-      // TODO : replace data
-    },
-
-    _computeScreenshotUrl: function(item) {
     },
 
     backTapped: function(e) {
@@ -179,7 +180,20 @@
     },
 
     deleteTapped: function(e) {
-      alert('todo');
+      this.$.deleteDlg.open();
+    },
+
+    deletePage: function(e) {
+      TwbService.deletePage(this.page.id, this.handleResponse, this.handleError, this);
+    },
+
+    handleResponse: function(data) {
+      this.showToast("Page has been deleted");
+      page('/');
+    },
+
+    handleError: function(error) {
+      this.showToast("Error : can't delete page");
     }
 
   });
