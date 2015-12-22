@@ -1,0 +1,73 @@
+<script>
+
+(function(scope) {
+var TwbStore = scope.TwbStore = scope.TwbStore || {};
+
+// User informations
+TwbStore.userId   = 0;
+TwbStore.username = '';
+TwbStore.email    = null;
+TwbStore.admin    = null;
+TwbStore.avatar   = null;
+
+// All pages informations
+TwbStore.pages = null;
+
+// Page currently displayed
+// FIXME : not sure to use this one because it is a display state, not a data
+TwbStore.currentPage = null;
+
+// Period constants
+TwbStore.THIS_MONTH    = 'this_month';
+TwbStore.THIS_WEEK     = 'this_week';
+TwbStore.THIS_DAY      = 'this_day';
+TwbStore.CUSTOM_PERIOD = 'custom';
+
+// Selected period
+TwbStore.currentPeriod = TwbStore.THIS_MONTH;
+
+// Custom period informations {startDate, endDate}
+TwbStore.customPeriod = {startDate:null, endDate:null};
+
+TwbStore.getPeriodStart = function getPeriodStart() {
+  var result = null;
+
+  switch (TwbStore.currentPeriod) {
+    case TwbStore.THIS_MONTH:
+      result = moment().startOf('month');
+      break;
+    case TwbStore.THIS_WEEK:
+      result = moment().startOf('week');
+      break;
+    case TwbStore.THIS_DAY:
+      result = moment().startOf('day');
+      break;
+    case TwbStore.THIS_DAY:
+      result = TwbStore.customPeriod.startDate;
+      break;
+  }
+  return result;
+};
+
+TwbStore.getPeriodEnd = function getPeriodEnd() {
+  var result = null;
+
+  switch (TwbStore.currentPeriod) {
+    case TwbStore.THIS_MONTH:
+      result = moment().endOf('month');
+      break;
+    case TwbStore.THIS_WEEK:
+      result = moment().endOf('week');
+      break;
+    case TwbStore.THIS_DAY:
+      result = moment().endOf('day');
+      break;
+    case TwbStore.THIS_DAY:
+      result = TwbStore.customPeriod.endDate;
+      break;
+  }
+  return result;
+};
+
+})(window);
+</script>

@@ -5,6 +5,7 @@
 <link rel="import" href="twb-pages.html">
 <link rel="import" href="twb-page.html">
 <link rel="import" href="twb-add-page.html">
+<link rel="import" href="twb-edit-page.html">
 
 <dom-module id="twb-app">
   <style>
@@ -60,6 +61,11 @@
       },
 
       currentPage : {
+        type: Object,
+        value: null     
+      }
+
+      currentPeriod : {
         type: Object,
         value: null     
       }

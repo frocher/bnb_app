@@ -1,0 +1,69 @@
+<script>
+/**
+ * @fileoverview Encapsulate all global application actions.
+ * Local components actions must not exist here.
+ */
+(function(scope) {
+var TwbActions = scope.TwbActions = scope.TwbActions || {};
+
+TwbActions.EDIT_PAGE_EVT  = 'edit-page';
+TwbActions.MESSAGE_EVT    = 'message';
+
+////////////////////////////////////////////////////////////////////
+// Global actions
+
+/**
+ * Display a toast message
+ */ 
+TwbActions.showMessage = function showMessage(message) {
+  this.fire(TwbActions.MESSAGE_EVT, {message: message});
+}
+
+
+////////////////////////////////////////////////////////////////////
+// User session management actions
+
+
+// TODO...
+
+////////////////////////////////////////////////////////////////////
+// Page specific actions
+
+/**
+ * Display the pages list
+ */ 
+TwbActions.showPageList = function showPageList(message) {
+  page('/');
+}
+
+/**
+ * Edit the given page
+ */ 
+TwbActions.editPage = function editPage(page) {
+  this.fire(TwbActions.EDIT_PAGE_EVT, {page: this.page});
+}
+
+/**
+ * Create a new page
+ */ 
+TwbActions.createPage = function updatePage(params, response, error, context) {
+  TwbService.createPage(params, response, error, context);
+}
+
+/**
+ * Save the given page
+ */ 
+TwbActions.updatePage = function updatePage(page, response, error, context) {
+  TwbService.updatePage(page.id, page, response, error, context);
+}
+
+/**
+ * Delete the given page
+ */ 
+TwbActions.deletePage = function deletePage(page, response, error, context) {
+  TwbService.deletePage(page.id, response, error, context);
+  // TODO : we need to remove the page from the page list in the store
+}
+
+})(window);
+</script>

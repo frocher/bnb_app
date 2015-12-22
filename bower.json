@@ -8,6 +8,7 @@
     "neon-elements": "PolymerElements/neon-elements#^1.0.0",
     "page": "visionmedia/page.js#~1.6.3",
     "underscore" : "underscore#^1.8.0",
+    "moment" : "moment#^2.10.0",
     "holderjs" : "holderjs#^2.8.0"
   },
   "devDependencies": {

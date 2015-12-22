@@ -43,19 +43,15 @@
     },
 
     handleSigninError: function(error) {
-      this.showToast(error.errors[0]);
-    },
-
-    showToast: function(message) {
-      this.fire('message', {message: message});
+      TwbActions.showMessage(error.errors[0]);
     },
 
     initUser: function(data) {
-      TwbUserStore.userId   = data.id;
-      TwbUserStore.username = data.name;
-      TwbUserStore.email    = data.email;
-      TwbUserStore.admin    = data.admin;
-      TwbUserStore.avatar   = data.avatar_url;
+      TwbStore.userId   = data.id;
+      TwbStore.username = data.name;
+      TwbStore.email    = data.email;
+      TwbStore.admin    = data.admin;
+      TwbStore.avatar   = data.avatar_url;
 
       this.params.password = '';
       this.params.password_confirmation = '';
