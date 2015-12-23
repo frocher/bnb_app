@@ -67,7 +67,7 @@
 
     closePage: function() {
       this.clearFields();
-      page('/');
+      TwbActions.showPageList();
     },
 
     createTapped: function() {
@@ -84,7 +84,7 @@
 
     handleError: function(error) {
       if (error === null) {
-        this.showToast("Error : can't create page");
+        TwbActions.showMessage("Error : can't create page");
       }
       else {
         var errors = error.errors;
@@ -98,10 +98,6 @@
           }
         }       
       }
-    },
-
-    showToast: function(message) {
-      this.fire('message', {message: message});
     },
 
     clearFields: function() {

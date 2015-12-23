@@ -45,11 +45,12 @@
     is: 'twb-app', 
 
     listeners: {
-      'message': 'handleMessage',
-      'signedin': 'handleSignedIn', 
-      'signedout': 'handleSignedOut',
-      'show-page': 'handleShowPage'
-      'edit-page': 'handleEditPage'
+      TwbActions.MESSAGE_EVT    : 'handleMessage',
+      TwbActions.SIGNED_IN_EVT  : 'handleSignedIn', 
+      TwbActions.SIGNED_OUT_EVT : 'handleSignedOut',
+      TwbActions.SHOW_PAGES_EVT : 'handleShowPages',
+      TwbActions.SHOW_PAGE_EVT  : 'handleShowPage',
+      TwbActions.EDIT_PAGE_EVT  : 'handleEditPage'
     },
 
     properties: {
@@ -90,11 +91,15 @@
     },
 
     handleLoadPagesError: function(error) {
-      this.showToast(error.errors[0]);
+      TwbActions.showMessage(error.errors[0]);
     },
 
     handleMessage: function(e) {
-      this.showToast(e.detail.message);
+      this._showToast(e.detail.message);
+    },
+
+    handleShowPages: function(e) {
+      page('/');
     },
 
     handleShowPage: function(e) {
@@ -117,7 +122,7 @@
       page('/signin');
     },
 
-    showToast: function(message) {
+    _showToast: function(message) {
       var toast = this.$['message-toast'];
       toast.text = message;
       toast.show();

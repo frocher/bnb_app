@@ -59,7 +59,7 @@
     },
 
     closePage: function() {
-      this.fire('show-page', {page: this.page});
+      TwbActions.showPage(this.page);
     },
 
     createTapped: function() {
@@ -70,13 +70,13 @@
     },
 
     handleResponse: function(data) {
-      this.showToast("Page has been updated");
+      TwbActions.showMessage("Page has been updated");
       this.closePage();
     },
 
     handleError: function(error) {
       if (error === null) {
-        this.showToast("Error : can't save page");
+        TwbActions.showMessage("Error : can't save page");
       }
       else {
         var errors = error.errors;
@@ -90,10 +90,6 @@
           }
         }       
       }
-    },
-
-    showToast: function(message) {
-      this.fire('message', {message: message});
     }
 
   });

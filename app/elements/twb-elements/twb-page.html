@@ -172,11 +172,11 @@
     },
 
     backTapped: function(e) {
-      page('/');
+      TwbActions.showPageList();
     },
 
     editTapped: function(e) {
-      this.fire('edit-page', {page: this.page});
+      TwbActions.editPage(this.page);
     },
 
     deleteTapped: function(e) {

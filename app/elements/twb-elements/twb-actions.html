@@ -6,6 +6,10 @@
 (function(scope) {
 var TwbActions = scope.TwbActions = scope.TwbActions || {};
 
+TwbActions.SIGNED_IN_EVT  = 'signedin';
+TwbActions.SIGNED_OUT_EVT = 'signedout';
+TwbActions.SHOW_PAGES_EVT = 'show-pages';
+TwbActions.SHOW_PAGE_EVT  = 'show-page';
 TwbActions.EDIT_PAGE_EVT  = 'edit-page';
 TwbActions.MESSAGE_EVT    = 'message';
 
@@ -23,17 +27,42 @@ TwbActions.showMessage = function showMessage(message) {
 ////////////////////////////////////////////////////////////////////
 // User session management actions
 
+TwbActions.isLogged = function isLogged() {
+  return sessionStorage.getItem('accessToken') !== null;
+};
+
+TwbActions.signout = function signout() {
+  sessionStorage.removeItem('accessToken');
+  sessionStorage.removeItem('uid');
+};
+
 
 // TODO...
 
 ////////////////////////////////////////////////////////////////////
 // Page specific actions
 
+
+/**
+ * Display the pages list
+ */ 
+TwbActions.loadPages = function loadPages() {
+  TwbService.loadPages({}, this.handleLoadPagesResponse, this.handleLoadPagesError, this);
+
+}
+
 /**
  * Display the pages list
  */ 
 TwbActions.showPageList = function showPageList(message) {
   page('/');
+}
+
+/**
+ * Display the given page
+ */ 
+TwbActions.showPage = function showPage(page) {
+  this.fire(TwbActions.SHOW_PAGE_EVT, {page: this.page});
 }
 
 /**
