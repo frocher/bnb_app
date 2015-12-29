@@ -60,14 +60,9 @@
         this.$.discardDlg.open();
       }
       else {
-        this.closePage();
+        this.clearFields();
+        this.fire('show-pages');
       }
-
-    },
-
-    closePage: function() {
-      this.clearFields();
-      TwbActions.showPageList();
     },
 
     createTapped: function() {
@@ -78,8 +73,7 @@
     },
 
     handleResponse: function(data) {
-      this.push('pages', data);
-      this.closePage();
+      this.fire('page-created', {page: data});
     },
 
     handleError: function(error) {

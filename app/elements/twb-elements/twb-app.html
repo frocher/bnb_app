@@ -42,16 +42,17 @@
 (function() {
 
   Polymer({
-
     is: 'twb-app',
 
     listeners: {
-      'message'   : 'handleMessage',
-      'signedin'  : 'handleSignedIn',
-      'signedout' : 'handleSignedOut',
-      'show-pages': 'handleShowPages',
-      'show-page' : 'handleShowPage',
-      'edit-page' : 'handleEditPage'
+      'message'      : 'handleMessage',
+      'signedin'     : 'handleSignedIn',
+      'signedout'    : 'handleSignedOut',
+      'show-pages'   : 'handleShowPages',
+      'show-page'    : 'handleShowPage',
+      'edit-page'    : 'handleEditPage',
+      'page-created' : 'handlePageCreated',
+      'page-deleted' : 'handlePageDeleted'
     },
 
     properties: {
@@ -62,41 +63,50 @@
         }
       },
 
-      currentPage : {
+      user: {
         type: Object,
         value: null
       },
 
-      currentPeriod : {
+      page: {
+        type: Object,
+        value: null
+      },
+
+      period: {
+        type: String,
+        value: null
+      },
+
+      customPeriod: {
         type: Object,
         value: null
       }
     },
 
-    ready: function() {
-      var _this = this;
-
-      this._initRoutes();
-
-      if (TwbService.isLogged()) {
-        this._initData();
-      }
+    loadPages: function() {
+      TwbService.loadPages({}, this.handleLoadPagesResponse, this.handleGenericError, this);
     },
 
-    loadPages: function() {
-      TwbService.loadPages({}, this.handleLoadPagesResponse, this.handleLoadPagesError, this);
+    loadPage: function(id) {
+      TwbService.loadPage(id, {}, this.handleLoadPageResponse, this.handleGenericError, this);
     },
 
     handleLoadPagesResponse: function(data) {
       this.pages = data;
     },
 
-    handleLoadPagesError: function(error) {
+    handleLoadPageResponse: function(data) {
+      this.page = data;
+    },
+
+    handleGenericError: function(error) {
       this.fire('message', {message: error.errors[0]});
     },
 
+
     handleMessage: function(e) {
-      this._showToast(e.detail.message);
+      this.showToast(e.detail.message);
     },
 
     handleShowPages: function(e) {
@@ -113,98 +123,30 @@
       page(path);
     },
 
-    handleSignedIn: function(e) {
+    handlePageCreated: function(e) {
       this.loadPages();
       page('/');
     },
 
+    handlePageDeleted: function(e) {
+      this.loadPages();
+      page('/');
+    },
+
+    handleSignedIn: function(e) {
+      this.user = e.detail.user;
+      page('/');
+    },
+
     handleSignedOut: function(e) {
-      // TODO : invalidate credentials
+      TwbService.signout();
       page('/signin');
     },
 
-    _showToast: function(message) {
+    showToast: function(message) {
       var toast = this.$['message-toast'];
       toast.text = message;
       toast.show();
-    },
-
-    _initData : function() {
-      this.loadPages();
-    },
-
-    _initCurrentPage: function(id) {
-      var id = context.params.id;
-      var found = _.select(this.pages, function( item ) {
-        return item.id == id;
-      });
-      if (found.length > 0) {
-        this.currentPage = found[0];
-        // TODO : load page details
-
-      }
-    },
-
-    _initRoutes: function() {
-      var _this = this;
-
-      page('/signin', function () {
-        _this.route = 'signin';
-      });
-
-      page('/signup', function () {
-        _this.route = 'signup';
-      });
-
-      page('/forgot', function () {
-        _this.route = 'forgot';
-      });
-
-      page('/edit-password', function () {
-        _this.route = 'edit-password';
-      });
-
-      page('/', function () {
-        if (!TwbService.isLogged()) {
-          page.redirect('/signin');
-        }
-        else {
-          _this.route = 'home';
-        }
-      });
-
-      page('/page/:id', function (context) {
-        if (!TwbService.isLogged()) {
-          page.redirect('/signin');
-        }
-        else {
-          _this._initCurrentPage(context.params.id);
-          _this.route = 'page';
-        }
-      });
-
-      page('/edit-page/:id', function () {
-        if (!TwbService.isLogged()) {
-          page.redirect('/signin');
-        }
-        else {
-          _this._initCurrentPage(context.params.id);
-          _this.route = 'edit-page';
-        }
-      });
-
-      page('/add-page', function () {
-        if (!TwbService.isLogged()) {
-          page.redirect('/signin');
-        }
-        else {
-          _this.route = 'add-page';
-        }
-      });
-
-      page({
-        hashbang: true
-      });
     }
 
   });

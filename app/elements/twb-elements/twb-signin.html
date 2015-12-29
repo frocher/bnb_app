@@ -36,26 +36,16 @@
     },
 
     handleSigninResponse: function(data) {
-      this.initUser(data);
-      this.fire('signedin');
-
       this.params.password = '';
+      this.params.password_confirmation = '';
+
+      this.fire('signedin', {user: data};
     },
 
     handleSigninError: function(error) {
       this.fire('message', {message: error.errors[0]});
-    },
-
-    initUser: function(data) {
-      TwbStore.userId   = data.id;
-      TwbStore.username = data.name;
-      TwbStore.email    = data.email;
-      TwbStore.admin    = data.admin;
-      TwbStore.avatar   = data.avatar_url;
-
-      this.params.password = '';
-      this.params.password_confirmation = '';
     }
+    
   });
 
 })();

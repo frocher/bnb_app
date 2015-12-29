@@ -172,11 +172,11 @@
     },
 
     backTapped: function(e) {
-      TwbActions.showPageList();
+      this.fire('show-pages');
     },
 
     editTapped: function(e) {
-      TwbActions.editPage(this.page);
+      this.fire('edit-page', {page: this.page});
     },
 
     deleteTapped: function(e) {
@@ -184,11 +184,11 @@
     },
 
     deletePage: function(e) {
-      TwbActions.deletePage(this.page, this.handleResponse, this.handleError, this);
+      TwbService.deletePage(this.page, this.handleResponse, this.handleError, this);
     },
 
     handleResponse: function(data) {
-      TwbActions.showPageList();
+      this.fire('page-deleted', {page: page});
       this.fire('message', {message: "Page has been deleted"});
     },
 

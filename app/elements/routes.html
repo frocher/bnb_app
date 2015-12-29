@@ -1,1 +1,77 @@
 <script src="../bower_components/page/page.js"></script>
+<script>
+  window.addEventListener('WebComponentsReady', function() {
+
+    /**
+     * Middleware for authentication check
+     */
+    function authenticate(ctx, next) {
+      if (ctx.pathname==='/signin' || ctx.pathname==='/signup' || ctx.pathname==='/forgot' || ctx.pathname==='/edit-password') {
+        next();
+      }
+      else if (app.isLogged()) {
+        if (app.pages == null) {
+          app.loadPages();         
+        }
+        next();
+      }
+      else {
+        page.redirect('/signin');
+      }
+    }
+
+    function loadPage(ctx, next) {
+      var id = ctx.params.id;
+      app.loadPage(id);
+      next();
+    }
+
+    // Interceptor for all pages
+    page('*', authenticate, function(ctx, next) {
+      next();
+    });
+
+    page('/signin', function () {
+      app.route = 'signin';
+    });
+
+    page('/signup', function () {
+      app.route = 'signup';
+    });
+
+    page('/forgot', function () {
+      app.route = 'forgot';
+    });
+
+    page('/edit-password', function () {
+      app.route = 'edit-password';
+    });
+
+    page('/', function () {
+      app.route = 'home';
+    });
+
+    page('/page/:id', loadPage, function (context) {
+      app.route = 'page';
+    });
+
+    page('/edit-page/:id', loadPage, function () {
+      app.route = 'edit-page';
+    });
+
+    page('/add-page', function () {
+      app.route = 'add-page';
+    });
+
+    // 404
+    page('*', function() {
+      app.showToast('Can\'t find: ' + window.location.href  + '. Redirected you to Home Page');
+      page.redirect(app.baseUrl);
+    });
+
+    page({
+      hashbang: true
+    });
+
+  });
+</script>

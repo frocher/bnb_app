@@ -106,7 +106,7 @@
     },
 
     cardTapped: function(e) {
-      TwbActions.showPage(this.page);
+      this.fire('show-page', {page: this.page});
     },
 
     urlTapped: function(e) {

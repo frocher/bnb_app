@@ -1,8 +1,7 @@
-<script>
 /**
- * @fileoverview Define TWB models
+ * Define TWB models
  */
-(function(scope) {
+(function(document) {
 
   var Page = function() {
   }
@@ -14,6 +13,4 @@
   Page.prototype.destroy = function(successCallback, errorCallback){
     // TODO
   }
-
-})();
-</script>
+})(wrap(document));

@@ -59,7 +59,7 @@
     },
 
     closePage: function() {
-      TwbActions.showPage(this.page);
+      this.fire('show-page', {page: this.page});
     },
 
     createTapped: function() {

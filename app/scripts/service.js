@@ -1,13 +1,9 @@
-<script>
+(function(document) {
 
-(function(scope) {
 var TwbService = scope.TwbService = scope.TwbService || {};
 
 TwbService.BASE_URL = '/api/';
 
-TwbService.isLogged = function isLogged() {
-  return sessionStorage.getItem('accessToken') !== null;
-};
 
 TwbService.signin = function signin(params, successCallback, errorCallback, callbackObj) {
   var options = TwbService._generateOptions('/auth/sign_in', 'POST', params);
@@ -41,7 +37,12 @@ TwbService.loadPages = function loadPages(params, successCallback, errorCallback
 
 TwbService.loadPage = function loadPage(id, params, successCallback, errorCallback, callbackObj) {
   var options = TwbService._generateOptions('/page/' + id, 'GET', params);
-  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
+  TwbService._sendRequest(options, TwbService.handleLoadPageSuccess, errorCallback, callbackObj);
+};
+
+TwbService.handleLoadPageSuccess = function TwbService.handleLoadPageSuccess(next) {
+  // TODO : enrichir avec les fonctions destroy et save
+  next();
 };
 
 TwbService.createPage = function createPage(params, successCallback, errorCallback, callbackObj) {
@@ -173,5 +174,4 @@ TwbService._setUid = function _setUid(uid) {
   sessionStorage.setItem('uid', uid);
 };
 
-})(window);
-</script>
+})(wrap(document));
