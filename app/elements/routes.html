@@ -10,14 +10,16 @@
         next();
       }
       else if (app.isLogged()) {
-        if (app.pages == null) {
-          app.loadPages();         
-        }
         next();
       }
       else {
         page.redirect('/signin');
       }
+    }
+
+    function loadPages(ctx, next) {
+      app.loadPages();
+      next();
     }
 
     function loadPage(ctx, next) {
@@ -31,35 +33,35 @@
       next();
     });
 
-    page('/signin', function () {
+    page('/signin', function() {
       app.route = 'signin';
     });
 
-    page('/signup', function () {
+    page('/signup', function() {
       app.route = 'signup';
     });
 
-    page('/forgot', function () {
+    page('/forgot', function() {
       app.route = 'forgot';
     });
 
-    page('/edit-password', function () {
+    page('/edit-password', function() {
       app.route = 'edit-password';
     });
 
-    page('/', function () {
+    page('/', loadPages, function() {
       app.route = 'home';
     });
 
-    page('/page/:id', loadPage, function (context) {
+    page('/page/:id', loadPage, function() {
       app.route = 'page';
     });
 
-    page('/edit-page/:id', loadPage, function () {
+    page('/edit-page/:id', loadPage, function() {
       app.route = 'edit-page';
     });
 
-    page('/add-page', function () {
+    page('/add-page', function() {
       app.route = 'add-page';
     });
 
