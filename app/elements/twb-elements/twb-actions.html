@@ -1,6 +1,8 @@
+<link rel="import" href="twb-service.html">
+
 <script>
 /**
- * @fileoverview Encapsulate all global application actions.
+ * Encapsulate all global application actions.
  * Local components actions must not exist here.
  */
 (function(scope) {
@@ -18,11 +20,10 @@ TwbActions.MESSAGE_EVT    = 'message';
 
 /**
  * Display a toast message
- */ 
+ */
 TwbActions.showMessage = function showMessage(message) {
-  this.fire(TwbActions.MESSAGE_EVT, {message: message});
+  this.fire('message', {message: message});
 }
-
 
 ////////////////////////////////////////////////////////////////////
 // User session management actions
@@ -36,16 +37,14 @@ TwbActions.signout = function signout() {
   sessionStorage.removeItem('uid');
 };
 
-
 // TODO...
 
 ////////////////////////////////////////////////////////////////////
 // Page specific actions
 
-
 /**
  * Display the pages list
- */ 
+ */
 TwbActions.loadPages = function loadPages() {
   TwbService.loadPages({}, this.handleLoadPagesResponse, this.handleLoadPagesError, this);
 
@@ -53,42 +52,42 @@ TwbActions.loadPages = function loadPages() {
 
 /**
  * Display the pages list
- */ 
+ */
 TwbActions.showPageList = function showPageList(message) {
   page('/');
 }
 
 /**
  * Display the given page
- */ 
+ */
 TwbActions.showPage = function showPage(page) {
   this.fire(TwbActions.SHOW_PAGE_EVT, {page: this.page});
 }
 
 /**
  * Edit the given page
- */ 
+ */
 TwbActions.editPage = function editPage(page) {
   this.fire(TwbActions.EDIT_PAGE_EVT, {page: this.page});
 }
 
 /**
  * Create a new page
- */ 
+ */
 TwbActions.createPage = function updatePage(params, response, error, context) {
   TwbService.createPage(params, response, error, context);
 }
 
 /**
  * Save the given page
- */ 
+ */
 TwbActions.updatePage = function updatePage(page, response, error, context) {
   TwbService.updatePage(page.id, page, response, error, context);
 }
 
 /**
  * Delete the given page
- */ 
+ */
 TwbActions.deletePage = function deletePage(page, response, error, context) {
   TwbService.deletePage(page.id, response, error, context);
   // TODO : we need to remove the page from the page list in the store

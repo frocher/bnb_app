@@ -1,3 +1,4 @@
+<link rel="import" href="twb-actions.html">
 <link rel="import" href="twb-signin.html">
 <link rel="import" href="twb-signup.html">
 <link rel="import" href="twb-forgot-password.html">
@@ -42,15 +43,15 @@
 
   Polymer({
 
-    is: 'twb-app', 
+    is: 'twb-app',
 
     listeners: {
-      TwbActions.MESSAGE_EVT    : 'handleMessage',
-      TwbActions.SIGNED_IN_EVT  : 'handleSignedIn', 
-      TwbActions.SIGNED_OUT_EVT : 'handleSignedOut',
-      TwbActions.SHOW_PAGES_EVT : 'handleShowPages',
-      TwbActions.SHOW_PAGE_EVT  : 'handleShowPage',
-      TwbActions.EDIT_PAGE_EVT  : 'handleEditPage'
+      'message'   : 'handleMessage',
+      'signedin'  : 'handleSignedIn',
+      'signedout' : 'handleSignedOut',
+      'show-pages': 'handleShowPages',
+      'show-page' : 'handleShowPage',
+      'edit-page' : 'handleEditPage'
     },
 
     properties: {
@@ -63,12 +64,12 @@
 
       currentPage : {
         type: Object,
-        value: null     
-      }
+        value: null
+      },
 
       currentPeriod : {
         type: Object,
-        value: null     
+        value: null
       }
     },
 

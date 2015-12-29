@@ -24,7 +24,7 @@
 (function() {
 
   Polymer({
-    is: 'twb-signin', 
+    is: 'twb-signin',
 
     ready: function() {
       this.params = { name:'', email:'', password:'' };
@@ -43,7 +43,7 @@
     },
 
     handleSigninError: function(error) {
-      TwbActions.showMessage(error.errors[0]);
+      this.fire('message', {message: error.errors[0]});
     },
 
     initUser: function(data) {
