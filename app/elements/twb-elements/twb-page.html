@@ -189,11 +189,11 @@
 
     handleResponse: function(data) {
       TwbActions.showPageList();
-      TwbActions.showMessage("Page has been deleted");
+      this.fire('message', {message: "Page has been deleted"});
     },
 
     handleError: function(error) {
-      TwbActions.showMessage("Error : can't delete page");
+      this.fire('message', {message: "Error : can't delete page"});
     }
 
   });

@@ -70,13 +70,13 @@
     },
 
     handleResponse: function(data) {
-      TwbActions.showMessage("Page has been updated");
+      this.fire('message', {message: "Page has been updated"});
       this.closePage();
     },
 
     handleError: function(error) {
       if (error === null) {
-        TwbActions.showMessage("Error : can't save page");
+        this.fire('message', {message: "Error : can't save page"});
       }
       else {
         var errors = error.errors;

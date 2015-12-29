@@ -92,7 +92,7 @@
     },
 
     handleLoadPagesError: function(error) {
-      TwbActions.showMessage(error.errors[0]);
+      this.fire('message', {message: error.errors[0]});
     },
 
     handleMessage: function(e) {

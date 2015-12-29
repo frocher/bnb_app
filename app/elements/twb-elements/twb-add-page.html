@@ -84,7 +84,7 @@
 
     handleError: function(error) {
       if (error === null) {
-        TwbActions.showMessage("Error : can't create page");
+        this.fire('message', {message: "Error : can't create page"});
       }
       else {
         var errors = error.errors;

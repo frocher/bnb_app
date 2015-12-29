@@ -15,15 +15,6 @@ TwbActions.SHOW_PAGE_EVT  = 'show-page';
 TwbActions.EDIT_PAGE_EVT  = 'edit-page';
 TwbActions.MESSAGE_EVT    = 'message';
 
-////////////////////////////////////////////////////////////////////
-// Global actions
-
-/**
- * Display a toast message
- */
-TwbActions.showMessage = function showMessage(message) {
-  this.fire('message', {message: message});
-}
 
 ////////////////////////////////////////////////////////////////////
 // User session management actions

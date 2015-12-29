@@ -69,7 +69,7 @@
     },
 
     showToast: function(message) {
-      TwbActions.showMessage(message);
+      this.fire('message', {message: message});
     },
 
     homeUrl: function() {
