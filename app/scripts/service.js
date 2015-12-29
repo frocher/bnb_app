@@ -37,7 +37,15 @@ TwbService.loadPages = function loadPages(params, successCallback, errorCallback
 
 TwbService.loadPage = function loadPage(id, params, successCallback, errorCallback, callbackObj) {
   var options = TwbService._generateOptions('/page/' + id, 'GET', params);
-  TwbService._sendRequest(options, TwbService.handleLoadPageSuccess, errorCallback, callbackObj);
+  TwbService._sendRequest(options,
+    function(data) {
+      // TODO : we need to transform object and add update et destroy methods to it
+      successCallback.apply(callbackObj, data);
+    },
+    function(error) {
+      errorCallback.apply(callbackObj, error);
+    },
+    this);
 };
 
 TwbService.handleLoadPageSuccess = function TwbService.handleLoadPageSuccess(next) {
