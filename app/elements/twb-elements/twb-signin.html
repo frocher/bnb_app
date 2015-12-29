@@ -39,13 +39,13 @@
       this.params.password = '';
       this.params.password_confirmation = '';
 
-      this.fire('signedin', {user: data};
+      this.fire('signedin', {user: data});
     },
 
     handleSigninError: function(error) {
       this.fire('message', {message: error.errors[0]});
     }
-    
+
   });
 
 })();

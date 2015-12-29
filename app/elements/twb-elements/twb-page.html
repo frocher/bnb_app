@@ -143,7 +143,7 @@
                 speed index
               </p>
           </div>
-        </div>      
+        </div>
 
         <paper-dialog id="deleteDlg" modal>
           <p>Delete page ?</p>
@@ -184,7 +184,7 @@
     },
 
     deletePage: function(e) {
-      TwbService.deletePage(this.page, this.handleResponse, this.handleError, this);
+      TwbService.deletePage(this.page.id, this.handleResponse, this.handleError, this);
     },
 
     handleResponse: function(data) {

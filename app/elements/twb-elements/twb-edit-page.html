@@ -62,14 +62,20 @@
       this.fire('show-page', {page: this.page});
     },
 
-    createTapped: function() {
+    saveTapped: function() {
       this.$['name'].invalid = false;
       this.$['url'].invalid = false;
 
-      TwbService.updatePage(this.page.id, this.page, this.handleResponse, this.handleError, this);
+      var page = {
+        name: this.$['name'].value,
+        url: this.$['url'].value
+      }
+
+      TwbService.updatePage(this.page.id, page, this.handleResponse, this.handleError, this);
     },
 
     handleResponse: function(data) {
+      this.page = data;
       this.fire('message', {message: "Page has been updated"});
       this.closePage();
     },
@@ -88,7 +94,7 @@
               this.$[objId].errorMessage = errors[prop][0];
             }
           }
-        }       
+        }
       }
     }
 
@@ -96,4 +102,3 @@
 
 })();
 </script>
-

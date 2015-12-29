@@ -1,185 +1,190 @@
-(function(document) {
+var TwbService = (function() {
 
-var TwbService = scope.TwbService = scope.TwbService || {};
-
-TwbService.BASE_URL = '/api/';
+  var BASE_URL = '/api/';
 
 
-TwbService.signin = function signin(params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions('/auth/sign_in', 'POST', params);
-  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
-};
-
-TwbService.signup = function signup(params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions('/auth/', 'POST', params);
-  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
-};
-
-TwbService.signout = function signout() {
-  sessionStorage.removeItem('accessToken');
-  sessionStorage.removeItem('uid');
-};
-
-TwbService.forgotPassword = function forgotPassword(params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions('/auth/password', 'POST', params);
-  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
-};
-
-TwbService.updatePassword = function updatePassword(params, headers, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions('/auth/password', 'PUT', params, headers);
-  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
-};
-
-TwbService.loadPages = function loadPages(params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions('/pages', 'GET', params);
-  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
-};
-
-TwbService.loadPage = function loadPage(id, params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions('/page/' + id, 'GET', params);
-  TwbService._sendRequest(options,
-    function(data) {
-      // TODO : we need to transform object and add update et destroy methods to it
-      successCallback.apply(callbackObj, data);
-    },
-    function(error) {
-      errorCallback.apply(callbackObj, error);
-    },
-    this);
-};
-
-TwbService.handleLoadPageSuccess = function TwbService.handleLoadPageSuccess(next) {
-  // TODO : enrichir avec les fonctions destroy et save
-  next();
-};
-
-TwbService.createPage = function createPage(params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions('/pages', 'POST', params);
-  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
-};
-
-TwbService.updatePage = function updatePage(id, params, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions('/page/' + id, 'PUT', params);
-  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
-};
-
-TwbService.deletePage = function deletePage(id, successCallback, errorCallback, callbackObj) {
-  var options = TwbService._generateOptions('/page/' + id, 'DELETE');
-  TwbService._sendRequest(options, successCallback, errorCallback, callbackObj);
-};
-
-TwbService._generateOptions = function _generateOptions(url, method, params, headers) {
-  var options = {
-    url: TwbService._getRequestUrl(url, params),
-    method: method,
-    headers: _.extend(TwbService._getCredentials(), TwbService._getRequestHeaders(headers)),
-    body: '',
-    async: true,
-    handleAs: 'json',
-    withCredentials: false
+  var signin = function(params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/auth/sign_in', 'POST', params);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
   };
-  return options;
-};
 
-TwbService._getCredentials = function _getCredentials() {
-  var token = TwbService._getAccessToken();
-  if (token !== null && token != "null") {
-    return {'access-token' : token, 'client' : TwbService._getClient(), 'uid' : TwbService._getUid(), 'token-type' : 'Bearer'};
-  }
-  else {
-    return {};
-  }
-};
+  var signup = function(params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/auth/', 'POST', params);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
 
-TwbService._sendRequest = function _sendRequest(options, successCallback, errorCallback, callbackObj) {
-  var req = document.createElement('iron-request');
-  var _this = this;
-  req.completes.then( function(result) {
-    _this._handleSuccess(req, successCallback, callbackObj);
-  }, function(err) {
-    _this._handleSuccess(req, errorCallback, callbackObj);
-  });
-  req.send(options);
-};
+  var signout = function() {
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('uid');
+  };
 
-TwbService._handleSuccess = function _handleSuccess(request, callback, callbackObj) {
-  var accessToken = request.xhr.getResponseHeader('access-token');
-  var uid         = request.xhr.getResponseHeader('uid');
-  var client      = request.xhr.getResponseHeader('client');
-  TwbService._setAccessToken(accessToken);
-  TwbService._setUid(uid);
-  TwbService._setClient(client);
-  callback.apply (callbackObj, [request.xhr.response]);
-};
+  var forgotPassword = function(params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/auth/password', 'POST', params);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
 
-TwbService._handleError = function _handleError(request, callback, callbackObj, error) {
-  callback.apply (callbackObj, [request.xhr.response]);
-};
+  var updatePassword = function(params, headers, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/auth/password', 'PUT', params, headers);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
 
-TwbService._getRequestHeaders = function _getRequestHeaders(headers) {
-  var resu = {};
-  var header;
+  var loadPages = function(params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/pages', 'GET', params);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
 
-  if (headers instanceof Object) {
-    for (header in headers) {
-      resu[header] = headers[header].toString();
+  var loadPage = function(id, params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/pages/' + id, 'GET', params);
+    _sendRequest(options,
+      function(data) {
+        // TODO : we need to transform object and add update et destroy methods to it
+        successCallback.apply(callbackObj, [data]);
+      },
+      function(error) {
+        errorCallback.apply(callbackObj, [error]);
+      },
+      this);
+  };
+
+  var createPage = function(params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/pages', 'POST', params);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
+  var updatePage = function(id, params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/pages/' + id, 'PUT', params);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
+  var deletePage = function(id, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/pages/' + id, 'DELETE');
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
+  var _generateOptions = function(url, method, params, headers) {
+    var options = {
+      url: _getRequestUrl(url, params),
+      method: method,
+      headers: _.extend(_getCredentials(), _getRequestHeaders(headers)),
+      body: '',
+      async: true,
+      handleAs: 'json',
+      withCredentials: false
+    };
+    return options;
+  };
+
+  var _getCredentials = function() {
+    var token = _getAccessToken();
+    if (token !== null && token != "null") {
+      return {'access-token' : token, 'client' : _getClient(), 'uid' : _getUid(), 'token-type' : 'Bearer'};
     }
-  }
+    else {
+      return {};
+    }
+  };
 
-  return resu;
-};
+  var _sendRequest = function(options, successCallback, errorCallback, callbackObj) {
+    var req = document.createElement('iron-request');
+    req.completes.then( function(result) {
+      _handleSuccess(req, successCallback, callbackObj);
+    }, function(err) {
+      _handleError(req, errorCallback, callbackObj, err);
+    });
+    req.send(options);
+  };
 
-TwbService._getQueryString = function _getQueryString(params) {
-  var queryParts = [];
-  var param;
-  var value;
+  var _handleSuccess = function(request, callback, callbackObj) {
+    var accessToken = request.xhr.getResponseHeader('access-token');
+    var uid         = request.xhr.getResponseHeader('uid');
+    var client      = request.xhr.getResponseHeader('client');
+    _setAccessToken(accessToken);
+    _setUid(uid);
+    _setClient(client);
+    callback.apply (callbackObj, [request.xhr.response]);
+  };
 
-  for (param in params) {
-    value = params[param];
-    param = window.encodeURIComponent(param);
+  var _handleError = function(request, callback, callbackObj, error) {
+    callback.apply (callbackObj, [request.xhr.response]);
+  };
 
-    if (value !== null) {
-      param += '=' + window.encodeURIComponent(value);
+  var _getRequestHeaders = function(headers) {
+    var resu = {};
+    var header;
+
+    if (headers instanceof Object) {
+      for (header in headers) {
+        resu[header] = headers[header].toString();
+      }
     }
 
-    queryParts.push(param);
-  }
+    return resu;
+  };
 
-  return queryParts.join('&');
-};
+  var _getQueryString = function(params) {
+    var queryParts = [];
+    var param;
+    var value;
 
-TwbService._getRequestUrl = function _getRequestUrl(url, params) {
-  var queryString = TwbService._getQueryString(params);
+    for (param in params) {
+      value = params[param];
+      param = window.encodeURIComponent(param);
 
-  if (queryString) {
-    return TwbService.BASE_URL + url + '?' + queryString;
-  }
+      if (value !== null) {
+        param += '=' + window.encodeURIComponent(value);
+      }
 
-  return TwbService.BASE_URL + url;
-};
+      queryParts.push(param);
+    }
 
-TwbService._getAccessToken = function _getAccessToken() {
-  return sessionStorage.getItem('accessToken');
-};
+    return queryParts.join('&');
+  };
 
-TwbService._setAccessToken = function _setAccessToken(token) {
-  sessionStorage.setItem('accessToken', token);
-};
+  var _getRequestUrl = function(url, params) {
+    var queryString = _getQueryString(params);
 
-TwbService._getClient = function _getClient() {
-  return sessionStorage.getItem('client');
-};
+    if (queryString) {
+      return BASE_URL + url + '?' + queryString;
+    }
 
-TwbService._setClient = function _setClient(client) {
-  sessionStorage.setItem('client', client);
-};
+    return BASE_URL + url;
+  };
 
-TwbService._getUid = function _getUid() {
-  return sessionStorage.getItem('uid');
-};
+  var _getAccessToken = function() {
+    return sessionStorage.getItem('accessToken');
+  };
 
-TwbService._setUid = function _setUid(uid) {
-  sessionStorage.setItem('uid', uid);
-};
+  var _setAccessToken = function(token) {
+    sessionStorage.setItem('accessToken', token);
+  };
 
-})(wrap(document));
+  var _getClient = function() {
+    return sessionStorage.getItem('client');
+  };
+
+  var _setClient = function(client) {
+    sessionStorage.setItem('client', client);
+  };
+
+  var _getUid = function() {
+    return sessionStorage.getItem('uid');
+  };
+
+  var _setUid = function _setUid(uid) {
+    sessionStorage.setItem('uid', uid);
+  };
+
+  return {
+    BASE_URL: BASE_URL,
+    signin: signin,
+    signup: signup,
+    signout: signout,
+    forgotPassword: forgotPassword,
+    updatePassword: updatePassword,
+    loadPages: loadPages,
+    loadPage: loadPage,
+    createPage: createPage,
+    updatePage: updatePage,
+    deletePage: deletePage
+  };
+})();
