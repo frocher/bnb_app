@@ -1,6 +1,11 @@
 ## The WatchBots Application
 
-### Installation for Development
+### Dependencies
+
+* Node.js
+* The WatchBots Nexus
+
+### Quicklaunch for Development
 
 With Node.js installed, run the following lines from the root of your Project download:
 
