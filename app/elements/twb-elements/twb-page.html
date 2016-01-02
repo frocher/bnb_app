@@ -70,8 +70,8 @@
           <twb-period-dropdown></twb-period-dropdown>
         </span>
         <div class="flex"></div>
-        <paper-icon-button icon="create" on-tap="editTapped" hidden?="{{!page.editable}"></paper-icon-button>
-        <paper-icon-button icon="delete" on-tap="deleteTapped" hidden?="{{!page.deletable}"></paper-icon-button>
+        <paper-icon-button icon="create" on-tap="editTapped" hidden$="{{!page.editable}}"></paper-icon-button>
+        <paper-icon-button icon="delete" on-tap="deleteTapped" hidden$="{{!page.deletable}}"></paper-icon-button>
       </paper-toolbar>
 
       <div id="content" class="fit">
