@@ -97,6 +97,28 @@
 
     handleLoadPageResponse: function(data) {
       this.page = data;
+      this.page.uptime = null;
+
+      TwbService.loadUptimes(this.page.id, 'median', '2015-11-01', '2015-11-30', this.handleLoadUptimeResponse, this.handleGenericError, this);
+      TwbService.loadChecks(this.page.id, 'median', '2015-11-01', '2015-11-30', this.handleLoadCheckResponse, this.handleGenericError, this);
+    },
+
+    handleLoadUptimeResponse: function(data) {
+      this.page.uptime = data[0].value;
+      this.notifyPath('page.uptime', this.page.uptime);
+    },
+
+    handleLoadCheckResponse: function(data) {
+      this.page.domReady = Math.round(data[0].dom_ready);
+      this.page.firstPaint = Math.round(data[0].first_paint);
+      this.page.pageLoad = Math.round(data[0].page_load);
+      this.page.responseStart = Math.round(data[0].response_start);
+      this.page.speedIndex = Math.round(data[0].speed_index);
+      this.notifyPath('page.domReady', this.page.domReady);
+      this.notifyPath('page.firstPaint', this.page.firstPaint);
+      this.notifyPath('page.pageLoad', this.page.pageLoad);
+      this.notifyPath('page.responseStart', this.page.responseStart);
+      this.notifyPath('page.speedIndex', this.page.speedIndex);
     },
 
     handleGenericError: function(error) {

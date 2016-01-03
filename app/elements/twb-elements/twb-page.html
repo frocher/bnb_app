@@ -1,4 +1,6 @@
 <link rel="import" href="twb-period-dropdown.html">
+<link rel="import" href="twb-value-card.html">
+<link rel="import" href="twb-chart.html">
 
 <dom-module id="twb-page">
   <style>
@@ -6,53 +8,16 @@
       @apply(--layout-vertical);
     }
 
-    .page {
-      padding-left: 8px;
-      padding-right: 8px;
+    #content {
+      margin-top: 8px;
     }
 
-
-    .box {
-      border-radius: 2px;
-      width: 250px;
-      height: 120px;
-      margin-bottom: 15px;
-      margin-left: 10px;
-      margin-right: 10px;
-      overflow: hidden;
+    #cards {
+      @apply(--layout-horizontal);
+      @apply(--layout-wrap);
+      @apply(--layout-center-justified);
     }
 
-
-    .box .inner {
-      padding: 10px;
-    }
-
-    .bg-green {
-      background-color: #4caf50;
-      color: #fff;
-    }
-
-    .bg-yellow {
-      background-color: #ffeb3b;
-      color: #000;
-    }
-
-    .bg-red {
-      background-color: #f44336;
-      color: #fff;
-    }
-
-    .box h3 {
-      font-size: 38px;
-      font-weight: bold;
-      margin: 0 0 10px 0;
-      white-space: nowrap;
-      padding: 0;
-    }
-
-    .box p {
-      font-size: 15px;
-    }
   </style>
   <template>
     <paper-header-panel class="flex">
@@ -76,74 +41,27 @@
 
       <div id="content" class="fit">
 
-        <h2>Hello</h2>
-        <div class="box bg-green">
-          <div class="inner">
-              <h3>{{page.upTime}}<span style="font-size:smaller">%</span></h3>
-              <p>
-                up time
-              </p>
-          </div>
+        <div id="cards">
+          <twb-value-card text="up time" value="[[computeUptime(page.uptime)]]" warning-value="99.7" alert-value="99.4" post-fix="%" test="lt">
+          </twb-value-card>
+
+          <twb-value-card text="speed index" value="[[page.speedIndex]]" warning-value="4500" alert-value="8000" test="gt">
+          </twb-value-card>
+
+          <twb-value-card text="response time" value="[[page.responseStart]]" warning-value="500" alert-value="1000" post-fix="ms" test="gt">
+          </twb-value-card>
+
+          <twb-value-card text="first paint" value="[[page.firstPaint]]" warning-value="4500" alert-value="8000" post-fix="ms" test="gt">
+          </twb-value-card>
+
+          <twb-value-card text="dom ready" value="[[page.domReady]]" warning-value="4500" alert-value="8000" post-fix="ms" test="gt">
+          </twb-value-card>
+
+          <twb-value-card text="page load" value="[[page.pageLoad]]" warning-value="8000" alert-value="15000" post-fix="ms" test="gt">
+          </twb-value-card>
         </div>
-        <div class="box bg-yellow">
-          <div class="inner">
-              <h3>{{page.responseTime}}<span style="font-size:smaller">ms</span></h3>
-              <p>
-                response time
-              </p>
-          </div>
-        </div>
-        <div class="box bg-red">
-          <div class="inner">
-              <h3>{{page.speedIndex}}</h3>
-              <p>
-                speed index
-              </p>
-          </div>
-        </div>
-        <div class="box bg-red">
-          <div class="inner">
-              <h3>{{page.speedIndex}}</h3>
-              <p>
-                speed index
-              </p>
-          </div>
-        </div>        <div class="box bg-red">
-          <div class="inner">
-              <h3>{{page.speedIndex}}</h3>
-              <p>
-                speed index
-              </p>
-          </div>
-        </div>        <div class="box bg-red">
-          <div class="inner">
-              <h3>{{page.speedIndex}}</h3>
-              <p>
-                speed index
-              </p>
-          </div>
-        </div>        <div class="box bg-red">
-          <div class="inner">
-              <h3>{{page.speedIndex}}</h3>
-              <p>
-                speed index
-              </p>
-          </div>
-        </div>        <div class="box bg-red">
-          <div class="inner">
-              <h3>{{page.speedIndex}}</h3>
-              <p>
-                speed index
-              </p>
-          </div>
-        </div>        <div class="box bg-red">
-          <div class="inner">
-              <h3>{{page.speedIndex}}</h3>
-              <p>
-                speed index
-              </p>
-          </div>
-        </div>
+
+        <twb-chart style="height: 400px;width:100%"></twb-chart>
 
         <paper-dialog id="deleteDlg" modal>
           <p>Delete page ?</p>
@@ -169,6 +87,10 @@
         type: Object,
         value: null
       }
+    },
+
+    computeUptime: function(uptime) {
+      return (uptime * 100).toFixed(2);
     },
 
     backTapped: function(e) {

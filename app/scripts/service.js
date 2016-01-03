@@ -61,6 +61,16 @@ var TwbService = (function() {
     _sendRequest(options, successCallback, errorCallback, callbackObj);
   };
 
+  var loadUptimes = function(id, type, start, end, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/pages/' + id + '/uptimes', 'GET', {type: type, start: start, end: end});
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
+  var loadChecks = function(id, type, start, end, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/pages/' + id + '/checks', 'GET', {type: type, start: start, end: end});
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
   var _generateOptions = function(url, method, params, headers) {
     var options = {
       url: _getRequestUrl(url, params),
@@ -185,6 +195,8 @@ var TwbService = (function() {
     loadPage: loadPage,
     createPage: createPage,
     updatePage: updatePage,
-    deletePage: deletePage
+    deletePage: deletePage,
+    loadUptimes: loadUptimes,
+    loadChecks: loadChecks
   };
 })();

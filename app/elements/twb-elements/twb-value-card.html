@@ -1,0 +1,125 @@
+<dom-module id="twb-value-card">
+  <style>
+
+    .box {
+      border-radius: 2px;
+      width: 200px;
+      height: 120px;
+      margin-bottom: 15px;
+      margin-left: 10px;
+      margin-right: 10px;
+      overflow: hidden;
+
+    }
+
+    .box .inner {
+      padding: 16px;
+      text-align: center;
+    }
+
+    .box h3 {
+      font-size: 38px;
+      font-weight: bold;
+      margin: 0 0 5px 0;
+      white-space: nowrap;
+      padding: 0;
+    }
+
+    .box p {
+      font-size: 20px;
+      margin-top: 5px;
+    }
+
+    .bg-green {
+      background-color: #4caf50;
+      color: #fff;
+    }
+
+    .bg-yellow {
+      background-color: #ffeb3b;
+      color: #000;
+    }
+
+    .bg-red {
+      background-color: #f44336;
+      color: #fff;
+    }
+
+  </style>
+  <template>
+    <div class$="{{computeBoxClass(value, warningValue, alertValue, test)}}">
+      <div class="inner">
+          <h3>[[value]]<span style="font-size:smaller">[[postFix]]</span></h3>
+          <p>[[text]]</p>
+      </div>
+    </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+    is: 'twb-value-card',
+
+    properties: {
+      text: {
+        type: String,
+        value: null
+      },
+
+      value: {
+        type: Number,
+        value: null
+      },
+
+      postFix: {
+        type: String,
+        value: null
+      },
+
+      warningValue: {
+        type: Number,
+        value: null
+      },
+
+      alertValue: {
+        type: Number,
+        value: null
+      },
+
+      test: {
+        type: String,
+        value: "lt"
+      }
+    },
+
+    computeBoxClass: function(value, warningValue, alertValue, test) {
+      var resu = "box "
+      if (test === "lt") {
+        if (alertValue !== null && value < alertValue) {
+          resu += "bg-red";
+        }
+        else if (warningValue !== null && value < warningValue) {
+          resu += "bg-yellow";
+        }
+        else {
+          resu += "bg-green";
+        }
+      }
+      else { // gt
+        if (alertValue !== null && value > alertValue) {
+          resu += "bg-red";
+        }
+        else if (warningValue !== null && value > warningValue) {
+          resu += "bg-yellow";
+        }
+        else {
+          resu += "bg-green";
+        }
+      }
+      return resu;
+    }
+  });
+
+})();
+</script>
