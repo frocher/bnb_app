@@ -1,15 +1,28 @@
-<link rel="import" href="twb-chart-card.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="twb-chart.html">
 
 <dom-module id="twb-chart-card">
   <style>
     :host {
-      display: inline-block;
+      display:flex;
+      margin:16px;
+      height:400px;
+    }
+
+    paper-card {
+      width: 100%;
+    }
+
+    .card-content {
+      width: 100%;
+      height: 340px;
+      padding: 0;
     }
   </style>
   <template>
     <paper-card heading="[[name]]">
       <div class="card-content">
-        <twb-chart data="[[data]]"></twb-chart>
+        <twb-chart style="height:340px;width:100%;" post-units="[[postUnits]]" data="[[data]]"></twb-chart>
       </div>
     </paper-card>
   </template>
@@ -25,12 +38,16 @@
       name: {
         type: String,
         value: ''
-      }
+      },
       data: {
         type: Object,
         value: function () {
           return {};
         }
+      },
+      postUnits: {
+        type: String,
+        value: ''
       }
     }
 

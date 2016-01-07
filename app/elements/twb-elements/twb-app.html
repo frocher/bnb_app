@@ -110,20 +110,10 @@
     handleLoadUptimeResponse: function(data) {
       this.page.uptime = data[0].value;
       this.notifyPath('page.uptime', this.page.uptime);
-
-      // TODO : remove
-      this.page.uptimes = [
-            { year: '2008', value: 20 },
-            { year: '2009', value: 10 },
-            { year: '2010', value: 5 },
-            { year: '2011', value: 5 },
-            { year: '2012', value: 20 }
-          ];
     },
 
     handleLoadUptimesResponse: function(data) {
-      // TODO : to change
-      this.page.uptimes = data[0].value;
+      this.page.uptimes = data;
       this.notifyPath('page.uptimes', this.page.uptimes);
     },
 

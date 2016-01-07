@@ -61,7 +61,7 @@
           </twb-value-card>
         </div>
 
-        <twb-chart-card style="height: 400px;width:100%" name="Uptime" data="[[page.uptimes]]"></twb-chart-card>
+        <twb-chart-card name="Uptime" data="[[page.uptimes]]" post-units="%"></twb-chart-card>
 
         <paper-dialog id="deleteDlg" modal>
           <p>Delete page ?</p>
@@ -90,7 +90,7 @@
     },
 
     computeUptime: function(uptime) {
-      return (uptime * 100).toFixed(2);
+      return Math.round(uptime * 100) / 100;
     },
 
     backTapped: function(e) {

@@ -31,6 +31,10 @@
         value: function () {
           return {};
         }
+      },
+      postUnits: {
+        type: String,
+        value: ''
       }
     },
 
@@ -51,30 +55,27 @@
     },
 
     onIronResize: function() {
-      this.chart.resizeHandler();
+      if (this.chart) {
+        this.chart.resizeHandler();
+      }
     },
 
     updateChart: function () {
-      console.log('update was called');
-
-      if (this.chart) {
-        this.chart.setData(this.data);
-      }
-      else {
-        this.chart = new Morris.Line({
-          // ID of the element in which to draw the chart.
-          element: this.$.canvas,
-          // Chart data records -- each entry in this array corresponds to a point on
-          // the chart.
-          data: this.data,
-          // The name of the data record attribute that contains x-values.
-          xkey: 'year',
-          // A list of names of data record attributes that contain y-values.
-          ykeys: ['value'],
-          // Labels for the ykeys -- will be displayed when you hover over the
-          // chart.
-          labels: ['Value']
-        });
+      if (this.data) {
+        if (this.chart) {
+          this.chart.setData(this.data);
+        }
+        else {
+          this.chart = new Morris.Line({
+            element: this.$.canvas,
+            data: this.data,
+            xkey: 'time',
+            ykeys: ['value'],
+            labels: ['Value'],
+            postUnits: this.postUnits,
+            dateFormat: function (x) { return moment(x).format('LL'); }
+          });
+        }
       }
     }
 
