@@ -97,15 +97,34 @@
 
     handleLoadPageResponse: function(data) {
       this.page = data;
-      this.page.uptime = null;
 
-      TwbService.loadUptimes(this.page.id, 'median', '2015-11-01', '2015-11-30', this.handleLoadUptimeResponse, this.handleGenericError, this);
-      TwbService.loadChecks(this.page.id, 'median', '2015-11-01', '2015-11-30', this.handleLoadCheckResponse, this.handleGenericError, this);
+      // TODO :replace with real selection
+      var periodStart = '2015-11-01';
+      var periodEnd   = '2015-11-30';
+
+      TwbService.loadUptimes(this.page.id, 'median', periodStart, periodEnd, this.handleLoadUptimeResponse, this.handleGenericError, this);
+      TwbService.loadChecks(this.page.id, 'median', periodStart, periodEnd, this.handleLoadCheckResponse, this.handleGenericError, this);
+      TwbService.loadUptimes(this.page.id, 'points', periodStart, periodEnd, this.handleLoadUptimesResponse, this.handleGenericError, this);
     },
 
     handleLoadUptimeResponse: function(data) {
       this.page.uptime = data[0].value;
       this.notifyPath('page.uptime', this.page.uptime);
+
+      // TODO : remove
+      this.page.uptimes = [
+            { year: '2008', value: 20 },
+            { year: '2009', value: 10 },
+            { year: '2010', value: 5 },
+            { year: '2011', value: 5 },
+            { year: '2012', value: 20 }
+          ];
+    },
+
+    handleLoadUptimesResponse: function(data) {
+      // TODO : to change
+      this.page.uptimes = data[0].value;
+      this.notifyPath('page.uptimes', this.page.uptimes);
     },
 
     handleLoadCheckResponse: function(data) {

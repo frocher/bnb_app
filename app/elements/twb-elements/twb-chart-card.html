@@ -1,0 +1,40 @@
+<link rel="import" href="twb-chart-card.html">
+
+<dom-module id="twb-chart-card">
+  <style>
+    :host {
+      display: inline-block;
+    }
+  </style>
+  <template>
+    <paper-card heading="[[name]]">
+      <div class="card-content">
+        <twb-chart data="[[data]]"></twb-chart>
+      </div>
+    </paper-card>
+  </template>
+</dom-module>
+<script>
+
+(function() {
+
+  Polymer({
+    is: 'twb-chart-card',
+
+    properties: {
+      name: {
+        type: String,
+        value: ''
+      }
+      data: {
+        type: Object,
+        value: function () {
+          return {};
+        }
+      }
+    }
+
+  });
+
+})();
+</script>

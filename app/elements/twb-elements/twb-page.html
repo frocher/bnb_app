@@ -1,6 +1,6 @@
 <link rel="import" href="twb-period-dropdown.html">
 <link rel="import" href="twb-value-card.html">
-<link rel="import" href="twb-chart.html">
+<link rel="import" href="twb-chart-card.html">
 
 <dom-module id="twb-page">
   <style>
@@ -61,7 +61,7 @@
           </twb-value-card>
         </div>
 
-        <twb-chart style="height: 400px;width:100%"></twb-chart>
+        <twb-chart-card style="height: 400px;width:100%" name="Uptime" data="[[page.uptimes]]"></twb-chart-card>
 
         <paper-dialog id="deleteDlg" modal>
           <p>Delete page ?</p>
