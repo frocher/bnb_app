@@ -17,6 +17,11 @@
       }
     }
 
+    function analytics(ctx, next) {
+      ga('send', 'screenview', {screenName: ctx.pathname});
+      next();
+    }
+
     function loadPages(ctx, next) {
       app.loadPages();
       next();
@@ -29,7 +34,7 @@
     }
 
     // Interceptor for all pages
-    page('*', authenticate, function(ctx, next) {
+    page('*', authenticate, analytics, function(ctx, next) {
       next();
     });
 
