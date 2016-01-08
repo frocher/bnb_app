@@ -42,7 +42,7 @@
       <div id="content" class="fit">
 
         <div id="cards">
-          <twb-value-card text="up time" value="[[computeUptime(page.uptime)]]" warning-value="99.7" alert-value="99.4" post-fix="%" test="lt">
+          <twb-value-card text="up time" value="[[page.uptime]]" warning-value="99.7" alert-value="99.4" post-fix="%" test="lt">
           </twb-value-card>
 
           <twb-value-card text="speed index" value="[[page.speedIndex]]" warning-value="4500" alert-value="8000" test="gt">
@@ -62,6 +62,11 @@
         </div>
 
         <twb-chart-card name="Uptime" data="[[page.uptimes]]" post-units="%"></twb-chart-card>
+        <twb-chart-card name="Speed index" data="[[page.speedIndexes]]"></twb-chart-card>
+        <twb-chart-card name="Response time" data="[[page.responseTimes]]" post-units="ms"></twb-chart-card>
+        <twb-chart-card name="First paint" data="[[page.firstPaints]]" post-units="ms"></twb-chart-card>
+        <twb-chart-card name="Dom ready" data="[[page.domReadies]]" post-units="ms"></twb-chart-card>
+        <twb-chart-card name="Page load" data="[[page.pageLoads]]" post-units="ms"></twb-chart-card>
 
         <paper-dialog id="deleteDlg" modal>
           <p>Delete page ?</p>
@@ -87,10 +92,6 @@
         type: Object,
         value: null
       }
-    },
-
-    computeUptime: function(uptime) {
-      return Math.round(uptime * 100) / 100;
     },
 
     backTapped: function(e) {

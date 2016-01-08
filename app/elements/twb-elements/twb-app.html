@@ -105,14 +105,19 @@
       TwbService.loadUptimes(this.page.id, 'median', periodStart, periodEnd, this.handleLoadUptimeResponse, this.handleGenericError, this);
       TwbService.loadChecks(this.page.id, 'median', periodStart, periodEnd, this.handleLoadCheckResponse, this.handleGenericError, this);
       TwbService.loadUptimes(this.page.id, 'points', periodStart, periodEnd, this.handleLoadUptimesResponse, this.handleGenericError, this);
+      TwbService.loadChecks(this.page.id, 'points', periodStart, periodEnd, this.handleLoadChecksResponse, this.handleGenericError, this);
     },
 
     handleLoadUptimeResponse: function(data) {
-      this.page.uptime = data[0].value;
+      this.page.uptime = Math.round(data[0].value * 100) / 100;
       this.notifyPath('page.uptime', this.page.uptime);
     },
 
     handleLoadUptimesResponse: function(data) {
+      var arrayLength = data.length;
+      for (var i = 0; i < arrayLength; i++) {
+        data[i].value = Math.round(data[i].value * 100) / 100;
+      }
       this.page.uptimes = data;
       this.notifyPath('page.uptimes', this.page.uptimes);
     },
@@ -130,10 +135,31 @@
       this.notifyPath('page.speedIndex', this.page.speedIndex);
     },
 
+    handleLoadChecksResponse: function(data) {
+      this.page.domReadies     = [];
+      this.page.firstPaints    = [];
+      this.page.pageLoads      = [];
+      this.page.responseStarts = [];
+      this.page.speedIndexes   = [];
+      var arrayLength = data.length;
+      for (var i = 0; i < arrayLength; i++) {
+        this.page.domReadies.push({time: data[i].time, value:Math.round(data[i].dom_ready)});
+        this.page.firstPaints.push({time: data[i].time, value:Math.round(data[i].first_paint)});
+        this.page.pageLoads.push({time: data[i].time, value:Math.round(data[i].page_load)});
+        this.page.responseStarts.push({time: data[i].time, value:Math.round(data[i].response_start)});
+        this.page.speedIndexes.push({time: data[i].time, value:Math.round(data[i].speedIndex)});
+      }
+
+      this.notifyPath('page.domReadies', this.page.domReadies);
+      this.notifyPath('page.firstPaints', this.page.firstPaints);
+      this.notifyPath('page.pageLoads', this.page.pageLoads);
+      this.notifyPath('page.responseStarts', this.page.responseStarts);
+      this.notifyPath('page.speedIndexes', this.page.speedIndexes);
+    }
+
     handleGenericError: function(error) {
       this.fire('message', {message: error.errors[0]});
     },
-
 
     handleMessage: function(e) {
       this.showToast(e.detail.message);
@@ -177,9 +203,8 @@
       var toast = this.$['message-toast'];
       toast.text = message;
       toast.show();
-    }
-
-  });
+    },
+ });
 
 })();
 </script>
