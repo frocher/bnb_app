@@ -26,9 +26,9 @@
       <twb-signup          id="signup"       class="page" data-route="signup"></twb-signup>
       <twb-forgot-password id="forgot"       class="page" data-route="forgot"></twb-forgot-password>
       <twb-edit-password   id="editPassword" class="page" data-route="edit-password"></twb-edit-password>
-      <twb-pages           id="pages"        class="page" data-route="home" pages="{{pages}}"></twb-pages>
+      <twb-pages           id="pages"        class="page" data-route="home" period="{{period}}" pages="{{pages}}"></twb-pages>
       <twb-add-page        id="addPage"      class="page" data-route="add-page" pages="{{pages}}"></twb-add-page>
-      <twb-page            id="page"         class="page" data-route="page" page="{{page}}"></twb-page>
+      <twb-page            id="page"         class="page" data-route="page" period="{{period}}" page="{{page}}"></twb-page>
       <twb-edit-page       id="editPage"     class="page" data-route="edit-page" page="{{page}}"></twb-edit-page>
     </iron-pages>
 
@@ -44,14 +44,15 @@
     is: 'twb-app',
 
     listeners: {
-      'message'      : 'handleMessage',
-      'signedin'     : 'handleSignedIn',
-      'signedout'    : 'handleSignedOut',
-      'show-pages'   : 'handleShowPages',
-      'show-page'    : 'handleShowPage',
-      'edit-page'    : 'handleEditPage',
-      'page-created' : 'handlePageCreated',
-      'page-deleted' : 'handlePageDeleted'
+      'message'        : 'handleMessage',
+      'signedin'       : 'handleSignedIn',
+      'signedout'      : 'handleSignedOut',
+      'show-pages'     : 'handleShowPages',
+      'show-page'      : 'handleShowPage',
+      'edit-page'      : 'handleEditPage',
+      'page-created'   : 'handlePageCreated',
+      'page-deleted'   : 'handlePageDeleted',
+      'period-changed' : 'handlePeriodChanged',
     },
 
     properties: {
@@ -74,7 +75,7 @@
 
       period: {
         type: Object,
-        value: null
+        value: {type: "this_week"}
       }
     },
 
@@ -86,16 +87,9 @@
       TwbService.loadPage(id, {}, this.handleLoadPageResponse, this.handleGenericError, this);
     },
 
-    handleLoadPagesResponse: function(data) {
-      this.pages = data;
-    },
-
-    handleLoadPageResponse: function(data) {
-      this.page = data;
-
-      // TODO :replace with real selection
-      var periodStart = '2015-11-01';
-      var periodEnd   = '2015-11-30';
+    loadPageMeasures: function() {
+      var periodStart = this.getPeriodStart();
+      var periodEnd   = this.getPeriodEnd();
 
       TwbService.loadUptimes(this.page.id, 'median', periodStart, periodEnd, this.handleLoadUptimeResponse, this.handleGenericError, this);
       TwbService.loadChecks(this.page.id, 'median', periodStart, periodEnd, this.handleLoadCheckResponse, this.handleGenericError, this);
@@ -103,8 +97,22 @@
       TwbService.loadChecks(this.page.id, 'points', periodStart, periodEnd, this.handleLoadChecksResponse, this.handleGenericError, this);
     },
 
+    handleLoadPagesResponse: function(data) {
+      this.pages = data;
+    },
+
+    handleLoadPageResponse: function(data) {
+      this.page = data;
+      this.loadPageMeasures();
+    },
+
     handleLoadUptimeResponse: function(data) {
-      this.page.uptime = Math.round(data[0].value * 100) / 100;
+      if (data.length > 0) {
+        this.page.uptime = Math.round(data[0].value * 100) / 100;
+      }
+      else {
+        this.page.uptime = 0;
+      }
       this.notifyPath('page.uptime', this.page.uptime);
     },
 
@@ -118,11 +126,21 @@
     },
 
     handleLoadCheckResponse: function(data) {
-      this.page.domReady = Math.round(data[0].dom_ready);
-      this.page.firstPaint = Math.round(data[0].first_paint);
-      this.page.pageLoad = Math.round(data[0].page_load);
-      this.page.responseStart = Math.round(data[0].response_start);
-      this.page.speedIndex = Math.round(data[0].speed_index);
+      if (data.length > 0) {
+        this.page.domReady = Math.round(data[0].dom_ready);
+        this.page.firstPaint = Math.round(data[0].first_paint);
+        this.page.pageLoad = Math.round(data[0].page_load);
+        this.page.responseStart = Math.round(data[0].response_start);
+        this.page.speedIndex = Math.round(data[0].speed_index);
+      }
+      else {
+        this.page.domReady = 0;
+        this.page.firstPaint = 0;
+        this.page.pageLoad = 0;
+        this.page.responseStart = 0;
+        this.page.speedIndex = 0;
+      }
+
       this.notifyPath('page.domReady', this.page.domReady);
       this.notifyPath('page.firstPaint', this.page.firstPaint);
       this.notifyPath('page.pageLoad', this.page.pageLoad);
@@ -158,6 +176,12 @@
 
     handleMessage: function(e) {
       this.showToast(e.detail.message);
+    },
+
+    handlePeriodChanged: function(e) {
+      if (this.route === 'page') {
+        this.loadPageMeasures();
+      }
     },
 
     handleShowPages: function(e) {

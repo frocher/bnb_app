@@ -24,12 +24,6 @@
   /** Current page */
   app.page = null;
 
-  /** Selected period type */
-  app.period = null;
-
-  /** Custom period informations {startDate, endDate} */
-  app.customPeriod = {startDate:null, endDate:null};
-
   if (window.location.port === '') {  // if production
     // Uncomment app.baseURL below and
     // set app.baseURL to '/your-pathname/' if running from folder in production
@@ -50,7 +44,7 @@
   app.getPeriodStart = function() {
     var result = null;
 
-    switch (this.period) {
+    switch (this.period.type) {
       case app.THIS_MONTH:
         result = moment().startOf('month');
         break;
@@ -61,7 +55,7 @@
         result = moment().startOf('day');
         break;
       case app.CUSTOM_PERIOD:
-        result = app.customPeriod.startDate;
+        result = app.period.startDate;
         break;
     }
     return result;
@@ -70,7 +64,7 @@
   app.getPeriodEnd = function() {
     var result = null;
 
-    switch (this.period) {
+    switch (this.period.type) {
       case app.THIS_MONTH:
         result = moment().endOf('month');
         break;
@@ -81,7 +75,7 @@
         result = moment().endOf('day');
         break;
       case app.CUSTOM_PERIOD:
-        result = app.customPeriod.endDate;
+        result = app.period.endDate;
         break;
     }
     return result;

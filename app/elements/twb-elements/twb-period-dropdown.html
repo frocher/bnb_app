@@ -1,8 +1,8 @@
 <dom-module id="twb-period-dropdown">
   <style>
-  paper-menu-button {
-    height: 40px;
-  }
+    paper-menu-button {
+      height: 40px;
+    }
 
     #periodBtn span {
       text-transform: lowercase;
@@ -20,17 +20,17 @@
   <template>
     <paper-menu-button>
       <paper-button id="periodBtn" class="dropdown-trigger">
-        <span id="periodSpan">This month</span>
+        <span id="periodSpan">[[computePeriodLabel(period.type)]]</span>
         <iron-icon icon="arrow-drop-down"></iron-icon>
       </paper-button>
-      <paper-menu selected="{{currentPeriod}}" class="dropdown-content">
-        <paper-item on-tap="periodTapped" data-period="month">This&nbsp;month</paper-item>
-        <paper-item on-tap="periodTapped" data-period="week">This week</paper-item>
-        <paper-item on-tap="periodTapped" data-period="day">This day</paper-item>
+      <paper-menu selected="{{period.type}}" class="dropdown-content" attr-for-selected="data-period">
+        <paper-item on-tap="periodTapped" data-period="this_month">This&nbsp;month</paper-item>
+        <paper-item on-tap="periodTapped" data-period="this_week">This week</paper-item>
+        <paper-item on-tap="periodTapped" data-period="this_day">This day</paper-item>
         <paper-item on-tap="periodTapped" data-period="custom">Custom...</paper-item>
       </paper-menu>
     </paper-menu-button>
-  
+
   </template>
 </dom-module>
 
@@ -41,16 +41,24 @@
     is: 'twb-period-dropdown',
 
     properties: {
-      currentPeriod: {
-        type: String,
+      period: {
+        type: Object,
         value: null
       }
     },
 
     periodTapped: function(e) {
-      // TODO
+      this.fire('period-changed', {period: this.period});
       this.$.periodSpan.innerHTML = e.currentTarget.innerHTML;
-      alert('todo ' + e.currentTarget.dataset.period);
+    },
+
+    computePeriodLabel: function(periodType) {
+      switch (periodType) {
+        case 'this_month' : return "This month";
+        case 'this_week' : return "This week";
+        case 'this_day' : return "This day";
+        case 'custom' : return "Custom";
+      }
     }
 
   });

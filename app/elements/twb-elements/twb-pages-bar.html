@@ -1,7 +1,13 @@
 <dom-module id="twb-pages-bar">
-
+  <style>
+    :host {
+      @apply(--layout-flex);
+      @apply(--layout-horizontal);
+      @apply(--layout-center);
+    }
+  </style>
   <template>
-    <span>All pages stats for&nbsp;<twb-period-dropdown period="[[period]]"></twb-period-dropdown></span>
+    <span>All pages stats for&nbsp;<twb-period-dropdown period="{{period}}"></twb-period-dropdown></span>
 
     <div class="flex"></div>
     <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
@@ -23,8 +29,7 @@
 
     properties: {
       period: {
-        type: Object,
-        value: null
+        type: Object
       }
     },
 

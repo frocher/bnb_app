@@ -1,4 +1,5 @@
 <link rel="import" href="twb-page-card.html">
+<link rel="import" href="twb-pages-bar.html">
 <link rel="import" href="twb-period-dropdown.html">
 
 <dom-module id="twb-pages">
@@ -46,8 +47,6 @@
       background-color: #d9534f;
     }
 
-
-
     .content {
       @apply(--layout-wrap);
       @apply(--layout-center-justified);
@@ -55,21 +54,11 @@
       padding:24px;
     }
 
-
   </style>
   <template>
     <paper-header-panel class="flex">
       <paper-toolbar>
-        <span>All pages stats for&nbsp;<twb-period-dropdown></twb-period-dropdown></span>
-        <div class="flex"></div>
-        <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
-        <paper-icon-button icon="search" on-tap="filterTapped"></paper-icon-button>
-        <paper-menu-button>
-          <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
-          <paper-menu class="dropdown-content">
-            <paper-item on-tap="signoutTapped">Logout</paper-item>
-          </paper-menu>
-        </paper-menu-button>
+        <twb-pages-bar period="{{period}}"></twb-pages-bar>
       </paper-toolbar>
       <div class="content">
         <template is="dom-repeat" items="{{pages}}" as="item" sort="sortPages">
@@ -92,19 +81,10 @@
         value: function() {
           return [];
         }
+      },
+      period: {
+        type: Object
       }
-    },
-
-    addTapped: function() {
-      page('/add-page');
-    },
-
-    filterTapped: function() {
-      alert('todo filter');
-    },
-
-    signoutTapped: function() {
-      this.fire('signedout');
     },
 
     sortPages: function(first, second) {

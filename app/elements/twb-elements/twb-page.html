@@ -18,6 +18,12 @@
       @apply(--layout-center-justified);
     }
 
+    #charts {
+      @apply(--layout-vertical);
+      @apply(--layout-wrap);
+      @apply(--layout-center-justified);
+    }
+
   </style>
   <template>
     <paper-header-panel class="flex">
@@ -32,7 +38,7 @@
         <span>
           <span>[[page.name]]</span>
           <span> stats for&nbsp;</span>
-          <twb-period-dropdown></twb-period-dropdown>
+          <twb-period-dropdown period="{{period}}"></twb-period-dropdown>
         </span>
         <div class="flex"></div>
         <paper-icon-button icon="create" on-tap="editTapped" hidden$="{{!page.editable}}"></paper-icon-button>
@@ -61,12 +67,14 @@
           </twb-value-card>
         </div>
 
-        <twb-chart-card name="Uptime" data="[[page.uptimes]]" post-units="%"></twb-chart-card>
-        <twb-chart-card name="Speed index" data="[[page.speedIndexes]]"></twb-chart-card>
-        <twb-chart-card name="Response time" data="[[page.responseStarts]]" post-units="ms"></twb-chart-card>
-        <twb-chart-card name="First paint" data="[[page.firstPaints]]" post-units="ms"></twb-chart-card>
-        <twb-chart-card name="Dom ready" data="[[page.domReadies]]" post-units="ms"></twb-chart-card>
-        <twb-chart-card name="Page load" data="[[page.pageLoads]]" post-units="ms"></twb-chart-card>
+        <div id="charts">
+          <twb-chart-card name="Uptime" data="[[page.uptimes]]" post-units="%"></twb-chart-card>
+          <twb-chart-card name="Speed index" data="[[page.speedIndexes]]"></twb-chart-card>
+          <twb-chart-card name="Response time" data="[[page.responseStarts]]" post-units="ms"></twb-chart-card>
+          <twb-chart-card name="First paint" data="[[page.firstPaints]]" post-units="ms"></twb-chart-card>
+          <twb-chart-card name="Dom ready" data="[[page.domReadies]]" post-units="ms"></twb-chart-card>
+          <twb-chart-card name="Page load" data="[[page.pageLoads]]" post-units="ms"></twb-chart-card>
+        </div>
 
         <paper-dialog id="deleteDlg" modal>
           <p>Delete page ?</p>
@@ -91,6 +99,9 @@
       page: {
         type: Object,
         value: null
+      },
+      period: {
+        type: Object
       }
     },
 

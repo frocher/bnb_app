@@ -10,9 +10,19 @@
       height: 100%;
       position:relative;
     }
+    #noData {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 24px;
+    }
   </style>
   <template>
-    <div id="canvas"></div>
+    <div id="canvas" hidden$="{{!displayChart(data)}}"></div>
+    <div id="noData" hidden$="{{displayChart(data)}}"><span>No data</span></div>
   </template>
 </dom-module>
 <script>
@@ -60,8 +70,8 @@
       }
     },
 
-    updateChart: function () {
-      if (this.data) {
+    updateChart: function() {
+      if (this.data && this.data.length > 0) {
         if (this.chart) {
           this.chart.setData(this.data);
         }
@@ -77,6 +87,13 @@
           });
         }
       }
+      else if (this.chart) {
+        this.chart.setData([]);
+      }
+    },
+
+    displayChart: function(data) {
+      return data !== undefined && data !== null && data.length > 0;
     }
 
   });
