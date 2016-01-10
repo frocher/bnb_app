@@ -142,7 +142,7 @@
         this.page.firstPaints.push({time: data[i].time, value:Math.round(data[i].first_paint)});
         this.page.pageLoads.push({time: data[i].time, value:Math.round(data[i].page_load)});
         this.page.responseStarts.push({time: data[i].time, value:Math.round(data[i].response_start)});
-        this.page.speedIndexes.push({time: data[i].time, value:Math.round(data[i].speedIndex)});
+        this.page.speedIndexes.push({time: data[i].time, value:Math.round(data[i].speed_index)});
       }
 
       this.notifyPath('page.domReadies', this.page.domReadies);
@@ -150,7 +150,7 @@
       this.notifyPath('page.pageLoads', this.page.pageLoads);
       this.notifyPath('page.responseStarts', this.page.responseStarts);
       this.notifyPath('page.speedIndexes', this.page.speedIndexes);
-    }
+    },
 
     handleGenericError: function(error) {
       this.fire('message', {message: error.errors[0]});
