@@ -6,12 +6,6 @@
   // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
   var app = document.querySelector('#app');
 
-  // Period constants
-  app.THIS_MONTH    = 'this_month';
-  app.THIS_WEEK     = 'this_week';
-  app.THIS_DAY      = 'this_day';
-  app.CUSTOM_PERIOD = 'custom';
-
   // Sets app default base URL
   app.baseUrl = '/';
 
@@ -35,50 +29,8 @@
     // imports are loaded and elements have been registered
   });
 
-
   app.isLogged = function() {
     return sessionStorage.getItem('accessToken') !== null;
-  };
-
-
-  app.getPeriodStart = function() {
-    var result = null;
-
-    switch (this.period.type) {
-      case app.THIS_MONTH:
-        result = moment().startOf('month');
-        break;
-      case app.THIS_WEEK:
-        result = moment().startOf('week');
-        break;
-      case app.THIS_DAY:
-        result = moment().startOf('day');
-        break;
-      case app.CUSTOM_PERIOD:
-        result = app.period.startDate;
-        break;
-    }
-    return result;
-  };
-
-  app.getPeriodEnd = function() {
-    var result = null;
-
-    switch (this.period.type) {
-      case app.THIS_MONTH:
-        result = moment().endOf('month');
-        break;
-      case app.THIS_WEEK:
-        result = moment().endOf('week');
-        break;
-      case app.THIS_DAY:
-        result = moment().endOf('day');
-        break;
-      case app.CUSTOM_PERIOD:
-        result = app.period.endDate;
-        break;
-    }
-    return result;
   };
 
 })(wrap(document));

@@ -1,7 +1,13 @@
+<link rel="import" href="../../bower_components/datepicker/paper-date-picker.html">
+
 <dom-module id="twb-period-dropdown">
   <style>
     paper-menu-button {
       height: 40px;
+    }
+
+    #startDate, #endDate {
+      cursor: pointer;
     }
 
     #periodBtn span {
@@ -13,23 +19,40 @@
     }
 
     paper-menu-button {
-      margin-left: -1em;
+      margin-left: -2em;
       padding: 0;
     }
   </style>
   <template>
+    <span id="periodSpan">
+      <span id="startDate" on-tap="startDateTapped">[[formatDate(period.start)]]</span>
+       -
+     <span id="endDate" on-tap="endDateTapped">[[formatDate(period.end)]]</span>
+    </span>
     <paper-menu-button>
       <paper-button id="periodBtn" class="dropdown-trigger">
-        <span id="periodSpan">[[computePeriodLabel(period.type)]]</span>
         <iron-icon icon="arrow-drop-down"></iron-icon>
       </paper-button>
-      <paper-menu selected="{{period.type}}" class="dropdown-content" attr-for-selected="data-period">
-        <paper-item on-tap="periodTapped" data-period="this_month">This&nbsp;month</paper-item>
+      <paper-menu class="dropdown-content" attr-for-selected="data-period">
+        <paper-item on-tap="periodTapped" data-period="today">Today</paper-item>
         <paper-item on-tap="periodTapped" data-period="this_week">This week</paper-item>
-        <paper-item on-tap="periodTapped" data-period="this_day">This day</paper-item>
-        <paper-item on-tap="periodTapped" data-period="custom">Custom...</paper-item>
+        <paper-item on-tap="periodTapped" data-period="this_month">This&nbsp;month</paper-item>
+        <paper-item on-tap="periodTapped" data-period="yesterday">Yesterday</paper-item>
+        <paper-item on-tap="periodTapped" data-period="last_week">Last week</paper-item>
+        <paper-item on-tap="periodTapped" data-period="last_month">Last month</paper-item>
+        <paper-item on-tap="periodTapped" data-period="last_7_days">Last 7 days</paper-item>
+        <paper-item on-tap="periodTapped" data-period="last_30_days">Last 30 days</paper-item>
       </paper-menu>
     </paper-menu-button>
+
+    <paper-dialog id="customDlg" class="paper-date-picker-dialog" modal
+      on-iron-overlay-closed="dismissDialog">
+      <paper-date-picker id="picker" date="[[date]]"></paper-date-picker>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm>OK</paper-button>
+      </div>
+    </paper-dialog>
 
   </template>
 </dom-module>
@@ -48,16 +71,77 @@
     },
 
     periodTapped: function(e) {
+      var type = e.currentTarget.dataset.period;
+      switch (type) {
+        case 'today':
+          this.period.start = moment().startOf('day').toDate();
+          this.period.end = moment().endOf('day').toDate();
+        break;
+        case 'this_week':
+          this.period.start = moment().startOf('week').toDate();
+          this.period.end = moment().endOf('week').toDate();
+        break;
+        case 'this_month':
+          this.period.start = moment().startOf('month').toDate();
+          this.period.end = moment().endOf('month').toDate();
+        break;
+        case 'yesterday':
+          this.period.start = moment().add(-1, 'days').startOf('day').toDate();
+          this.period.end = moment().add(-1, 'days').endOf('day').toDate();
+        break;
+        case 'last_week':
+          this.period.start = moment().add(-1, 'weeks').startOf('week').toDate();
+          this.period.end = moment().add(-1, 'weeks').endOf('week').toDate();
+        break;
+        case 'last_month':
+          this.period.start = moment().add(-1, 'months').startOf('month').toDate();
+          this.period.end = moment().add(-1, 'months').endOf('month').toDate();
+        break;
+        case 'last_7_days':
+          this.period.start = moment().add(-7, 'days').startOf('day').toDate();
+          this.period.end = moment().endOf('day').toDate();
+        break;
+        case 'last_30_days':
+          this.period.start = moment().add(-30, 'days').startOf('day').toDate();
+          this.period.end = moment().endOf('day').toDate();
+        break;
+      }
       this.fire('period-changed', {period: this.period});
-      this.$.periodSpan.innerHTML = e.currentTarget.innerHTML;
+      this.notifyPath('period.start', this.period.start);
+      this.notifyPath('period.end', this.period.end);
     },
 
-    computePeriodLabel: function(periodType) {
-      switch (periodType) {
-        case 'this_month' : return "This month";
-        case 'this_week' : return "This week";
-        case 'this_day' : return "This day";
-        case 'custom' : return "Custom";
+    startDateTapped: function(e) {
+      this.periodType = 'start';
+      this.date = this.period.start;
+      this.$.customDlg.open();
+    },
+
+    endDateTapped: function(e) {
+      this.periodType = 'end';
+      this.date = this.period.end;
+      this.$.customDlg.open();
+    },
+
+    formatDate: function(date) {
+      return moment(date).format('LL');
+    },
+
+    computePeriodLabel: function(period) {
+      return moment(period.start).format('LL') + " - " + moment(period.end).format('LL')
+    },
+
+    dismissDialog: function(e) {
+      if (e.detail.confirmed) {
+        if (this.periodType === 'start') {
+          this.period.start = this.$.picker.date;
+          this.notifyPath('period.start', this.period.start);
+        }
+        else {
+          this.period.end = moment(this.$.picker.date).endOf('day').toDate();
+          this.notifyPath('period.end', this.period.end);
+        }
+        this.fire('period-changed', {period: this.period})
       }
     }
 

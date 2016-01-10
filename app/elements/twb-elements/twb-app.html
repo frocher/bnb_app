@@ -75,7 +75,7 @@
 
       period: {
         type: Object,
-        value: {type: "this_week"}
+        value: {start: moment().startOf('month').toDate(), end: moment().endOf('month').toDate()}
       }
     },
 
@@ -88,13 +88,13 @@
     },
 
     loadPageMeasures: function() {
-      var periodStart = this.getPeriodStart();
-      var periodEnd   = this.getPeriodEnd();
+      var start = this.period.start;
+      var end   = this.period.end;
 
-      TwbService.loadUptimes(this.page.id, 'median', periodStart, periodEnd, this.handleLoadUptimeResponse, this.handleGenericError, this);
-      TwbService.loadChecks(this.page.id, 'median', periodStart, periodEnd, this.handleLoadCheckResponse, this.handleGenericError, this);
-      TwbService.loadUptimes(this.page.id, 'points', periodStart, periodEnd, this.handleLoadUptimesResponse, this.handleGenericError, this);
-      TwbService.loadChecks(this.page.id, 'points', periodStart, periodEnd, this.handleLoadChecksResponse, this.handleGenericError, this);
+      TwbService.loadUptimes(this.page.id, 'median', start, end, this.handleLoadUptimeResponse, this.handleGenericError, this);
+      TwbService.loadChecks(this.page.id, 'median', start, end, this.handleLoadCheckResponse, this.handleGenericError, this);
+      TwbService.loadUptimes(this.page.id, 'points', start, end, this.handleLoadUptimesResponse, this.handleGenericError, this);
+      TwbService.loadChecks(this.page.id, 'points', start, end, this.handleLoadChecksResponse, this.handleGenericError, this);
     },
 
     handleLoadPagesResponse: function(data) {

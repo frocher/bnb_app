@@ -11,7 +11,8 @@
     "moment": "moment#^2.10.0",
     "holderjs": "holderjs#^2.8.0",
     "mocha": "mochajs/mocha#2.3.4",
-    "morrisjs": "morrisjs/morris.js#^0.5.0"
+    "morrisjs": "morrisjs/morris.js#^0.5.0",
+    "datepicker": "bendavis78/paper-date-picker"
   },
   "devDependencies": {
     "web-component-tester": "*"
