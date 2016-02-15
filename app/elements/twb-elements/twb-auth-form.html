@@ -6,14 +6,16 @@
 
     .links {
       @apply(--layout-vertical);
-      width: 380px;
+      width: 70%;
+      max-width: 380px;
       margin: 0 auto;
       text-align: center;
     }
 
     .auth-form {
-      width: 380px;   
-      margin: 4em auto 1em auto;       
+      width: 70%;
+      max-width: 380px;
+      margin: 4em auto 1em auto;
       padding: 1em 2em 1em 2em;
       background-color: #fff;
     }
@@ -48,7 +50,7 @@
 (function() {
 
   Polymer({
-    is: 'twb-auth-form', 
+    is: 'twb-auth-form',
     properties: {
       title: String,
       buttons: Array
