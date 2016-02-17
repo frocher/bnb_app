@@ -18,7 +18,7 @@
     }
 
     function analytics(ctx, next) {
-      ga('send', 'screenview', {screenName: ctx.pathname});
+      ga('send', 'pageview', {screenName: ctx.pathname});
       next();
     }
 
