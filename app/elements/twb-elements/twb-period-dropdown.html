@@ -124,11 +124,7 @@
     },
 
     formatDate: function(date) {
-      return moment(date).format('LL');
-    },
-
-    computePeriodLabel: function(period) {
-      return moment(period.start).format('LL') + " - " + moment(period.end).format('LL')
+      return moment(date).format('ll');
     },
 
     dismissDialog: function(e) {

@@ -265,24 +265,22 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
 
 // Build and serve the output from the dist build
 gulp.task('serve:dist', ['default'], function () {
+  var proxyOptionsApi = url.parse('http://localhost:3000');
+  proxyOptionsApi.route = '/api';
   browserSync({
     notify: false,
+    port: 9000,
     logPrefix: 'PSK',
-    snippetOptions: {
-      rule: {
-        match: '<span id="browser-sync-binding"></span>',
-        fn: function (snippet) {
-          return snippet;
-        }
-      }
-    },
     // Run as an https by uncommenting 'https: true'
     // Note: this uses an unsigned certificate which on first access
     //       will present a certificate warning in the browser.
     // https: true,
-    server: dist(),
-    middleware: [ historyApiFallback() ]
+    server: {
+      baseDir: ['dist'],
+      middleware: [proxy(proxyOptionsApi)]
+    }
   });
+
 });
 
 // Build Production Files, the Default Task
