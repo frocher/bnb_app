@@ -57,9 +57,7 @@
   </style>
   <template>
     <paper-header-panel class="flex">
-      <paper-toolbar>
-        <twb-pages-bar period="{{period}}"></twb-pages-bar>
-      </paper-toolbar>
+      <twb-pages-bar period="{{period}}"></twb-pages-bar>
       <div class="content">
         <template is="dom-repeat" items="{{pages}}" as="item" sort="sortPages">
           <twb-page-card page="[[item]]"></twb-page-card>

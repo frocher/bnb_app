@@ -22,6 +22,12 @@
       margin-left: -2em;
       padding: 0;
     }
+    paper-dialog {
+      margin: 0;
+    }
+    paper-date-picker {
+      padding: 0;
+    }
   </style>
   <template>
     <span id="periodSpan">
@@ -124,11 +130,7 @@
     },
 
     formatDate: function(date) {
-      return moment(date).format('LL');
-    },
-
-    computePeriodLabel: function(period) {
-      return moment(period.start).format('LL') + " - " + moment(period.end).format('LL')
+      return moment(date).format('ll');
     },
 
     dismissDialog: function(e) {

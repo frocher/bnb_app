@@ -1,23 +1,19 @@
 <dom-module id="twb-pages-bar">
   <style>
-    :host {
-      @apply(--layout-flex);
-      @apply(--layout-horizontal);
-      @apply(--layout-center);
-    }
   </style>
   <template>
-    <span>All pages stats for&nbsp;<twb-period-dropdown period="{{period}}"></twb-period-dropdown></span>
-
-    <div class="flex"></div>
-    <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
-    <paper-icon-button icon="search" on-tap="filterTapped"></paper-icon-button>
-    <paper-menu-button>
-      <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
-      <paper-menu class="dropdown-content">
-        <paper-item on-tap="signoutTapped">Logout</paper-item>
-      </paper-menu>
-    </paper-menu-button>
+    <paper-toolbar>
+      <span>All pages stats for&nbsp;<twb-period-dropdown period="{{period}}"></twb-period-dropdown></span>
+      <div class="flex"></div>
+      <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
+      <paper-icon-button icon="search" on-tap="filterTapped"></paper-icon-button>
+      <paper-menu-button>
+        <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+        <paper-menu class="dropdown-content" style="z-index:9999">
+          <paper-item on-tap="signoutTapped">Logout</paper-item>
+        </paper-menu>
+      </paper-menu-button>
+    </paper-toolbar>
   </template>
 
 </dom-module>
