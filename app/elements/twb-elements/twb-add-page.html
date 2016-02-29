@@ -60,8 +60,7 @@
         this.$.discardDlg.open();
       }
       else {
-        this.clearFields();
-        this.fire('show-pages');
+        this.closePage();
       }
     },
 
@@ -96,6 +95,11 @@
 
     clearFields: function() {
       this.params = {name: '', url: ''};      
+    },
+
+    closePage: function() {
+      this.clearFields();
+      this.fire('show-pages');
     }
 
   });
