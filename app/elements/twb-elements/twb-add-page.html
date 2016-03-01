@@ -73,6 +73,7 @@
 
     handleResponse: function(data) {
       this.fire('page-created', {page: data});
+      this.clearFields();
     },
 
     handleError: function(error) {
@@ -89,12 +90,12 @@
               this.$[objId].errorMessage = errors[prop][0];
             }
           }
-        }       
+        }
       }
     },
 
     clearFields: function() {
-      this.params = {name: '', url: ''};      
+      this.params = {name: '', url: ''};
     },
 
     closePage: function() {
@@ -106,4 +107,3 @@
 
 })();
 </script>
-
