@@ -1,5 +1,4 @@
 <link rel="import" href="twb-page-card.html">
-<link rel="import" href="twb-pages-bar.html">
 <link rel="import" href="twb-period-dropdown.html">
 
 <dom-module id="twb-pages">
@@ -57,7 +56,17 @@
   </style>
   <template>
     <paper-header-panel class="flex">
-      <twb-pages-bar period="{{period}}"></twb-pages-bar>
+      <paper-toolbar>
+        <span>All pages stats for&nbsp;<twb-period-dropdown period="{{period}}"></twb-period-dropdown></span>
+        <div class="flex"></div>
+        <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
+        <paper-menu-button>
+          <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
+          <paper-menu class="dropdown-content" style="z-index:9999" horizontal-align="right">
+            <paper-item on-tap="signoutTapped">Logout</paper-item>
+          </paper-menu>
+        </paper-menu-button>
+      </paper-toolbar>
       <div class="content">
         <template is="dom-repeat" items="{{pages}}" as="item" sort="sortPages">
           <twb-page-card page="[[item]]"></twb-page-card>
@@ -93,6 +102,14 @@
 
     selectedChanged: function() {
       this.page = this.pages[this.selected];
+    },
+
+    addTapped: function() {
+      page('/add-page');
+    },
+
+    signoutTapped: function() {
+      this.fire('signedout');
     }
   });
 
