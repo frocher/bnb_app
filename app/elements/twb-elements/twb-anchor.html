@@ -2,7 +2,7 @@
 <style>
   .anchor {
     cursor:pointer;
-    color: #4285f4;
+    color: var(--default-primary-color);
     text-decoration: none;
   }
 
@@ -19,7 +19,7 @@
 (function() {
 
   Polymer({
-    is: 'twb-anchor', 
+    is: 'twb-anchor',
 
     properties: {
       text: String,
@@ -30,7 +30,7 @@
     listeners: {
       'tap': '_onTap',
     },
-      
+
     _onTap: function() {
       page('/' + this.path);
       event.stopPropagation();
