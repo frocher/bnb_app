@@ -53,6 +53,14 @@
     height: 240px;
   }
 
+  #shadow {
+    @apply(--shadow-2dp);
+  }
+
+  #shadow:hover {
+    @apply(--shadow-elevation-8dp);
+  }
+
   </style>
 
   <template>
@@ -103,7 +111,7 @@
        */
       animatedShadow: {
         type: Boolean,
-        value: false
+        value: true
       }
     },
 
