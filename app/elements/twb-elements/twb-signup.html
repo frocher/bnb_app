@@ -6,7 +6,7 @@
 
     <twb-auth-form id="signup-form" name="signup" title="Sign up" buttons="{{signupButtons}}">
 
-      <paper-input id="signup-name" autofocus="autofocus" label="Full name" type="text" value="{{params.name}}">
+      <paper-input id="signup-name" autofocus="true" label="Full name" type="text" value="{{params.name}}">
       </paper-input>
 
       <paper-input id="signup-email" label="E-mail" type="email" value="{{params.email}}">
@@ -64,7 +64,7 @@
               this.$[objId].errorMessage = errors[prop][0];
             }
           }
-        }       
+        }
       }
     },
 
