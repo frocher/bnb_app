@@ -1,3 +1,5 @@
+<link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
+
 <dom-module id="twb-add-page">
   <style>
     :host {
@@ -11,6 +13,8 @@
 
   </style>
   <template>
+    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="createTapped">
+    </iron-a11y-keys>
     <paper-header-panel class="flex">
       <paper-toolbar>
         <paper-icon-button icon="close" on-tap="closeTapped"></paper-icon-button>
@@ -21,17 +25,16 @@
       <div id="content" class="fit">
         <paper-input id="name" label="Page name" value="{{params.name}}" autofocus="true"></paper-input>
         <paper-input id="url" label="URL" value="{{params.url}}"></paper-input>
-
-        <paper-dialog id="discardDlg" modal>
-          <p>Discard new page.</p>
-          <div class="buttons">
-            <paper-button dialog-dismiss>Cancel</paper-button>
-            <paper-button dialog-confirm autofocus on-tap="closePage">Discard</paper-button>
-          </div>
-        </paper-dialog>
       </div>
     </paper-header-panel>
 
+    <paper-dialog id="discardDlg" modal>
+      <p>Discard new page.</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus on-tap="closePage">Discard</paper-button>
+      </div>
+    </paper-dialog>
 
   </template>
 </dom-module>
@@ -47,6 +50,13 @@
         type: Array,
         value: function() {
           return [];
+        }
+      },
+
+      target: {
+        type: Object,
+        value: function() {
+          return this.$.content;
         }
       }
     },
@@ -95,6 +105,8 @@
     },
 
     clearFields: function() {
+      this.$['name'].invalid = false;
+      this.$['url'].invalid = false;
       this.params = {name: '', url: ''};
     },
 

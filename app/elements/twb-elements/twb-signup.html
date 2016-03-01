@@ -1,8 +1,12 @@
+<link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
+
 <dom-module id="twb-signup">
   <style>
   </style>
 
   <template>
+    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="signupSubmitTapped">
+    </iron-a11y-keys>
 
     <twb-auth-form id="signup-form" name="signup" title="Sign up" buttons="{{signupButtons}}">
 
@@ -29,8 +33,16 @@
 (function() {
 
   Polymer({
-
     is: 'twb-signup',
+
+    properties: {
+      target: {
+        type: Object,
+        value: function() {
+          return this.$['signup-form'];
+        }
+      }
+    },
 
     ready: function() {
       this.params = { name:'', email:'', password:'', password_confirmation:'', confirm_success_url: this.homeUrl() };
