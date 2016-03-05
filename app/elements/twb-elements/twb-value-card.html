@@ -9,7 +9,7 @@
       margin-left: 10px;
       margin-right: 10px;
       overflow: hidden;
-      background-color: #fff;
+      background-color: var(--paper-card-background-color);
     }
 
     .box .inner {
@@ -28,31 +28,30 @@
     .box p {
       font-size: 20px;
       margin-top: 5px;
+      color: var(--secondary-text-color);
     }
 
     .bg-green {
-      background-color: #4caf50;
-      color: #fff;
+      color: var(--google-green-500);
     }
 
     .bg-yellow {
-      background-color: #ffeb3b;
-      color: #000;
+      color: var(--google-yellow-300);
     }
 
     .bg-red {
-      background-color: #f44336;
-      color: #fff;
+      color: var(--google-red-500);
     }
 
   </style>
   <template>
-    <div class$="{{computeBoxClass(value, warningValue, alertValue, test)}}">
+    <paper-material class="box">
       <div class="inner">
-          <h3>[[value]]<span style="font-size:smaller">[[postFix]]</span></h3>
+          <h3 class$="{{computeValueClass(value, warningValue, alertValue, test)}}">[[value]]<span style="font-size:smaller">[[postFix]]</span></h3>
           <p>[[text]]</p>
       </div>
-    </template>
+    </paper-material>
+  </template>
 </dom-module>
 
 <script>
@@ -93,8 +92,8 @@
       }
     },
 
-    computeBoxClass: function(value, warningValue, alertValue, test) {
-      var resu = "box "
+    computeValueClass: function(value, warningValue, alertValue, test) {
+      var resu = ""
       if (test === "lt") {
         if (alertValue !== null && value < alertValue) {
           resu += "bg-red";

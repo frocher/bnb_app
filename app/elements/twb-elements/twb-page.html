@@ -24,9 +24,13 @@
       @apply(--layout-center-justified);
     }
 
+    twb-value-card:hover {
+      cursor: pointer;
+    }
+
   </style>
   <template>
-    <paper-header-panel class="flex">
+    <paper-header-panel id="panel" class="flex">
 
       <paper-toolbar>
         <paper-icon-button icon="arrow-back" on-tap="backTapped"></paper-icon-button>
@@ -44,32 +48,32 @@
       <div id="content" class="fit">
 
         <div id="cards">
-          <twb-value-card text="up time" value="[[page.uptime]]" warning-value="99.7" alert-value="99.4" post-fix="%" test="lt">
+          <twb-value-card text="up time" value="[[page.uptime]]" warning-value="99.7" alert-value="99.4" post-fix="%" test="lt" on-tap="uptimeTapped">
           </twb-value-card>
 
-          <twb-value-card text="speed index" value="[[page.speedIndex]]" warning-value="4500" alert-value="8000" test="gt">
+          <twb-value-card text="response time" value="[[page.responseStart]]" warning-value="500" alert-value="1000" post-fix="ms" test="gt" on-tap="responseTimeTapped">
           </twb-value-card>
 
-          <twb-value-card text="response time" value="[[page.responseStart]]" warning-value="500" alert-value="1000" post-fix="ms" test="gt">
+          <twb-value-card text="first paint" value="[[page.firstPaint]]" warning-value="4500" alert-value="8000" post-fix="ms" test="gt" on-tap="firstPaintTapped">
           </twb-value-card>
 
-          <twb-value-card text="first paint" value="[[page.firstPaint]]" warning-value="4500" alert-value="8000" post-fix="ms" test="gt">
+          <twb-value-card text="speed index" value="[[page.speedIndex]]" warning-value="4500" alert-value="8000" test="gt" on-tap="speedIndexTapped">
           </twb-value-card>
 
-          <twb-value-card text="dom ready" value="[[page.domReady]]" warning-value="4500" alert-value="8000" post-fix="ms" test="gt">
+          <twb-value-card text="dom ready" value="[[page.domReady]]" warning-value="4500" alert-value="8000" post-fix="ms" test="gt" on-tap="domReadyTapped">
           </twb-value-card>
 
-          <twb-value-card text="page load" value="[[page.pageLoad]]" warning-value="8000" alert-value="15000" post-fix="ms" test="gt">
+          <twb-value-card text="fully loaded" value="[[page.pageLoad]]" warning-value="8000" alert-value="15000" post-fix="ms" test="gt" on-tap="pageLoadTapped">
           </twb-value-card>
         </div>
 
         <div id="charts">
-          <twb-chart-card name="Uptime" data="[[page.uptimes]]" post-units="%"></twb-chart-card>
-          <twb-chart-card name="Speed index" data="[[page.speedIndexes]]"></twb-chart-card>
-          <twb-chart-card name="Response time" data="[[page.responseStarts]]" post-units="ms"></twb-chart-card>
-          <twb-chart-card name="First paint" data="[[page.firstPaints]]" post-units="ms"></twb-chart-card>
-          <twb-chart-card name="Dom ready" data="[[page.domReadies]]" post-units="ms"></twb-chart-card>
-          <twb-chart-card name="Page load" data="[[page.pageLoads]]" post-units="ms"></twb-chart-card>
+          <twb-chart-card id="uptimeChart" name="Uptime" data="[[page.uptimes]]" post-units="%"></twb-chart-card>
+          <twb-chart-card id="responseTimeChart" name="Response time" data="[[page.responseStarts]]" post-units="ms"></twb-chart-card>
+          <twb-chart-card id="firstPaintChart" name="First paint" data="[[page.firstPaints]]" post-units="ms"></twb-chart-card>
+          <twb-chart-card id="speedIndexChart" name="Speed index" data="[[page.speedIndexes]]"></twb-chart-card>
+          <twb-chart-card id="domReadyChart" name="Dom ready" data="[[page.domReadies]]" post-units="ms"></twb-chart-card>
+          <twb-chart-card id="pageLoadChart" name="Fully loaded" data="[[page.pageLoads]]" post-units="ms"></twb-chart-card>
         </div>
 
         <paper-dialog id="deleteDlg" modal>
@@ -79,7 +83,7 @@
             <paper-button dialog-confirm autofocus on-tap="deletePage">Delete</paper-button>
           </div>
         </paper-dialog>
-    </div>
+      </div>
     </paper-header-panel>
 
   </template>
@@ -124,6 +128,37 @@
 
     handleError: function(error) {
       this.fire('message', {message: "Error : can't delete page"});
+    },
+
+    uptimeTapped: function() {
+      this.scrollIntoView('uptimeChart');
+    },
+
+    responseTimeTapped: function() {
+      this.scrollIntoView('responseTimeChart');
+    },
+
+    firstPaintTapped: function() {
+      this.scrollIntoView('firstPaintChart');
+    },
+
+    speedIndexTapped: function() {
+      this.scrollIntoView('speedIndexChart');
+    },
+
+    domReadyTapped: function() {
+      this.scrollIntoView('domReadyChart');
+    },
+
+    pageLoadTapped: function() {
+      this.scrollIntoView('pageLoadChart');
+    },
+
+    scrollIntoView: function(elemID) {
+      var e = document.getElementById(elemID);
+      $(this.$.panel.scroller).animate({
+        scrollTop: $(e).offset().top - 80
+      }, 500);
     }
 
   });

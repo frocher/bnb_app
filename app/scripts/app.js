@@ -32,5 +32,4 @@
   app.isLogged = function() {
     return sessionStorage.getItem('accessToken') !== null;
   };
-
 })(wrap(document));
