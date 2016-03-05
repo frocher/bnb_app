@@ -76,7 +76,7 @@
 
       period: {
         type: Object,
-        value: {start: moment().startOf('month').toDate(), end: moment().endOf('month').toDate()}
+        value: {start: moment().subtract(30, 'days').toDate(), end: moment().toDate()}
       }
     },
 

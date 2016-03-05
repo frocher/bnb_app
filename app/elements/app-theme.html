@@ -26,25 +26,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 /* Application theme */
 
 :root {
-  --dark-primary-color: #455A64;
-  --default-primary-color:#607D8B;
-  --light-primary-color: #CFD8DC;
+  --dark-primary-color: #000000;
+  --default-primary-color:var(--paper-grey-900);
+  --light-primary-color: #303030;
   --text-primary-color: #ffffff; /*text/icons*/
   --accent-color: #FF5722;
-  --primary-background-color: #f5f5f5;
-  --primary-text-color: #212121;
-  --secondary-text-color: #727272;
+  --primary-background-color: #303030;
+  --primary-text-color: #ffffff;
+  --secondary-text-color: var(--paper-grey-300);
   --disabled-text-color: #bdbdbd;
   --divider-color: #B6B6B6;
   --error-color: #db4437;
 
   /* Components */
-  --paper-card-background-color: #ffffff;
+  --paper-card-background-color: var(--paper-grey-800);
+  --paper-card-header-color: var(--secondary-text-color);
   --paper-toolbar-background: var(--default-primary-color);
   --paper-input-container-color: var(--secondary-text-color);
-  --paper-input-container-focus-color: var(--default-primary-color);
-  --paper-button-ink-color: var(--default-primary-color);
-  --paper-dialog-button-color: var(--default-primary-color);
+  --paper-input-container-focus-color: var(--google-blue-300);
+  --paper-button-ink-color: var(--google-blue-300);
+  --paper-dialog-button-color: var(--google-blue-300);
 
   /* paper-drawer-panel */
   --drawer-menu-color: #ffffff;
@@ -52,14 +53,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   --drawer-toolbar-border-color: 1px solid rgba(0, 0, 0, 0.22);
 
     /* paper-menu */
-  --paper-menu-background-color: #fff;
+  --paper-menu-background-color: var(--paper-grey-900);
   --menu-link-color: #111111;
 }
 
 /* General styles */
 
 a {
-  color: var(--default-primary-color);
+  color: var(--secondary-text-color);
   text-decoration: none;
 }
 
