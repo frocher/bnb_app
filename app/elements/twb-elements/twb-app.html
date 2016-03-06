@@ -17,6 +17,14 @@
     .page {
       @apply(--layout-fit);
     }
+
+    #version {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      height:100%;
+      color: var(--disabled-text-color);
+    }
   </style>
 
   <template>
@@ -32,6 +40,8 @@
       <twb-page            id="page"         class="page" data-route="page" period="{{period}}" page="{{page}}"></twb-page>
       <twb-edit-page       id="editPage"     class="page" data-route="edit-page" page="{{page}}"></twb-edit-page>
     </iron-pages>
+
+    <span id="version">v0.1</span>
 
     <paper-toast id="message-toast"></paper-toast>
 
