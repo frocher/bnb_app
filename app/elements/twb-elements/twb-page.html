@@ -24,22 +24,33 @@
       @apply(--layout-center-justified);
     }
 
+    paper-toolbar ::content > #middleBar {
+      z-index: 9999;
+    }
+
     twb-value-card:hover {
       cursor: pointer;
     }
 
   </style>
   <template>
+    <iron-media-query query="(min-width: 600px)" query-matches="{{wide}}"></iron-media-query>
+
     <paper-header-panel id="panel" class="flex">
-
-      <paper-toolbar>
+      <paper-toolbar class$="{{computeToolbarClass(wide)}}">
         <paper-icon-button icon="arrow-back" on-tap="backTapped"></paper-icon-button>
-
-        <span>
+        <template is="dom-if" if="{{!wide}}">
           <span>[[page.name]]</span>
-          <span> stats for&nbsp;</span>
-          <twb-period-dropdown period="{{period}}"></twb-period-dropdown>
-        </span>
+          <div class="flex middle"></div>
+          <twb-period-dropdown class="middle" period="{{period}}"></twb-period-dropdown>
+        </template>
+        <template is="dom-if" if="{{wide}}">
+          <span>
+            <span>[[page.name]]</span>
+            <span> stats for&nbsp;</span>
+            <twb-period-dropdown period="{{period}}"></twb-period-dropdown>
+          </span>
+        </template>
         <div class="flex"></div>
         <paper-icon-button icon="create" on-tap="editTapped" hidden$="{{!page.editable}}"></paper-icon-button>
         <paper-icon-button icon="delete" on-tap="deleteTapped" hidden$="{{!page.deletable}}"></paper-icon-button>
@@ -103,6 +114,10 @@
       period: {
         type: Object
       }
+    },
+
+    computeToolbarClass: function(param) {
+      return this.wide ? "" : "medium-tall";
     },
 
     backTapped: function(e) {

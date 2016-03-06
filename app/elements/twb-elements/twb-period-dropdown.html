@@ -19,7 +19,7 @@
     }
 
     paper-menu-button {
-      margin-left: -2em;
+      margin-left: -0.5em;
       padding: 0;
     }
     paper-dialog {
@@ -35,10 +35,9 @@
        -
      <span id="endDate" on-tap="endDateTapped">[[formatDate(period.end)]]</span>
     </span>
-    <paper-menu-button>
-      <paper-button id="periodBtn" class="dropdown-trigger">
-        <iron-icon icon="arrow-drop-down"></iron-icon>
-      </paper-button>
+    <paper-menu-button horizontal-align="right">
+      <paper-icon-button id="periodBtn" icon="arrow-drop-down" class="dropdown-trigger">
+      </paper-icon-button>
       <paper-menu class="dropdown-content" attr-for-selected="data-period">
         <paper-item on-tap="periodTapped" data-period="today">Today</paper-item>
         <paper-item on-tap="periodTapped" data-period="this_week">This week</paper-item>

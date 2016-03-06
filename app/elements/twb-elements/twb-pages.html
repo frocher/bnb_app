@@ -1,3 +1,4 @@
+<link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="twb-page-card.html">
 <link rel="import" href="twb-period-dropdown.html">
 
@@ -8,56 +9,32 @@
       @apply(--layout-horizontal);
     }
 
-    .page-item {
-      display: block;
-      width: 200px;
-      height: 160px;
-      background-color: white;
-      margin-top: 8px;
-      margin-left: 4px;
-      margin-right: 4px;
-
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-      border-radius: 2px;
-    }
-
-    .label {
-      display: inline;
-      padding: .2em .6em .3em;
-      font-size: 75%;
-      font-weight: 500;
-      line-height: 1;
-      color: #fff;
-      text-align: center;
-      white-space: nowrap;
-      vertical-align: baseline;
-      border-radius: .25em;
-    }
-
-    .label-success {
-      background-color: #5cb85c;
-    }
-
-    .label-warning {
-      background-color: #f0ad4e;
-    }
-
-    .label-danger {
-      background-color: #d9534f;
-    }
-
     .content {
+      @apply(--layout-fit);
       @apply(--layout-wrap);
       @apply(--layout-center-justified);
       @apply(--layout-horizontal);
       padding:24px;
     }
 
+    paper-toolbar ::content > #middleBar {
+      z-index: 9999;
+    }
+
   </style>
   <template>
+    <iron-media-query query="(min-width: 600px)" query-matches="{{wide}}"></iron-media-query>
+
     <paper-header-panel class="flex">
-      <paper-toolbar>
-        <span>All pages stats for&nbsp;<twb-period-dropdown period="{{period}}"></twb-period-dropdown></span>
+      <paper-toolbar class$="{{computeToolbarClass(wide)}}">
+        <template is="dom-if" if="{{!wide}}">
+          <span>All pages stats</span>
+          <div class="flex middle"></div>
+          <twb-period-dropdown class="middle" period="{{period}}"></twb-period-dropdown>
+        </template>
+        <template is="dom-if" if="{{wide}}">
+          <span>All pages stats for&nbsp;<twb-period-dropdown class="middle" period="{{period}}"></twb-period-dropdown></span>
+        </template>
         <div class="flex"></div>
         <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
         <paper-menu-button horizontal-align="right">
@@ -92,6 +69,10 @@
       period: {
         type: Object
       }
+    },
+
+    computeToolbarClass: function(param) {
+      return this.wide ? "" : "medium-tall";
     },
 
     sortPages: function(first, second) {
