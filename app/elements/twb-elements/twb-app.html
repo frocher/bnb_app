@@ -116,8 +116,18 @@
     },
 
     handleRouteChanged: function(newValue, oldValue) {
-      this.entryAnimation = 'fade-in-animation';
-      this.exitAnimation = 'fade-out-animation';
+      if (newValue === 'add-page' || newValue === 'edit-page') {
+        this.entryAnimation = 'slide-from-bottom-animation';
+        this.exitAnimation = 'slide-up-animation';
+      }
+      else if (oldValue === 'add-page' || oldValue === 'edit-page') {
+        this.entryAnimation = 'slide-from-top-animation';
+        this.exitAnimation = 'slide-down-animation';
+      }
+      else {
+        this.entryAnimation = 'fade-in-animation';
+        this.exitAnimation = 'fade-out-animation';
+      }
       this.$.animated.select(newValue);
     },
 
