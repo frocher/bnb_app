@@ -1,3 +1,4 @@
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="twb-period-dropdown.html">
 <link rel="import" href="twb-value-card.html">
 <link rel="import" href="twb-chart-card.html">
@@ -116,6 +117,11 @@
       }
     },
 
+    behaviors: [
+      Polymer.NeonAnimatableBehavior,
+      Polymer.IronResizableBehavior
+    ],
+    
     computeToolbarClass: function(param) {
       return this.wide ? "" : "medium-tall";
     },

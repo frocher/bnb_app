@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 
 <dom-module id="twb-edit-page">
   <style>
@@ -58,6 +59,11 @@
       }
     },
 
+    behaviors: [
+      Polymer.NeonAnimatableBehavior,
+      Polymer.IronResizableBehavior
+    ],
+    
     closeTapped: function() {
       if (this.$['name'].value !== this.page.name || this.$['url'].value !== this.page.url) {
         this.$.discardDlg.open();
