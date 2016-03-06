@@ -20,14 +20,17 @@
 
     #version {
       display: flex;
+      height:100%;
       justify-content: flex-end;
       align-items: flex-end;
-      height:100%;
+      font-size: 12px;
       color: var(--disabled-text-color);
+      opacity: 0.5;
     }
   </style>
 
   <template>
+    <span id="version">v0.1</span>
 
     <iron-pages class="page" attr-for-selected="data-route" selected="{{route}}">
       <section             id="splash"       class="page" data-route="splash"></section>
@@ -40,8 +43,6 @@
       <twb-page            id="page"         class="page" data-route="page" period="{{period}}" page="{{page}}"></twb-page>
       <twb-edit-page       id="editPage"     class="page" data-route="edit-page" page="{{page}}"></twb-edit-page>
     </iron-pages>
-
-    <span id="version">v0.1</span>
 
     <paper-toast id="message-toast"></paper-toast>
 
