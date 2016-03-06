@@ -1,3 +1,4 @@
+<link rel="import" href="../../bower_components/iron-image/iron-image.html">
 
 <dom-module id="twb-page-card">
   <style>
@@ -18,10 +19,11 @@
     @apply(--paper-card-header);
   }
 
-  .header img {
+  .header iron-image {
     width: 100%;
     padding-bottom: 75%;
     pointer-events: none;
+    background-color: lightgray;
   }
 
   :host ::content h2 {
@@ -70,7 +72,7 @@
 
     <paper-material id="shadow" animated$="[[animatedShadow]]" elevation=[[elevation]] on-tap="cardTapped">
       <div class="header">
-        <img src="[[_computeScreenshotUrl(page)]]"></img>
+        <iron-image sizing="cover" preload fade src="[[_computeScreenshotUrl(page)]]"></iron-image>
       </div>
 
       <div class="card-content">
