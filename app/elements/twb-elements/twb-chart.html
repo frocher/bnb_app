@@ -1,4 +1,6 @@
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 
 <dom-module id="twb-chart">
   <link rel="stylesheet" href="../../bower_components/morrisjs/morris.css">
@@ -6,11 +8,28 @@
     :host {
       display: inline-block;
     }
+
+    iron-pages {
+      width: 100%;
+      height: 100%;
+    }
+
     #canvas {
       width: 100%;
       height: 100%;
       position:relative;
     }
+
+    #loading {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 24px;
+    }
+
     #noData {
       width: 100%;
       height: 100%;
@@ -26,8 +45,15 @@
     }
   </style>
   <template>
-    <div id="canvas" hidden$="{{!displayChart(data)}}"></div>
-    <div id="noData" hidden$="{{displayChart(data)}}"><span>No data</span></div>
+    <iron-pages selected="{{displayChart(data)}}" wrap>
+      <div id="loading">
+        <span>Loading</span>
+        <paper-progress indeterminate></paper-progress>
+        <paper-spinner alt="Loading contacts list" active></paper-spinner>
+      </div>
+      <div id="noData"><span>No data</span></div>
+      <div id="canvas"></div>
+    </iron-pages>
   </template>
 </dom-module>
 
@@ -45,7 +71,7 @@
       data: {
         type: Object,
         value: function () {
-          return {};
+          return null;
         }
       },
       postUnits: {
@@ -79,7 +105,11 @@
     updateChart: function() {
       if (this.data && this.data.length > 0) {
         if (this.chart) {
-          this.chart.setData(this.data);
+          if (!_.isEqual(this.oldData, this.data)) {
+            this.chart.setData(this.data);
+            this.oldData = this.data;
+            console.log("New " + this.data)
+          }
         }
         else {
           this.chart = new Morris.Line({
@@ -97,12 +127,32 @@
         }
       }
       else if (this.chart) {
-        this.chart.setData([]);
+        //this.chart.setData([]);
       }
     },
 
     displayChart: function(data) {
-      return data !== undefined && data !== null && data.length > 0;
+      if (data === undefined || data === null) {
+        return 0;
+      }
+      else if (data.length == 0) {
+        return 1;
+      }
+      return 2;
+    },
+
+    arraysEqual: function(a, b) {
+      if (a === b) return true;
+      if (a == null || b == null) return false;
+      if (a.length != b.length) return false;
+
+      // If you don't care about the order of the elements inside
+      // the array, you should sort both arrays here.
+
+      for (var i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+      }
+      return true;
     }
 
   });
