@@ -45,10 +45,9 @@
     }
   </style>
   <template>
-    <iron-pages selected="{{displayChart(data)}}" wrap>
+    <iron-pages selected="{{displayChart(data)}}">
       <div id="loading">
         <span>Loading</span>
-        <paper-progress indeterminate></paper-progress>
         <paper-spinner alt="Loading contacts list" active></paper-spinner>
       </div>
       <div id="noData"><span>No data</span></div>
@@ -108,7 +107,6 @@
           if (!_.isEqual(this.oldData, this.data)) {
             this.chart.setData(this.data);
             this.oldData = this.data;
-            console.log("New " + this.data)
           }
         }
         else {
