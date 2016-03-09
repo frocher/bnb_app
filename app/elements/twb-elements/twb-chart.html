@@ -1,17 +1,10 @@
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 
 <dom-module id="twb-chart">
-  <link rel="stylesheet" href="../../bower_components/morrisjs/morris.css">
   <style>
     :host {
       display: inline-block;
-    }
-
-    iron-pages {
-      width: 100%;
-      height: 100%;
     }
 
     #canvas {
@@ -45,14 +38,12 @@
     }
   </style>
   <template>
-    <iron-pages selected="{{displayChart(data)}}">
-      <div id="loading">
-        <span>Loading</span>
-        <paper-spinner alt="Loading contacts list" active></paper-spinner>
-      </div>
-      <div id="noData"><span>No data</span></div>
-      <div id="canvas"></div>
-    </iron-pages>
+    <div id="loading" hidden$="[[computeHideLoading(data)]]">
+      <span>Loading&nbsp;</span>
+      <paper-spinner alt="Loading contacts list" active></paper-spinner>
+    </div>
+    <div id="noData" hidden$="[[computeHideNoData(data)]]"><span>No data</span></div>
+    <div id="canvas" hidden$="[[computeHideGraph(data)]]"></div>
   </template>
 </dom-module>
 
@@ -125,18 +116,20 @@
         }
       }
       else if (this.chart) {
-        //this.chart.setData([]);
+        // Nothing todo here : the chart will be hidden
       }
     },
 
-    displayChart: function(data) {
-      if (data === undefined || data === null) {
-        return 0;
-      }
-      else if (data.length == 0) {
-        return 1;
-      }
-      return 2;
+    computeHideLoading: function(data) {
+      return this.data !== undefined && this.data !== null;
+    },
+
+    computeHideNoData: function(data) {
+      return (this.data === undefined || this.data === null) || this.data.length !== 0;
+    },
+
+    computeHideGraph: function(data) {
+      return (this.data === undefined || this.data === null) || this.data.length === 0;
     },
 
     arraysEqual: function(a, b) {
