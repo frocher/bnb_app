@@ -12,6 +12,6 @@ rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN npm install -g bower
 RUN npm install --production
-RUN bower install
+RUN bower install --production
 
 COPY dist /usr/share/nginx/html

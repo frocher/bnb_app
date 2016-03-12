@@ -113,6 +113,8 @@
             postUnits: this.postUnits,
             dateFormat: function (x) { return moment(x).format('LL'); }
           });
+          // Force redraw
+          this.async(this.onIronResize, 1);
         }
       }
       else if (this.chart) {
