@@ -1,4 +1,4 @@
-var BnbBnbService = (function() {
+var BnbService = (function() {
 
   var BASE_URL = '/api/';
 
