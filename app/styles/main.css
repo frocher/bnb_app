@@ -7,7 +7,7 @@ html, body {
 }
 
 
-twb-app {
+bnb-app {
   height: 100%;
   overflow: auto;
   -webkit-overflow-scrolling: touch;

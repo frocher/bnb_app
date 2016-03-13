@@ -1,14 +1,14 @@
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="twb-signin.html">
-<link rel="import" href="twb-signup.html">
-<link rel="import" href="twb-forgot-password.html">
-<link rel="import" href="twb-edit-password.html">
-<link rel="import" href="twb-pages.html">
-<link rel="import" href="twb-page.html">
-<link rel="import" href="twb-add-page.html">
-<link rel="import" href="twb-edit-page.html">
+<link rel="import" href="bnb-signin.html">
+<link rel="import" href="bnb-signup.html">
+<link rel="import" href="bnb-forgot-password.html">
+<link rel="import" href="bnb-edit-password.html">
+<link rel="import" href="bnb-pages.html">
+<link rel="import" href="bnb-page.html">
+<link rel="import" href="bnb-add-page.html">
+<link rel="import" href="bnb-edit-page.html">
 
-<dom-module id="twb-app">
+<dom-module id="bnb-app">
   <style>
     :host {
       @apply(--layout-vertical);
@@ -35,14 +35,14 @@
 
     <neon-animated-pages id="animated" class="page" attr-for-selected="data-route" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]">
       <neon-animatable     id="splash"       class="page" data-route="splash">Splash !!!</neon-animatable>
-      <twb-signin          id="signin"       class="page" data-route="signin"></twb-signin>
-      <twb-signup          id="signup"       class="page" data-route="signup"></twb-signup>
-      <twb-forgot-password id="forgot"       class="page" data-route="forgot"></twb-forgot-password>
-      <twb-edit-password   id="editPassword" class="page" data-route="edit-password"></twb-edit-password>
-      <twb-pages           id="pages"        class="page" data-route="home" period="{{period}}" pages="{{pages}}"></twb-pages>
-      <twb-add-page        id="addPage"      class="page" data-route="add-page" pages="{{pages}}"></twb-add-page>
-      <twb-page            id="page"         class="page" data-route="page" period="{{period}}" page="{{page}}"></twb-page>
-      <twb-edit-page       id="editPage"     class="page" data-route="edit-page" page="{{page}}"></twb-edit-page>
+      <bnb-signin          id="signin"       class="page" data-route="signin"></bnb-signin>
+      <bnb-signup          id="signup"       class="page" data-route="signup"></bnb-signup>
+      <bnb-forgot-password id="forgot"       class="page" data-route="forgot"></bnb-forgot-password>
+      <bnb-edit-password   id="editPassword" class="page" data-route="edit-password"></bnb-edit-password>
+      <bnb-pages           id="pages"        class="page" data-route="home" period="{{period}}" pages="{{pages}}"></bnb-pages>
+      <bnb-add-page        id="addPage"      class="page" data-route="add-page" pages="{{pages}}"></bnb-add-page>
+      <bnb-page            id="page"         class="page" data-route="page" period="{{period}}" page="{{page}}"></bnb-page>
+      <bnb-edit-page       id="editPage"     class="page" data-route="edit-page" page="{{page}}"></bnb-edit-page>
     </neon-animated--pages>
 
     <paper-toast id="message-toast"></paper-toast>
@@ -54,8 +54,8 @@
 (function() {
 
   Polymer({
-    is: 'twb-app',
-
+    is: 'bnb-app',
+bnb
     listeners: {
       'message'        : 'handleMessage',
       'signedin'       : 'handleSignedIn',
@@ -98,21 +98,21 @@
     },
 
     loadPages: function() {
-      TwbService.loadPages({}, this.handleLoadPagesResponse, this.handleGenericError, this);
+      BnbService.loadPages({}, this.handleLoadPagesResponse, this.handleGenericError, this);
     },
 
     loadPage: function(id) {
-      TwbService.loadPage(id, {}, this.handleLoadPageResponse, this.handleGenericError, this);
+      BnbService.loadPage(id, {}, this.handleLoadPageResponse, this.handleGenericError, this);
     },
 
     loadPageMeasures: function() {
       var start = this.period.start;
       var end   = this.period.end;
 
-      TwbService.loadUptimes(this.page.id, 'median', start, end, this.handleLoadUptimeResponse, this.handleGenericError, this);
-      TwbService.loadChecks(this.page.id, 'median', start, end, this.handleLoadCheckResponse, this.handleGenericError, this);
-      TwbService.loadUptimes(this.page.id, 'points', start, end, this.handleLoadUptimesResponse, this.handleGenericError, this);
-      TwbService.loadChecks(this.page.id, 'points', start, end, this.handleLoadChecksResponse, this.handleGenericError, this);
+      BnbService.loadUptimes(this.page.id, 'median', start, end, this.handleLoadUptimeResponse, this.handleGenericError, this);
+      BnbService.loadChecks(this.page.id, 'median', start, end, this.handleLoadCheckResponse, this.handleGenericError, this);
+      BnbService.loadUptimes(this.page.id, 'points', start, end, this.handleLoadUptimesResponse, this.handleGenericError, this);
+      BnbService.loadChecks(this.page.id, 'points', start, end, this.handleLoadChecksResponse, this.handleGenericError, this);
     },
 
     handleRouteChanged: function(newValue, oldValue) {
@@ -248,7 +248,7 @@
     },
 
     handleSignedOut: function(e) {
-      TwbService.signout();
+      BnbService.signout();
       page('/signin');
     },
 

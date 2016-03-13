@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 
-<dom-module id="twb-add-page">
+<dom-module id="bnb-edit-page">
   <style>
     :host {
       @apply(--layout-vertical);
@@ -13,28 +13,29 @@
 
   </style>
   <template>
-    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="createTapped">
+    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="saveTapped">
     </iron-a11y-keys>
     <paper-header-panel class="flex">
       <paper-toolbar>
         <paper-icon-button icon="close" on-tap="closeTapped"></paper-icon-button>
-        <span class="title">New page</span>
+        <span class="title">Edit page</span>
         <span class="flex"></span>
-        <paper-button on-tap="createTapped">Create</paper-button>
+        <paper-button on-tap="saveTapped">Save</paper-button>
       </paper-toolbar>
       <div id="content" class="fit">
-        <paper-input id="name" label="Page name" value="{{params.name}}" autofocus="true"></paper-input>
-        <paper-input id="url" label="URL" value="{{params.url}}"></paper-input>
+        <paper-input id="name" label="Page name" value="[[page.name]]" autofocus="true"></paper-input>
+        <paper-input id="url" label="URL" value="[[page.url]]"></paper-input>
       </div>
+
+      <paper-dialog id="discardDlg" modal>
+        <p>Discard edit.</p>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button dialog-confirm autofocus on-tap="closePage">Discard</paper-button>
+        </div>
+      </paper-dialog>
     </paper-header-panel>
 
-    <paper-dialog id="discardDlg" modal>
-      <p>Discard new page.</p>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button dialog-confirm autofocus on-tap="closePage">Discard</paper-button>
-      </div>
-    </paper-dialog>
 
   </template>
 </dom-module>
@@ -43,16 +44,13 @@
 (function() {
 
   Polymer({
-    is: 'twb-add-page',
+    is: 'bnb-edit-page',
 
     properties: {
-      pages: {
-        type: Array,
-        value: function() {
-          return [];
-        }
+      page: {
+        type: Object,
+        value: null
       },
-
       target: {
         type: Object,
         value: function() {
@@ -66,12 +64,8 @@
       Polymer.IronResizableBehavior
     ],
 
-    ready: function() {
-      this.clearFields();
-    },
-
     closeTapped: function() {
-      if (this.params.name !== '' || this.params.url !== '') {
+      if (this.$['name'].value !== this.page.name || this.$['url'].value !== this.page.url) {
         this.$.discardDlg.open();
       }
       else {
@@ -79,21 +73,33 @@
       }
     },
 
-    createTapped: function() {
+    closePage: function() {
+      this.$['name'].invalid = false;
+      this.$['url'].invalid = false;
+      this.fire('show-page', {page: this.page});
+    },
+
+    saveTapped: function() {
       this.$['name'].invalid = false;
       this.$['url'].invalid = false;
 
-      TwbService.createPage(this.params, this.handleResponse, this.handleError, this);
+      var page = {
+        name: this.$['name'].value,
+        url: this.$['url'].value
+      }
+
+      BnbService.updatePage(this.page.id, page, this.handleResponse, this.handleError, this);
     },
 
     handleResponse: function(data) {
-      this.fire('page-created', {page: data});
-      this.clearFields();
+      this.page = data;
+      this.fire('message', {message: "Page has been updated"});
+      this.closePage();
     },
 
     handleError: function(error) {
       if (error === null) {
-        this.fire('message', {message: "Error : can't create page"});
+        this.fire('message', {message: "Error : can't save page"});
       }
       else {
         var errors = error.errors;
@@ -107,17 +113,6 @@
           }
         }
       }
-    },
-
-    clearFields: function() {
-      this.$['name'].invalid = false;
-      this.$['url'].invalid = false;
-      this.params = {name: '', url: ''};
-    },
-
-    closePage: function() {
-      this.clearFields();
-      this.fire('show-pages');
     }
 
   });

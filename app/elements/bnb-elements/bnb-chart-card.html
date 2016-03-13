@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
-<link rel="import" href="twb-chart.html">
+<link rel="import" href="bnb-chart.html">
 
-<dom-module id="twb-chart-card">
+<dom-module id="bnb-chart-card">
   <style>
     :host {
       display:flex;
@@ -22,7 +22,7 @@
   <template>
     <paper-card heading="[[name]]">
       <div class="card-content">
-        <twb-chart style="height:340px;width:100%;" post-units="[[postUnits]]" data="[[data]]"></twb-chart>
+        <bnb-chart style="height:340px;width:100%;" post-units="[[postUnits]]" data="[[data]]"></bnb-chart>
       </div>
     </paper-card>
   </template>
@@ -32,7 +32,7 @@
 (function() {
 
   Polymer({
-    is: 'twb-chart-card',
+    is: 'bnb-chart-card',
 
     properties: {
       name: {

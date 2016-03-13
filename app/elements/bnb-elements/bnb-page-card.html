@@ -1,7 +1,7 @@
 <link rel="import" href="../../bower_components/iron-image/iron-image.html">
 <link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
 
-<dom-module id="twb-page-card">
+<dom-module id="bnb-page-card">
   <style>
   :host {
     display: inline-block;
@@ -91,11 +91,9 @@
 <script>
 
   Polymer({
-
-    is: 'twb-page-card',
+    is: 'bnb-page-card',
 
     properties: {
-
       /**
        * The page of the card.
        */
@@ -132,7 +130,7 @@
     },
 
     _computeScreenshotUrl: function(item) {
-      return TwbService.BASE_URL + 'pages/' + item.id + '/screenshot?style=thumb';
+      return BnbService.BASE_URL + 'pages/' + item.id + '/screenshot?style=thumb';
     }
 
   });

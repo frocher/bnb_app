@@ -1,9 +1,9 @@
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="twb-period-dropdown.html">
-<link rel="import" href="twb-value-card.html">
-<link rel="import" href="twb-chart-card.html">
+<link rel="import" href="bnb-period-dropdown.html">
+<link rel="import" href="bnb-value-card.html">
+<link rel="import" href="bnb-chart-card.html">
 
-<dom-module id="twb-page">
+<dom-module id="bnb-page">
   <style>
     :host {
       @apply(--layout-vertical);
@@ -29,7 +29,7 @@
       z-index: 9999;
     }
 
-    twb-value-card:hover {
+    bnb-value-card:hover {
       cursor: pointer;
     }
 
@@ -43,13 +43,13 @@
         <template is="dom-if" if="{{!wide}}">
           <span>[[page.name]]</span>
           <div class="flex middle"></div>
-          <twb-period-dropdown class="middle" period="{{period}}"></twb-period-dropdown>
+          <bnb-period-dropdown class="middle" period="{{period}}"></bnb-period-dropdown>
         </template>
         <template is="dom-if" if="{{wide}}">
           <span>
             <span>[[page.name]]</span>
             <span> stats for&nbsp;</span>
-            <twb-period-dropdown period="{{period}}"></twb-period-dropdown>
+            <bnb-period-dropdown period="{{period}}"></bnb-period-dropdown>
           </span>
         </template>
         <div class="flex"></div>
@@ -60,32 +60,32 @@
       <div id="content" class="fit">
 
         <div id="cards">
-          <twb-value-card text="up time" value="[[page.uptime]]" warning-value="99.7" alert-value="99.4" post-fix="%" test="lt" on-tap="uptimeTapped">
-          </twb-value-card>
+          <bnb-value-card text="up time" value="[[page.uptime]]" warning-value="99.7" alert-value="99.4" post-fix="%" test="lt" on-tap="uptimeTapped">
+          </bnb-value-card>
 
-          <twb-value-card text="response time" value="[[page.responseStart]]" warning-value="500" alert-value="1000" post-fix="ms" test="gt" on-tap="responseTimeTapped">
-          </twb-value-card>
+          <bnb-value-card text="response time" value="[[page.responseStart]]" warning-value="500" alert-value="1000" post-fix="ms" test="gt" on-tap="responseTimeTapped">
+          </bnb-value-card>
 
-          <twb-value-card text="first paint" value="[[page.firstPaint]]" warning-value="4500" alert-value="8000" post-fix="ms" test="gt" on-tap="firstPaintTapped">
-          </twb-value-card>
+          <bnb-value-card text="first paint" value="[[page.firstPaint]]" warning-value="4500" alert-value="8000" post-fix="ms" test="gt" on-tap="firstPaintTapped">
+          </bnb-value-card>
 
-          <twb-value-card text="speed index" value="[[page.speedIndex]]" warning-value="4500" alert-value="8000" test="gt" on-tap="speedIndexTapped">
-          </twb-value-card>
+          <bnb-value-card text="speed index" value="[[page.speedIndex]]" warning-value="4500" alert-value="8000" test="gt" on-tap="speedIndexTapped">
+          </bnb-value-card>
 
-          <twb-value-card text="dom ready" value="[[page.domReady]]" warning-value="4500" alert-value="8000" post-fix="ms" test="gt" on-tap="domReadyTapped">
-          </twb-value-card>
+          <bnb-value-card text="dom ready" value="[[page.domReady]]" warning-value="4500" alert-value="8000" post-fix="ms" test="gt" on-tap="domReadyTapped">
+          </bnb-value-card>
 
-          <twb-value-card text="fully loaded" value="[[page.pageLoad]]" warning-value="8000" alert-value="15000" post-fix="ms" test="gt" on-tap="pageLoadTapped">
-          </twb-value-card>
+          <bnb-value-card text="fully loaded" value="[[page.pageLoad]]" warning-value="8000" alert-value="15000" post-fix="ms" test="gt" on-tap="pageLoadTapped">
+          </bnb-value-card>
         </div>
 
         <div id="charts">
-          <twb-chart-card id="uptimeChart" name="Uptime" data="[[page.uptimes]]" post-units="%"></twb-chart-card>
-          <twb-chart-card id="responseTimeChart" name="Response time" data="[[page.responseStarts]]" post-units="ms"></twb-chart-card>
-          <twb-chart-card id="firstPaintChart" name="First paint" data="[[page.firstPaints]]" post-units="ms"></twb-chart-card>
-          <twb-chart-card id="speedIndexChart" name="Speed index" data="[[page.speedIndexes]]"></twb-chart-card>
-          <twb-chart-card id="domReadyChart" name="Dom ready" data="[[page.domReadies]]" post-units="ms"></twb-chart-card>
-          <twb-chart-card id="pageLoadChart" name="Fully loaded" data="[[page.pageLoads]]" post-units="ms"></twb-chart-card>
+          <bnb-chart-card id="uptimeChart" name="Uptime" data="[[page.uptimes]]" post-units="%"></bnb-chart-card>
+          <bnb-chart-card id="responseTimeChart" name="Response time" data="[[page.responseStarts]]" post-units="ms"></bnb-chart-card>
+          <bnb-chart-card id="firstPaintChart" name="First paint" data="[[page.firstPaints]]" post-units="ms"></bnb-chart-card>
+          <bnb-chart-card id="speedIndexChart" name="Speed index" data="[[page.speedIndexes]]"></bnb-chart-card>
+          <bnb-chart-card id="domReadyChart" name="Dom ready" data="[[page.domReadies]]" post-units="ms"></bnb-chart-card>
+          <bnb-chart-card id="pageLoadChart" name="Fully loaded" data="[[page.pageLoads]]" post-units="ms"></bnb-chart-card>
         </div>
 
         <paper-dialog id="deleteDlg" modal>
@@ -105,7 +105,7 @@
 (function() {
 
   Polymer({
-    is: 'twb-page',
+    is: 'bnb-page',
 
     properties: {
       page: {
@@ -139,7 +139,7 @@
     },
 
     deletePage: function(e) {
-      TwbService.deletePage(this.page.id, this.handleResponse, this.handleError, this);
+      BnbService.deletePage(this.page.id, this.handleResponse, this.handleError, this);
     },
 
     handleResponse: function(data) {

@@ -1,9 +1,9 @@
 <link rel="import" href="../../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
-<link rel="import" href="twb-page-card.html">
-<link rel="import" href="twb-period-dropdown.html">
+<link rel="import" href="bnb-page-card.html">
+<link rel="import" href="bnb-period-dropdown.html">
 
-<dom-module id="twb-pages">
+<dom-module id="bnb-pages">
 
   <style>
     :host {
@@ -31,10 +31,10 @@
         <template is="dom-if" if="{{!wide}}">
           <span>All pages stats</span>
           <div class="flex middle"></div>
-          <twb-period-dropdown class="middle" period="{{period}}"></twb-period-dropdown>
+          <bnb-period-dropdown class="middle" period="{{period}}"></bnb-period-dropdown>
         </template>
         <template is="dom-if" if="{{wide}}">
-          <span>All pages stats for&nbsp;<twb-period-dropdown class="middle" period="{{period}}"></twb-period-dropdown></span>
+          <span>All pages stats for&nbsp;<bnb-period-dropdown class="middle" period="{{period}}"></bnb-period-dropdown></span>
         </template>
         <div class="flex"></div>
         <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
@@ -47,7 +47,7 @@
       </paper-toolbar>
       <div class="content">
         <template is="dom-repeat" items="{{pages}}" as="item" sort="sortPages">
-          <twb-page-card page="[[item]]"></twb-page-card>
+          <bnb-page-card page="[[item]]"></bnb-page-card>
         </template>
       </div>
     </paper-header-panel>
@@ -58,7 +58,7 @@
 <script>
 (function() {
   Polymer({
-    is: 'twb-pages',
+    is: 'bnb-pages',
 
     properties: {
       pages: {
@@ -76,7 +76,7 @@
       Polymer.NeonAnimatableBehavior,
       Polymer.IronResizableBehavior
     ],
-    
+
     computeToolbarClass: function(param) {
       return this.wide ? "" : "medium-tall";
     },

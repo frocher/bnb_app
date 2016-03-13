@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
 
-<dom-module id="twb-signup">
+<dom-module id="bnb-signup">
   <style>
   </style>
 
@@ -8,7 +8,7 @@
     <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="signupSubmitTapped">
     </iron-a11y-keys>
 
-    <twb-auth-form id="signup-form" name="signup" title="Sign up" buttons="{{signupButtons}}">
+    <bnb-auth-form id="signup-form" name="signup" title="Sign up" buttons="{{signupButtons}}">
 
       <paper-input id="signup-name" autofocus="true" label="Full name" type="text" value="{{params.name}}">
       </paper-input>
@@ -25,7 +25,7 @@
       <div class="actions">
         <paper-button on-tap="signupSubmitTapped">Sign me up</paper-button>
       </div>
-    </twb-auth-form>
+    </bnb-auth-form>
   </template>
 </dom-module>
 
@@ -33,7 +33,7 @@
 (function() {
 
   Polymer({
-    is: 'twb-signup',
+    is: 'bnb-signup',
 
     properties: {
       target: {
@@ -55,7 +55,7 @@
       this.$['signup-password'].invalid = false;
       this.$['signup-password_confirmation'].invalid = false;
 
-      TwbService.signup(this.params, this.handleSignupResponse, this.handleSignupError, this);
+      BnbService.signup(this.params, this.handleSignupResponse, this.handleSignupError, this);
     },
 
     handleSignupResponse: function(data) {

@@ -1,4 +1,4 @@
-<dom-module id="twb-auth-form">
+<dom-module id="bnb-auth-form">
   <style>
     :host {
        @apply(--layout-center);
@@ -40,7 +40,7 @@
 
     <div class="links">
       <template is="dom-repeat" items="{{buttons}}">
-        <twb-anchor text="{{item.text}}" path="{{item.path}}"></twb-anchor>
+        <bnb-anchor text="{{item.text}}" path="{{item.path}}"></bnb-anchor>
       </template>
     </div>
   </template>
@@ -50,7 +50,7 @@
 (function() {
 
   Polymer({
-    is: 'twb-auth-form',
+    is: 'bnb-auth-form',
     properties: {
       title: String,
       buttons: Array
