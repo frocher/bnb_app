@@ -1,6 +1,6 @@
 {
-  "name": "twb_app",
-  "version": "0.0.1",
+  "name": "bnb_app",
+  "version": "0.1.0",
   "dependencies": {
     "iron-elements": "PolymerElements/iron-elements#^1.0.0",
     "paper-elements": "PolymerElements/paper-elements#^1.0.0",
