@@ -109,8 +109,8 @@
       var start = this.period.start;
       var end   = this.period.end;
 
-      BnbService.loadUptimes(this.page.id, 'median', start, end, this.handleLoadUptimeResponse, this.handleGenericError, this);
-      BnbService.loadChecks(this.page.id, 'median', start, end, this.handleLoadCheckResponse, this.handleGenericError, this);
+      BnbService.loadUptimes(this.page.id, 'point', start, end, this.handleLoadUptimeResponse, this.handleGenericError, this);
+      BnbService.loadChecks(this.page.id, 'point', start, end, this.handleLoadCheckResponse, this.handleGenericError, this);
       BnbService.loadUptimes(this.page.id, 'points', start, end, this.handleLoadUptimesResponse, this.handleGenericError, this);
       BnbService.loadChecks(this.page.id, 'points', start, end, this.handleLoadChecksResponse, this.handleGenericError, this);
     },
