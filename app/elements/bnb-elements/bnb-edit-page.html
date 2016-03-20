@@ -1,5 +1,9 @@
 <link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/paper-divider/paper-divider.html">
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="bnb-collapse.html">
 
 <dom-module id="bnb-edit-page">
   <style>
@@ -23,8 +27,12 @@
         <paper-button on-tap="saveTapped">Save</paper-button>
       </paper-toolbar>
       <div id="content" class="fit">
-        <paper-input id="name" label="Page name" value="[[page.name]]" autofocus="true"></paper-input>
-        <paper-input id="url" label="URL" value="[[page.url]]"></paper-input>
+        <bnb-collapse icon="icons:info" header="General" opened>
+          <paper-input id="name" label="Page name" value="[[page.name]]" autofocus="true"></paper-input>
+          <paper-input id="url" label="URL" value="[[page.url]]"></paper-input>
+        </bnb-collapse>
+        <paper-divider></paper-divider>
+
       </div>
 
       <paper-dialog id="discardDlg" modal>
@@ -113,6 +121,10 @@
           }
         }
       }
+    },
+
+    toggleMembers: function(selector) {
+      this.$.members.toggle();
     }
 
   });

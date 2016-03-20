@@ -1,0 +1,112 @@
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../bower_components/vaadin-grid/vaadin-grid.html">
+
+<dom-module id="bnb-members-page">
+  <style>
+    :host {
+      @apply(--layout-vertical);
+    }
+
+    #content {
+      padding: 10px 22px 10px 22px;
+    }
+
+    h3 {
+      color: var(--secondary-text-color);
+    }
+
+    #members {
+      height: 400px;
+    }
+
+
+  </style>
+  <template>
+    <paper-header-panel class="flex">
+      <paper-toolbar>
+        <paper-icon-button icon="arrow-back" on-tap="closeTapped"></paper-icon-button>
+        <span class="title">Edit members</span>
+      </paper-toolbar>
+      <div id="content" class="fit">
+        <div class="layout horizontal end">
+          <paper-input id="email" label="E-mail" class="flex"></paper-input>
+          <paper-button>Invite</paper-button>
+        </div>
+
+        <h3>Members</h3>
+        <vaadin-grid id="members" items="[[_computeMembers(page.members)]]">
+          <table>
+            <colgroup>
+              <col name="index" width="60">
+              <col name="username">
+              <col name="email">
+              <col name="role">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td></td>
+              <td>Fred</td>
+              <td>focher2005@gmail.com</td>
+              <td>Admin</td>
+            </tr>
+          </tbody>
+          </table>
+        </vaadin-grid>
+      </div>
+    </paper-header-panel>
+
+
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+    is: 'bnb-members-page',
+
+    properties: {
+      page: {
+        type: Object,
+        value: null
+      },
+      target: {
+        type: Object,
+        value: function() {
+          return this.$.content;
+        }
+      }
+    },
+
+    behaviors: [
+      Polymer.NeonAnimatableBehavior,
+      Polymer.IronResizableBehavior
+    ],
+
+    closeTapped: function() {
+      this.closePage();
+    },
+
+    closePage: function() {
+      this.$['email'].invalid = false;
+      this.fire('show-page', {page: this.page});
+    },
+
+    _computeMembers: function(members) {
+      if (members === undefined) {
+        return [];
+      }
+      return members;
+    }
+  });
+
+})();
+</script>

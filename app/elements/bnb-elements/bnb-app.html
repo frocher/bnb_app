@@ -7,6 +7,7 @@
 <link rel="import" href="bnb-page.html">
 <link rel="import" href="bnb-add-page.html">
 <link rel="import" href="bnb-edit-page.html">
+<link rel="import" href="bnb-members-page.html">
 
 <dom-module id="bnb-app">
   <style>
@@ -43,7 +44,8 @@
       <bnb-add-page        id="addPage"      class="page" data-route="add-page" pages="{{pages}}"></bnb-add-page>
       <bnb-page            id="page"         class="page" data-route="page" period="{{period}}" page="{{page}}"></bnb-page>
       <bnb-edit-page       id="editPage"     class="page" data-route="edit-page" page="{{page}}"></bnb-edit-page>
-    </neon-animated--pages>
+      <bnb-members-page    id="editMembers"  class="page" data-route="edit-members" page="{{page}}"></bnb-members-page>
+    </neon-animated-pages>
 
     <paper-toast id="message-toast"></paper-toast>
 
@@ -63,6 +65,7 @@
       'show-pages'     : 'handleShowPages',
       'show-page'      : 'handleShowPage',
       'edit-page'      : 'handleEditPage',
+      'edit-members'   : 'handleEditMembers',
       'page-created'   : 'handlePageCreated',
       'page-deleted'   : 'handlePageDeleted',
       'period-changed' : 'handlePeriodChanged',
@@ -105,6 +108,16 @@
       BnbService.loadPage(id, {}, this.handleLoadPageResponse, this.handleGenericError, this);
     },
 
+    loadMembers: function(id) {
+      var _this = this;
+      BnbService.loadPage(id, {},
+        function(data) {
+          _this.page = data;
+          BnbService.loadMembers(id, _this.handleLoadMembersResponse, _this.handleGenericError, _this);
+        },
+        this.handleGenericError, this);
+    },
+
     loadPageMeasures: function() {
       var start = this.period.start;
       var end   = this.period.end;
@@ -116,11 +129,11 @@
     },
 
     handleRouteChanged: function(newValue, oldValue) {
-      if (newValue === 'add-page' || newValue === 'edit-page') {
+      if (newValue === 'add-page' || newValue === 'edit-page' || newValue === 'edit-members') {
         this.entryAnimation = 'slide-from-bottom-animation';
         this.exitAnimation = 'slide-up-animation';
       }
-      else if (oldValue === 'add-page' || oldValue === 'edit-page') {
+      else if (oldValue === 'add-page' || oldValue === 'edit-page' || oldValue === 'edit-members') {
         this.entryAnimation = 'slide-from-top-animation';
         this.exitAnimation = 'slide-down-animation';
       }
@@ -204,6 +217,11 @@
       this.notifyPath('page.speedIndexes', this.page.speedIndexes);
     },
 
+    handleLoadMembersResponse: function(data) {
+      this.page.members = data;
+      this.notifyPath('page.members', this.page.members);
+    },
+
     handleGenericError: function(error) {
       this.fire('message', {message: error.errors[0]});
     },
@@ -229,6 +247,11 @@
 
     handleEditPage: function(e) {
       var path = '/edit-page/' + e.detail.page.id;
+      page(path);
+    },
+
+    handleEditMembers: function(e) {
+      var path = '/edit-members/' + e.detail.page.id;
       page(path);
     },
 

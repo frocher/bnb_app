@@ -33,6 +33,12 @@
       next();
     }
 
+    function loadMembers(ctx, next) {
+      var id = ctx.params.id;
+      app.loadMembers(id);
+      next();
+    }
+
     // Interceptor for all pages
     page('*', authenticate, analytics, function(ctx, next) {
       next();
@@ -64,6 +70,10 @@
 
     page('/edit-page/:id', loadPage, function() {
       app.route = 'edit-page';
+    });
+
+    page('/edit-members/:id', loadMembers, function() {
+      app.route = 'edit-members';
     });
 
     page('/add-page', function() {

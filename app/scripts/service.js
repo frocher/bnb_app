@@ -71,6 +71,11 @@ var BnbService = (function() {
     _sendRequest(options, successCallback, errorCallback, callbackObj);
   };
 
+  var loadMembers = function(id, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/pages/' + id + '/members', 'GET', {});
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
   var _generateOptions = function(url, method, params, headers) {
     var options = {
       url: _getRequestUrl(url, params),
@@ -197,6 +202,7 @@ var BnbService = (function() {
     updatePage: updatePage,
     deletePage: deletePage,
     loadUptimes: loadUptimes,
-    loadChecks: loadChecks
+    loadChecks: loadChecks,
+    loadMembers: loadMembers
   };
 })();
