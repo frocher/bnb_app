@@ -142,7 +142,7 @@
 
     handleLoadUptimeResponse: function(data) {
       if (data.length > 0) {
-        this.page.uptime = Math.round(data[0].value * 100) / 100;
+        this.page.uptime = Math.round(data[0].value * 100);
       }
       else {
         this.page.uptime = 0;
@@ -151,10 +151,6 @@
     },
 
     handleLoadUptimesResponse: function(data) {
-      var arrayLength = data.length;
-      for (var i = 0; i < arrayLength; i++) {
-        data[i].value = Math.round(data[i].value * 100) / 100;
-      }
       this.page.uptimes = data;
       this.notifyPath('page.uptimes', this.page.uptimes);
     },

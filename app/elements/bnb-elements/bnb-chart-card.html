@@ -22,7 +22,7 @@
   <template>
     <paper-card heading="[[name]]">
       <div class="card-content">
-        <bnb-chart style="height:340px;width:100%;" post-units="[[postUnits]]" data="[[data]]"></bnb-chart>
+        <bnb-chart style="height:340px;width:100%;" symbol="[[symbol]]" data="[[data]]"></bnb-chart>
       </div>
     </paper-card>
   </template>
@@ -45,7 +45,7 @@
           return {};
         }
       },
-      postUnits: {
+      symbol: {
         type: String,
         value: ''
       }
