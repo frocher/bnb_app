@@ -147,7 +147,7 @@
 
         var chartData = [{
 			      values: values,
-			      key: "response",
+			      key: "value",
     				color: "#1976D2",
     				fillOpacity: 0.2,
     				area: true
@@ -197,7 +197,7 @@
   		var resu = [];
   		for (var i = 0; i < this.data.length; i++) {
   			var time = new Date(this.data[i].time);
-  			resu.push( {x: time, y: parseInt(this.data[i].value)});
+  			resu.push( {x: time, y: this.data[i].value});
   		}
   		return resu;
   	},
