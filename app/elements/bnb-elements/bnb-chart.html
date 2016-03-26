@@ -1,10 +1,19 @@
 <link rel="import" href="../../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+<script src="../../bower_components/d3/d3.min.js"></script>
+<script src="../../bower_components/nvd3/build/nv.d3.min.js"></script>
 
 <dom-module id="bnb-chart">
+  <link rel="stylesheet" href="../../bower_components/nvd3/build/nv.d3.min.css">
   <style>
     :host {
       display: inline-block;
+    }
+
+    iron-pages {
+      width: 100%;
+      height: 100%;
     }
 
     #canvas {
@@ -40,14 +49,35 @@
     #canvas > svg {
       width: 100% !important;
     }
+
+    .nvd3 .nv-axis path {
+        fill: none;
+        stroke: #b6b6b6;
+        stroke-opacity: .75;
+        shape-rendering: crispEdges;
+    }
+
+    .nv-x .tick line {
+      display: none;
+    }
+
+    .nv-y .tick line {
+      stroke:#b6b6b6;
+    }
+
+		.nvd3 text {
+			fill:#e0e0e0;
+		}
   </style>
   <template>
-    <div id="loading" hidden$="[[computeHideLoading(data)]]">
-      <span>Loading&nbsp;</span>
-      <paper-spinner alt="Loading contacts list" active></paper-spinner>
-    </div>
-    <div id="noData" hidden$="[[computeHideNoData(data)]]"><span>No data</span></div>
-    <div id="canvas" hidden$="[[computeHideGraph(data)]]"></div>
+    <iron-pages selected="[[selectedPage]]">
+      <div id="loading">
+        <span>Loading&nbsp;</span>
+        <paper-spinner alt="Loading contacts list" active></paper-spinner>
+      </div>
+      <div id="noData"><span>No data</span></div>
+      <div id="canvas"></div>
+    </iron-pages>
   </template>
 </dom-module>
 
@@ -68,9 +98,13 @@
           return null;
         }
       },
-      postUnits: {
+      symbol: {
         type: String,
         value: ''
+      },
+      selectedPage: {
+        type: Number,
+        value: 0
       }
     },
 
@@ -86,55 +120,94 @@
       'iron-resize': 'onIronResize'
     },
 
-    attached: function() {
-      this.async(this.notifyResize, 1);
-    },
-
     onIronResize: function() {
       if (this.chart) {
-        this.chart.resizeHandler();
+        this.chart.update();
       }
     },
 
     updateChart: function() {
+      if (this.data) {
+        if (this.data.length > 0) {
+          this.selectedPage = 2;
+        }
+        else {
+          this.selectedPage = 1;
+        }
+      }
+      else {
+        this.selectedPage = 0;
+      }
+
+
       if (this.data && this.data.length > 0) {
+        var values = this.values();
+        var max = this.maxValue(values);
+        max += parseInt(max * 0.1);
+
+        var chartData = [{
+			      values: values,
+			      key: "value",
+    				color: "#1976D2",
+    				fillOpacity: 0.2,
+    				area: true
+			   }];
+
         if (this.chart) {
           if (!_.isEqual(this.oldData, this.data)) {
-            this.chart.setData(this.data);
+            this.chart.yDomain([0, max]);
+            var lines = d3.select(this.$.canvas).selectAll("svg");
+            lines.datum(chartData).call(this.chart);
             this.oldData = this.data;
           }
         }
         else {
-          this.chart = new Morris.Line({
-            element: this.$.canvas,
-            data: this.data,
-            xkey: 'time',
-            ykeys: ['value'],
-            labels: ['Value'],
-            pointSize: 0,
-            gridTextColor: '#fff',
-            lineColors: ['#4285f4'],
-            postUnits: this.postUnits,
-            dateFormat: function (x) { return moment(x).format('LL'); }
+          this.chart = nv.models.lineChart()
+            .useInteractiveGuideline(true)
+            .duration(100)
+          ;
+
+          this.chart.showLegend(false);
+          this.chart.interpolate("cardinal");
+          this.chart.yDomain([0, max]);
+
+          this.chart.xAxis.tickFormat(function(d) {
+            return d3.time.format('%x')(new Date(d));
           });
+          this.chart.xAxis.showMaxMin(false);
+
+          this.chart.yAxis.tickFormat(d3.format(this.symbol + ',.0'));
+          this.chart.yAxis.showMaxMin(false);
+          this.chart.yAxis.ticks(5);
+
+          d3.select(this.$.canvas).append('svg')
+            .datum(chartData)
+            .call(this.chart);
+            nv.utils.windowResize(this.chart.update);
         }
       }
       else if (this.chart) {
         // Nothing todo here : the chart will be hidden
       }
+      // Apply svg styles
+      this.scopeSubtree(this.$.canvas, true);
     },
 
-    computeHideLoading: function(data) {
-      return this.data !== undefined && this.data !== null;
-    },
+    values: function() {
+  		var resu = [];
+  		for (var i = 0; i < this.data.length; i++) {
+  			var time = new Date(this.data[i].time);
+  			resu.push( {x: time, y: this.data[i].value});
+  		}
+  		return resu;
+  	},
 
-    computeHideNoData: function(data) {
-      return (this.data === undefined || this.data === null) || this.data.length !== 0;
-    },
-
-    computeHideGraph: function(data) {
-      return (this.data === undefined || this.data === null) || this.data.length === 0;
-    },
+    maxValue: function(values) {
+  		if (values.length === 0) {
+  			return 0;
+  		}
+  		return parseInt(_.max(values, function(item){ return item.y; }).y);
+  	},
 
     arraysEqual: function(a, b) {
       if (a === b) return true;
