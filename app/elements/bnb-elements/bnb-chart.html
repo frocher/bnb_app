@@ -206,7 +206,7 @@
   		if (values.length === 0) {
   			return 0;
   		}
-  		return parseInt(_.max(values, function(item){ return item.y; }).y);
+  		return parseInt(d3.max(values, function(item){ return item.y; }));
   	}
   });
 
