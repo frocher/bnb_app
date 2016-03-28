@@ -69,6 +69,9 @@
       'page-created'   : 'handlePageCreated',
       'page-deleted'   : 'handlePageDeleted',
       'period-changed' : 'handlePeriodChanged',
+      'add-member'     : 'handleAddMember',
+      'update-member'  : 'handleUpdateMember',
+      'remove-member'  : 'handleRemoveMember',
     },
 
     properties: {
@@ -218,8 +221,41 @@
       this.notifyPath('page.members', this.page.members);
     },
 
+    handleAddMember: function(data) {
+      BnbService.addMember(this.page.id, data.detail, this.handleAddMemberResponse, this.handleGenericError, this);
+    },
+
+    handleAddMemberResponse: function(data) {
+      this.loadMembers(this.page.id);
+    },
+
+    handleUpdateMember: function(data) {
+      var params = {email: data.detail.email, role: data.detail.role };
+      BnbService.updateMember(this.page.id, data.detail.id, params, this.handleUpdateMemberResponse, this.handleGenericError, this);
+    },
+
+    handleUpdateMemberResponse: function(data) {
+      this.loadMembers(this.page.id);
+    },
+
+    handleRemoveMember: function(data) {
+      BnbService.removeMember(this.page.id, data.detail.id, this.handleRemoveMemberResponse, this.handleGenericError, this);
+    },
+
+    handleRemoveMemberResponse: function(data) {
+      this.loadMembers(this.page.id);
+    },
+
     handleGenericError: function(error) {
-      this.fire('message', {message: error.errors[0]});
+      if (error.errors) {
+        this.fire('message', {message: error.errors[0]});
+      }
+      else if (error.message) {
+        this.fire('message', {message: error.message});
+      }
+      else {
+        this.fire('message', {message: 'Sorry, an error as occured'});
+      }
     },
 
     handleMessage: function(e) {

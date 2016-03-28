@@ -76,6 +76,21 @@ var BnbService = (function() {
     _sendRequest(options, successCallback, errorCallback, callbackObj);
   };
 
+  var addMember = function(page_id, params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/pages/' + page_id + '/members', 'POST', params);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
+  var updateMember = function(page_id, id, params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/pages/' + page_id + '/members/' + id, 'PUT', params);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
+  var removeMember = function(page_id, id, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/pages/' + page_id + '/members/' + id, 'DELETE');
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
   var _generateOptions = function(url, method, params, headers) {
     var options = {
       url: _getRequestUrl(url, params),
@@ -203,6 +218,9 @@ var BnbService = (function() {
     deletePage: deletePage,
     loadUptimes: loadUptimes,
     loadChecks: loadChecks,
-    loadMembers: loadMembers
+    loadMembers: loadMembers,
+    addMember: addMember,
+    updateMember: updateMember,
+    removeMember: removeMember
   };
 })();

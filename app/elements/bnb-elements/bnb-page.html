@@ -56,10 +56,10 @@
         <paper-menu-button horizontal-align="right">
           <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
           <paper-menu class="dropdown-content" style="z-index:9999">
-            <paper-item on-tap="editTapped" hidden$="{{!page.editable}}">Settings</paper-item>
+            <paper-item on-tap="editTapped" hidden$="{{!page.can_edit}}">Settings</paper-item>
             <paper-item on-tap="membersTapped">Members</paper-item>
-            <paper-divider></paper-divider>
-            <paper-item on-tap="deleteTapped" hidden$="{{!page.deletable}}">Delete</paper-item>
+            <paper-divider hidden$="{{!page.can_delete}}"></paper-divider>
+            <paper-item on-tap="deleteTapped" hidden$="{{!page.can_delete}}">Delete</paper-item>
           </paper-menu>
         </paper-menu-button>
       </paper-toolbar>
