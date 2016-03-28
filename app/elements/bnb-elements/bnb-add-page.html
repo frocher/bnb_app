@@ -8,9 +8,15 @@
     }
 
     #content {
-      padding: 10px 22px 10px 22px;
+      @apply(--layout-horizontal);
+      @apply(--layout-center-justified);
     }
 
+    #container {
+      width: 100%;
+      max-width: 1000px;
+      padding: 10px 22px 10px 22px;
+    }
   </style>
   <template>
     <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="createTapped">
@@ -23,8 +29,10 @@
         <paper-button on-tap="createTapped">Create</paper-button>
       </paper-toolbar>
       <div id="content" class="fit">
-        <paper-input id="name" label="Page name" value="{{params.name}}" autofocus="true"></paper-input>
-        <paper-input id="url" label="URL" value="{{params.url}}"></paper-input>
+        <div id="container">
+          <paper-input id="name" label="Page name" value="{{params.name}}" autofocus="true"></paper-input>
+          <paper-input id="url" label="URL" value="{{params.url}}"></paper-input>
+        </div>
       </div>
     </paper-header-panel>
 

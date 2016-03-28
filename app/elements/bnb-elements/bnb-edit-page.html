@@ -12,9 +12,15 @@
     }
 
     #content {
-      padding: 10px 22px 10px 22px;
+      @apply(--layout-horizontal);
+      @apply(--layout-center-justified);
     }
 
+    #container {
+      width: 100%;
+      max-width: 1000px;
+      padding: 10px 22px 10px 22px;
+    }
   </style>
   <template>
     <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="saveTapped">
@@ -27,11 +33,13 @@
         <paper-button on-tap="saveTapped">Save</paper-button>
       </paper-toolbar>
       <div id="content" class="fit">
-        <bnb-collapse icon="icons:info" header="General" opened>
-          <paper-input id="name" label="Page name" value="[[page.name]]" autofocus="true"></paper-input>
-          <paper-input id="url" label="URL" value="[[page.url]]"></paper-input>
-        </bnb-collapse>
-        <paper-divider></paper-divider>
+        <div id="container">
+          <bnb-collapse icon="icons:info" header="General" opened>
+            <paper-input id="name" label="Page name" value="[[page.name]]" autofocus="true"></paper-input>
+            <paper-input id="url" label="URL" value="[[page.url]]"></paper-input>
+          </bnb-collapse>
+          <paper-divider></paper-divider>
+        </div>
 
       </div>
 
