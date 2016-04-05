@@ -1,4 +1,8 @@
+<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../../bower_components/iron-icons/hardware-icons.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="bnb-value-chip.html">
 <link rel="import" href="bnb-chart.html">
 
 <dom-module id="bnb-chart-card">
@@ -6,23 +10,49 @@
     :host {
       display:flex;
       margin:16px;
-      height:400px;
     }
 
     paper-card {
       width: 100%;
     }
 
-    .card-content {
-      width: 100%;
-      height: 340px;
-      padding: 0;
+    #chips {
+      @apply(--layout-horizontal);
+      @apply(--layout-wrap);
+      text-align: center;
+      align-items: stretch;
     }
+
+    bnb-value-chip {
+      flex: 1;
+    }
+
+    #chart {
+      height: 340px;
+      width: 100%;
+    }
+
   </style>
   <template>
     <paper-card heading="[[name]]">
       <div class="card-content">
-        <bnb-chart style="height:340px;width:100%;" symbol="[[symbol]]" data="[[data]]"></bnb-chart>
+        <div id="chips">
+          <template is="dom-repeat" id="values" items="[[getData(data)]]">
+            <bnb-value-chip text="[[computeLabel(item)]]" value="[[item.summary]]" suffix="[[computeSuffix(item)]]">
+            </bnb-value-chip>
+          </template>
+        </div>
+        <bnb-chart id="chart" data="[[data]]" model="[[model]]"></bnb-chart>
+      </div>
+      <div class="card-actions">
+        <paper-tabs selected="0" style="width:100px">
+          <paper-tab on-tap="desktopTapped">
+            <iron-icon icon="hardware:computer"></iron-icon>
+          </paper-tab>
+          <paper-tab on-tap="mobileTapped">
+            <iron-icon icon="hardware:smartphone"></iron-icon>
+          </paper-tab>
+        </paper-tabs>
       </div>
     </paper-card>
   </template>
@@ -45,12 +75,56 @@
           return {};
         }
       },
-      symbol: {
+      model: {
+        type: Array,
+        value: function () {
+          return [];
+        }
+      },
+      target: {
         type: String,
-        value: ''
+        value: 'desktop'
+      }
+    },
+
+    getData: function(d) {
+      return this.data[this.target];
+    },
+
+    computeData: function(p) {
+      return this.data[this.target];
+    },
+
+    computeLabel: function(o) {
+      var item = _.find(this.model, function(i) { return i.name === o.key; });
+      if (item) {
+        return item.label;
+      }
+      return "";
+    },
+
+    computeSuffix: function(o) {
+      var item = _.find(this.model, function(i) { return i.name === o.key; });
+      if (item) {
+        return item.suffix;
+      }
+      return "";
+    },
+
+    desktopTapped: function() {
+      this.switchToTarget("desktop");
+    },
+
+    mobileTapped: function() {
+      this.switchToTarget("mobile");
+    },
+
+    switchToTarget: function(newTarget) {
+      if (this.target !== newTarget) {
+        this.target = newTarget;
+        this.$.values.items = this.data[this.target];
       }
     }
-
   });
 
 })();

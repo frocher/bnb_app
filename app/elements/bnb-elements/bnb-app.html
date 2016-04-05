@@ -71,7 +71,7 @@
       'period-changed' : 'handlePeriodChanged',
       'add-member'     : 'handleAddMember',
       'update-member'  : 'handleUpdateMember',
-      'remove-member'  : 'handleRemoveMember',
+      'remove-member'  : 'handleRemoveMember'
     },
 
     properties: {
@@ -125,10 +125,11 @@
       var start = this.period.start;
       var end   = this.period.end;
 
+      BnbService.loadStats(this.page.id, start, end, this.handleLoadStatsResponse, this.handleGenericError, this);
       BnbService.loadUptimes(this.page.id, 'point', start, end, this.handleLoadUptimeResponse, this.handleGenericError, this);
-      BnbService.loadChecks(this.page.id, 'point', start, end, this.handleLoadCheckResponse, this.handleGenericError, this);
+      BnbService.loadChecks(this.page.id, 'point', 'desktop', start, end, this.handleLoadCheckResponse, this.handleGenericError, this);
       BnbService.loadUptimes(this.page.id, 'points', start, end, this.handleLoadUptimesResponse, this.handleGenericError, this);
-      BnbService.loadChecks(this.page.id, 'points', start, end, this.handleLoadChecksResponse, this.handleGenericError, this);
+      BnbService.loadChecks(this.page.id, 'points', 'desktop', start, end, this.handleLoadChecksResponse, this.handleGenericError, this);
     },
 
     handleRouteChanged: function(newValue, oldValue) {
@@ -154,6 +155,11 @@
     handleLoadPageResponse: function(data) {
       this.page = data;
       this.loadPageMeasures();
+    },
+
+    handleLoadStatsResponse: function(data) {
+      this.page.stats = data;
+      this.notifyPath('page.stats', this.page.stats);
     },
 
     handleLoadUptimeResponse: function(data) {

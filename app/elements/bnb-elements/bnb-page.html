@@ -87,6 +87,9 @@
         </div>
 
         <div id="charts">
+          <h2>[[page.stats.performance.desktop.dom_ready]]</h2>
+          <bnb-chart-card id="performanceChart" name="Load times" data="[[page.stats.performance]]" model="[[performanceModel]]"></bnb-chart-card>
+
           <bnb-chart-card id="uptimeChart" name="Uptime" data="[[page.uptimes]]" symbol="%"></bnb-chart-card>
           <bnb-chart-card id="responseTimeChart" name="Response time" data="[[page.responseStarts]]"></bnb-chart-card>
           <bnb-chart-card id="firstPaintChart" name="First paint" data="[[page.firstPaints]]"></bnb-chart-card>
@@ -121,6 +124,9 @@
       },
       period: {
         type: Object
+      },
+      performanceModel: {
+        type: Object
       }
     },
 
@@ -128,6 +134,16 @@
       Polymer.NeonAnimatableBehavior,
       Polymer.IronResizableBehavior
     ],
+
+    ready: function() {
+      this.performanceModel = [
+        {name: 'response_start', color: '#ff7f0e', label: 'response time', suffix: 'ms'},
+        {name: 'first_paint', color: '#ff7f0e', label: 'first paint', suffix: 'ms'},
+        {name: 'speed_index', color: '#ff7f0e', label: 'speed index'},
+        {name: 'dom_ready', color: '#ff7f0e', label: 'dom ready', suffix: 'ms'},
+        {name: 'page_load', color: '#ff7f0e', label: 'fully loaded', suffix: 'ms'}
+      ];
+    },
 
     computeToolbarClass: function(param) {
       return this.wide ? "" : "medium-tall";

@@ -1,0 +1,59 @@
+<link rel="import" href="../../bower_components/paper-divider/paper-divider.html">
+
+<dom-module id="bnb-value-chip">
+  <style>
+
+    :host {
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+
+    h3 {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 0 0 5px 0;
+      white-space: nowrap;
+      padding: 0;
+    }
+
+    p {
+      font-size: 16px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      color: var(--secondary-text-color);
+    }
+
+  </style>
+  <template>
+    <h3>[[value]]<span style="font-size:smaller">[[suffix]]</span></h3>
+    <p>[[text]]</p>
+    <paper-divider></paper-divider>
+  </template>
+</dom-module>
+
+<script>
+(function() {
+
+  Polymer({
+    is: 'bnb-value-chip',
+
+    properties: {
+      text: {
+        type: String,
+        value: null
+      },
+
+      value: {
+        type: Number,
+        value: null
+      },
+
+      suffix: {
+        type: String,
+        value: null
+      }
+    }
+  });
+
+})();
+</script>
