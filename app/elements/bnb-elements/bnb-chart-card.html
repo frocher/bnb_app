@@ -42,9 +42,9 @@
             </bnb-value-chip>
           </template>
         </div>
-        <bnb-chart id="chart" data="[[data]]" model="[[model]]"></bnb-chart>
+        <bnb-chart id="chart" stacked="[[stacked]]" data="[[getData(data)]]" model="[[model]]"></bnb-chart>
       </div>
-      <div class="card-actions">
+      <div class="card-actions" hidden$="[[hasNoDomain(data)]]">
         <paper-tabs selected="0" style="width:100px">
           <paper-tab on-tap="desktopTapped">
             <iron-icon icon="hardware:computer"></iron-icon>
@@ -81,18 +81,33 @@
           return [];
         }
       },
+      stacked: {
+        type: Boolean,
+        value: false
+      },
       target: {
         type: String,
         value: 'desktop'
       }
     },
 
-    getData: function(d) {
-      return this.data[this.target];
+    hasNoDomain: function(data) {
+      if (this.data) {
+        return this.data instanceof Array;
+      }
+      return true;
     },
 
-    computeData: function(p) {
-      return this.data[this.target];
+    getData: function() {
+      if (this.data) {
+        if (this.data instanceof Array) {
+          return this.data;
+        }
+        else {
+          return this.data[this.target];
+        }
+      }
+      return [];
     },
 
     computeLabel: function(o) {
@@ -123,6 +138,7 @@
       if (this.target !== newTarget) {
         this.target = newTarget;
         this.$.values.items = this.data[this.target];
+        this.$.chart.data = this.data[this.target];
       }
     }
   });

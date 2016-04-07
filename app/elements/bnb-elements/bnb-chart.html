@@ -32,20 +32,6 @@
       font-size: 24px;
     }
 
-    #noData {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #999;
-      font-size: 36px;
-    }
-
-    #noData span {
-      margin-top: -50px;
-    }
-
     #canvas > svg {
       width: 100% !important;
     }
@@ -68,6 +54,11 @@
 		.nvd3 text {
 			fill:#e0e0e0;
 		}
+
+    .nvd3.nv-noData {
+			fill: #e0e0e0;
+		}
+
   </style>
   <template>
     <iron-pages selected="[[selectedPage]]">
@@ -75,7 +66,6 @@
         <span>Loading&nbsp;</span>
         <paper-spinner alt="Loading contacts list" active></paper-spinner>
       </div>
-      <div id="noData"><span>No data</span></div>
       <div id="canvas"></div>
     </iron-pages>
   </template>
@@ -98,9 +88,19 @@
           return null;
         }
       },
+      model: {
+        type: Array,
+        value: function () {
+          return [];
+        }
+      },
       symbol: {
         type: String,
         value: ''
+      },
+      stacked: {
+        type: Boolean,
+        value: false
       },
       selectedPage: {
         type: Number,
@@ -128,48 +128,30 @@
 
     updateChart: function() {
       if (this.data) {
-        if (this.data.length > 0) {
-          this.selectedPage = 2;
-        }
-        else {
-          this.selectedPage = 1;
-        }
-      }
-      else {
-        this.selectedPage = 0;
-      }
-
-
-      if (this.data && this.data.length > 0) {
-        var values = this.values();
-        var max = this.maxValue(values);
-        max += parseInt(max * 0.1);
-
-        var chartData = [{
-			      values: values,
-			      key: "value",
-    				color: "#1976D2",
-    				fillOpacity: 0.2,
-    				area: true
-			   }];
+        this.selectedPage = 1;
+        var chartData = this.createChartData();
 
         if (this.chart) {
           if (!_.isEqual(this.oldData, this.data)) {
-            this.chart.yDomain([0, max]);
             var lines = d3.select(this.$.canvas).selectAll("svg");
             lines.datum(chartData).call(this.chart);
             this.oldData = this.data;
           }
         }
         else {
-          this.chart = nv.models.lineChart()
-            .useInteractiveGuideline(true)
-            .duration(100)
-          ;
+          if (this.stacked) {
+            this.chart = nv.models.stackedAreaChart();
+            this.chart.showControls(false);
+          }
+          else {
+            this.chart = nv.models.lineChart();
+            this.chart.forceY([0]);
+          }
+          this.chart.useInteractiveGuideline(true)
+          this.chart.duration(500);
 
-          this.chart.showLegend(false);
+          this.chart.showLegend(true);
           this.chart.interpolate("cardinal");
-          this.chart.yDomain([0, max]);
 
           this.chart.xAxis.tickFormat(function(d) {
             return d3.time.format('%x')(new Date(d));
@@ -187,26 +169,36 @@
         }
       }
       else if (this.chart) {
-        // Nothing todo here : the chart will be hidden
+        this.selectedPage = 0;
       }
       // Apply svg styles
       this.scopeSubtree(this.$.canvas, true);
     },
 
-    values: function() {
-  		var resu = [];
-  		for (var i = 0; i < this.data.length; i++) {
-  			var time = new Date(this.data[i].time);
-  			resu.push( {x: time, y: this.data[i].value});
-  		}
-  		return resu;
-  	},
+    createChartData: function() {
+      var resu = [];
+      for (var i = 0; i < this.model.length; i++) {
+        var serie = {};
+        serie.key = this.model[i].label;
+        serie.color = this.model[i].color;
+        serie.fillOpacity = 0.2;
+        serie.area = true;
+        serie.values = this.createValues(this.model[i].name);
+        resu.push(serie);
+      }
+      return resu;
+    },
 
-    maxValue: function(values) {
-  		if (values.length === 0) {
-  			return 0;
-  		}
-  		return parseInt(d3.max(values, function(item){ return item.y; }));
+    createValues: function(key) {
+      var item = _.find(this.data, function(i) { return i.key === key; });
+  		var resu = [];
+      if (item) {
+    		for (var i = 0; i < item.values.length; i++) {
+    			var time = new Date(item.values[i].time);
+    			resu.push( {x: time, y: item.values[i].value});
+    		}
+      }
+  		return resu;
   	}
   });
 

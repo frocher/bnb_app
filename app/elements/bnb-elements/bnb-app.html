@@ -124,12 +124,7 @@
     loadPageMeasures: function() {
       var start = this.period.start;
       var end   = this.period.end;
-
       BnbService.loadStats(this.page.id, start, end, this.handleLoadStatsResponse, this.handleGenericError, this);
-      BnbService.loadUptimes(this.page.id, 'point', start, end, this.handleLoadUptimeResponse, this.handleGenericError, this);
-      BnbService.loadChecks(this.page.id, 'point', 'desktop', start, end, this.handleLoadCheckResponse, this.handleGenericError, this);
-      BnbService.loadUptimes(this.page.id, 'points', start, end, this.handleLoadUptimesResponse, this.handleGenericError, this);
-      BnbService.loadChecks(this.page.id, 'points', 'desktop', start, end, this.handleLoadChecksResponse, this.handleGenericError, this);
     },
 
     handleRouteChanged: function(newValue, oldValue) {
@@ -158,68 +153,43 @@
     },
 
     handleLoadStatsResponse: function(data) {
+      this.updateUptime(data.uptime[0]);
+      this.updateCount(data.performance.desktop);
+      this.updateCount(data.performance.mobile);
+      this.updateBytes(data.bytes.desktop);
+      this.updateBytes(data.bytes.mobile);
+      this.updateCount(data.requests.desktop);
+      this.updateCount(data.requests.mobile);
+
       this.page.stats = data;
       this.notifyPath('page.stats', this.page.stats);
     },
 
-    handleLoadUptimeResponse: function(data) {
-      if (data.length > 0) {
-        this.page.uptime = Math.round(data[0].value * 10000) / 100;
+    updateUptime: function(data) {
+      data.summary = Math.round(data.summary * 10000) / 100;
+      for (var i = 0; i < data.values.length; i++) {
+        data.values[i].value = Math.round(data.values[i].value * 10000) / 100;
       }
-      else {
-        this.page.uptime = 0;
-      }
-      this.notifyPath('page.uptime', this.page.uptime);
     },
 
-    handleLoadUptimesResponse: function(data) {
-      this.page.uptimes = data;
-      this.notifyPath('page.uptimes', this.page.uptimes);
+    updateCount: function(data) {
+      for (var iSeries = 0; iSeries < data.length; iSeries++) {
+        var serie = data[iSeries];
+        serie.summary = Math.round(serie.summary);
+        for (var iValue = 0; iValue < serie.values.length; iValue++) {
+          serie.values[iValue].value = Math.round(serie.values[iValue].value);
+        }
+      }
     },
 
-    handleLoadCheckResponse: function(data) {
-      if (data.length > 0) {
-        this.page.domReady = Math.round(data[0].dom_ready);
-        this.page.firstPaint = Math.round(data[0].first_paint);
-        this.page.pageLoad = Math.round(data[0].page_load);
-        this.page.responseStart = Math.round(data[0].response_start);
-        this.page.speedIndex = Math.round(data[0].speed_index);
+    updateBytes: function(data) {
+      for (var iSeries = 0; iSeries < data.length; iSeries++) {
+        var serie = data[iSeries];
+        serie.summary = Math.round(serie.summary*10/1024)/10;
+        for (var iValue = 0; iValue < serie.values.length; iValue++) {
+          serie.values[iValue].value = Math.round(serie.values[iValue].value*10/1024)/10;
+        }
       }
-      else {
-        this.page.domReady = 0;
-        this.page.firstPaint = 0;
-        this.page.pageLoad = 0;
-        this.page.responseStart = 0;
-        this.page.speedIndex = 0;
-      }
-
-      this.notifyPath('page.domReady', this.page.domReady);
-      this.notifyPath('page.firstPaint', this.page.firstPaint);
-      this.notifyPath('page.pageLoad', this.page.pageLoad);
-      this.notifyPath('page.responseStart', this.page.responseStart);
-      this.notifyPath('page.speedIndex', this.page.speedIndex);
-    },
-
-    handleLoadChecksResponse: function(data) {
-      this.page.domReadies     = [];
-      this.page.firstPaints    = [];
-      this.page.pageLoads      = [];
-      this.page.responseStarts = [];
-      this.page.speedIndexes   = [];
-      var arrayLength = data.length;
-      for (var i = 0; i < arrayLength; i++) {
-        this.page.domReadies.push({time: data[i].time, value:Math.round(data[i].dom_ready)});
-        this.page.firstPaints.push({time: data[i].time, value:Math.round(data[i].first_paint)});
-        this.page.pageLoads.push({time: data[i].time, value:Math.round(data[i].page_load)});
-        this.page.responseStarts.push({time: data[i].time, value:Math.round(data[i].response_start)});
-        this.page.speedIndexes.push({time: data[i].time, value:Math.round(data[i].speed_index)});
-      }
-
-      this.notifyPath('page.domReadies', this.page.domReadies);
-      this.notifyPath('page.firstPaints', this.page.firstPaints);
-      this.notifyPath('page.pageLoads', this.page.pageLoads);
-      this.notifyPath('page.responseStarts', this.page.responseStarts);
-      this.notifyPath('page.speedIndexes', this.page.speedIndexes);
     },
 
     handleLoadMembersResponse: function(data) {
