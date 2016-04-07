@@ -36,6 +36,19 @@
       width: 100% !important;
     }
 
+    #noData {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: 36px;
+    }
+    #noData span {
+      margin-top: -50px;
+    }
+
     .nvd3 .nv-axis path {
         fill: none;
         stroke: #b6b6b6;
@@ -66,6 +79,7 @@
         <span>Loading&nbsp;</span>
         <paper-spinner alt="Loading contacts list" active></paper-spinner>
       </div>
+      <div id="noData"><span>No data</span></div>
       <div id="canvas"></div>
     </iron-pages>
   </template>
@@ -128,7 +142,18 @@
 
     updateChart: function() {
       if (this.data) {
-        this.selectedPage = 1;
+        if (this.data.length > 0) {
+          this.selectedPage = 2;
+        }
+        else {
+          this.selectedPage = 1;
+        }
+      }
+      else {
+        this.selectedPage = 0;
+      }
+
+      if (this.data && this.data.length > 0) {
         var chartData = this.createChartData();
 
         if (this.chart) {
@@ -168,9 +193,7 @@
             nv.utils.windowResize(this.chart.update);
         }
       }
-      else if (this.chart) {
-        this.selectedPage = 0;
-      }
+
       // Apply svg styles
       this.scopeSubtree(this.$.canvas, true);
     },
