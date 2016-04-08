@@ -6,13 +6,8 @@ html, body {
   background-color: #212121
 }
 
-
 bnb-app {
   height: 100%;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-}
-
-.hide {
-  display: none;
 }

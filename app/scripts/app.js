@@ -18,17 +18,6 @@
   /** Current page */
   app.page = null;
 
-  if (window.location.port === '') {  // if production
-    // Uncomment app.baseURL below and
-    // set app.baseURL to '/your-pathname/' if running from folder in production
-    // app.baseUrl = '/polymer-starter-kit/';
-  }
-
-  // See https://github.com/Polymer/polymer/issues/1381
-  window.addEventListener('WebComponentsReady', function() {
-    // imports are loaded and elements have been registered
-  });
-
   app.isLogged = function() {
     return sessionStorage.getItem('accessToken') !== null;
   };
