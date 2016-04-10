@@ -56,6 +56,30 @@
     height: 240px;
   }
 
+  .hurt {
+    position:absolute;
+    background-color: red;
+    left:0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 1;
+    -webkit-animation: pulse 5s infinite;
+    animation: pulse 5s infinite;
+  }
+
+  @-webkit-keyframes pulse {
+    0% {opacity: 0}
+    50% {opacity: 0.3}
+    100% {opacity: 0}
+  }
+
+  @keyframes pulse {
+    0% {opacity: 0}
+    50% {opacity: 0.3}
+    100% {opacity: 0}
+  }
+
   #shadow {
     @apply(--shadow-2dp);
     background-color: var(--paper-card-background-color);
@@ -72,6 +96,7 @@
 
       <div class="header">
         <iron-image sizing="cover" preload fade src="[[_computeScreenshotUrl(page)]]"></iron-image>
+        <div id="imageCover" class$="[[_computeHurt(page)]]"></div>
       </div>
 
       <div class="card-content">
@@ -129,6 +154,13 @@
 
     _computeScreenshotUrl: function(item) {
       return BnbService.BASE_URL + 'pages/' + item.id + '/screenshot?style=thumb';
+    },
+
+    _computeHurt: function(item) {
+      if (item.uptime_status === 0) {
+        return "hurt";
+      }
+      return "";
     }
 
   });
