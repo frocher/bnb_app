@@ -28,15 +28,8 @@
     <iron-media-query query="(min-width: 600px)" query-matches="{{wide}}"></iron-media-query>
 
     <paper-header-panel class="flex">
-      <paper-toolbar class$="{{computeToolbarClass(wide)}}">
-        <template is="dom-if" if="{{!wide}}">
-          <span>All pages stats</span>
-          <div class="flex middle"></div>
-          <bnb-period-dropdown class="middle" period="{{period}}"></bnb-period-dropdown>
-        </template>
-        <template is="dom-if" if="{{wide}}">
-          <span>All pages stats for&nbsp;<bnb-period-dropdown class="middle" period="{{period}}"></bnb-period-dropdown></span>
-        </template>
+      <paper-toolbar>
+        <span>All pages</span>
         <div class="flex"></div>
         <paper-icon-button id="addBtn" icon="add" on-tap="addTapped"></paper-icon-button>
         <paper-menu-button horizontal-align="right">
@@ -77,10 +70,6 @@
       Polymer.NeonAnimatableBehavior,
       Polymer.IronResizableBehavior
     ],
-
-    computeToolbarClass: function(param) {
-      return this.wide ? "" : "medium-tall";
-    },
 
     sortPages: function(first, second) {
       var a = first.name.toUpperCase();

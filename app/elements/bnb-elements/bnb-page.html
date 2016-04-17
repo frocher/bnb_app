@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="bnb-period-dropdown.html">
 <link rel="import" href="bnb-chart-card.html">
 
@@ -8,7 +9,9 @@
       @apply(--layout-vertical);
     }
 
-    #content {
+    #chartsFilter {
+      margin:16px;
+      padding:16px;
     }
 
     #charts {
@@ -17,29 +20,14 @@
       @apply(--layout-center-justified);
     }
 
-    paper-toolbar ::content > #middleBar {
-      z-index: 9999;
-    }
-
   </style>
   <template>
     <iron-media-query query="(min-width: 600px)" query-matches="{{wide}}"></iron-media-query>
 
     <paper-header-panel id="panel" class="flex">
-      <paper-toolbar class$="{{computeToolbarClass(wide)}}">
+      <paper-toolbar>
         <paper-icon-button icon="arrow-back" on-tap="backTapped"></paper-icon-button>
-        <template is="dom-if" if="{{!wide}}">
-          <span>[[page.name]]</span>
-          <div class="flex middle"></div>
-          <bnb-period-dropdown class="middle" period="{{period}}"></bnb-period-dropdown>
-        </template>
-        <template is="dom-if" if="{{wide}}">
-          <span>
-            <span>[[page.name]]</span>
-            <span> stats for&nbsp;</span>
-            <bnb-period-dropdown period="{{period}}"></bnb-period-dropdown>
-          </span>
-        </template>
+        <span>[[page.name]]</span>
         <div class="flex"></div>
         <paper-menu-button horizontal-align="right">
           <paper-icon-button icon="more-vert" class="dropdown-trigger"></paper-icon-button>
@@ -55,6 +43,11 @@
       <div id="content" class="fit">
 
         <div id="charts">
+          <paper-card id="chartsFilter">
+            <span>Stats for&nbsp;</span>
+            <bnb-period-dropdown period="{{period}}"></bnb-period-dropdown>
+          </paper-card>
+
           <bnb-chart-card id="performanceChart" name="Load times" data="[[page.stats.performance]]" model="[[performanceModel]]"></bnb-chart-card>
           <bnb-chart-card id="uptimeChart" name="Uptime" data="[[page.stats.uptime]]" model="[[uptimeModel]]"></bnb-chart-card>
           <bnb-chart-card id="requestsChart" name="Assets count" stacked="true" data="[[page.stats.requests]]" model="[[requestsModel]]"></bnb-chart-card>
@@ -128,10 +121,6 @@
         {name: 'font', color: '#F48FB1', label: 'font', suffix: 'kb'},
         {name: 'other', color: '#F8BBD0', label: 'other', suffix: 'kb'}
       ];
-    },
-
-    computeToolbarClass: function(param) {
-      return this.wide ? "" : "medium-tall";
     },
 
     backTapped: function(e) {
