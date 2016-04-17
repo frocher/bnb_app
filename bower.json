@@ -10,7 +10,7 @@
     "lodash": "lodash#^4.6.0",
     "moment": "moment#^2.10.0",
     "mocha": "mochajs/mocha#2.3.4",
-    "datepicker": "bendavis78/paper-date-picker",
+    "datepicker": "bendavis78/paper-date-picker#^1.1.2",
     "paper-divider": "paper-divider#^1.0.0",
     "vaadin-grid": "vaadin-grid#^1.0.0",
     "nvd3": "nvd3#^1.8.0"
