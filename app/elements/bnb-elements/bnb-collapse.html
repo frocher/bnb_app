@@ -2,30 +2,8 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/iron-collapse/iron-collapse.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../../bower_components/paper-styles/paper-styles.html">
 
-<!--
-A Material Design [item with header and collapsible content](https://www.google.com/design/spec/components/lists.html)
-
-### Example
-
-```html
-<paper-collapse-item icon="icons:favorite" header="Item 1" opened>
-  Lots of very interesting content.
-</paper-collapse-item>
-<paper-collapse-item icon="icons:info" header="Item 2">
-  Lots of very interesting content.
-</paper-collapse-item>
-<paper-collapse-item icon="icons:help" header="Item 3">
-  Lots of very interesting content.
-</paper-collapse-item>
-```
-
-
-@demo demo/index.html
--->
 <dom-module id="bnb-collapse">
 
 	<template>
@@ -52,22 +30,18 @@ A Material Design [item with header and collapsible content](https://www.google.
 
 			.content {
 				color: var(--primary-text-color);
-				@apply(--paper-font-body1);
+				@apply(--paper-font-body);
 			}
 		</style>
 
-		<paper-item>
-			<paper-item-body>
-				<div class="header" on-tap="_toggleOpened">
-					<iron-icon class="icon" src="[[src]]" icon="[[icon]]"></iron-icon>
-					<div class="flex">[[header]]</div>
-					<paper-icon-button class="toogle" icon="[[_toggleIcon]]"></paper-icon-button>
-				</div>
-				<iron-collapse class="content" opened="{{opened}}">
-					<content></content>
-				</iron-collapse>
-			</paper-item-body>
-		</paper-item>
+		<div class="header" on-click="_toggleOpened">
+			<iron-icon class="icon" src="[[src]]" icon="[[icon]]"></iron-icon>
+			<div class="flex">[[header]]</div>
+			<paper-icon-button class="toogle" icon="[[_toggleIcon]]"></paper-icon-button>
+		</div>
+		<iron-collapse class="content" opened="{{opened}}">
+			<content></content>
+		</iron-collapse>
 
 	</template>
 </dom-module>
