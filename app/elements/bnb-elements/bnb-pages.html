@@ -30,6 +30,9 @@
       padding:24px;
     }
 
+    paper-item {
+      cursor: pointer;
+    }
   </style>
   <template>
     <paper-header-panel class="flex">
@@ -40,7 +43,9 @@
         <paper-menu-button horizontal-align="right">
           <paper-icon-button id="moreBtn" icon="more-vert" class="dropdown-trigger"></paper-icon-button>
           <paper-menu class="dropdown-content" style="z-index:9999">
-            <paper-item on-tap="signoutTapped">Logout</paper-item>
+            <paper-item on-tap="preferencesTapped">User preferences</paper-item>
+            <paper-divider></paper-divider>
+            <paper-item on-tap="signoutTapped">Log out</paper-item>
           </paper-menu>
         </paper-menu-button>
       </paper-toolbar>
@@ -103,6 +108,10 @@
 
     addTapped: function() {
       page('/add-page');
+    },
+
+    preferencesTapped: function() {
+      this.fire('edit-preferences');
     },
 
     signoutTapped: function() {

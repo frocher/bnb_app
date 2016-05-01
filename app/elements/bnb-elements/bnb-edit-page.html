@@ -1,9 +1,11 @@
 <link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/notification-icons.html">
 <link rel="import" href="../../bower_components/iron-icons/social-icons.html">
 <link rel="import" href="../../bower_components/paper-divider/paper-divider.html">
 <link rel="import" href="../../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../../bower_components/paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
 <link rel="import" href="bnb-collapse.html">
 
@@ -24,6 +26,16 @@
       max-width: 1000px;
       padding: 10px 22px 10px 22px;
     }
+
+    #slackInformations {
+      @apply(--layout-horizontal);
+      margin-left: 40px;
+      margin-right: 40px;
+    }
+
+    #slackWebhook {
+      margin-right: 16px;
+    }
   </style>
   <template>
     <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="saveTapped">
@@ -37,17 +49,28 @@
       </paper-toolbar>
       <div id="content" class="fit">
         <div id="container">
-          <bnb-collapse icon="icons:info" header="General" opened>
+          <bnb-collapse icon="icons:info" header="General">
             <paper-input id="name" label="Page name" value="[[page.name]]" autofocus="true"></paper-input>
             <paper-input id="url" label="URL" value="[[page.url]]"></paper-input>
           </bnb-collapse>
           <paper-divider></paper-divider>
-          <bnb-collapse icon="icons:timeline" header="Uptime" opened>
+          <bnb-collapse icon="icons:timeline" header="Uptime check">
             <paper-input id="uptimeKeyword" value="[[page.uptime_keyword]]" label="Keyword"></paper-input>
             <paper-radio-group id="uptimeKeywordType" selected="[[page.uptime_keyword_type]]">
               <paper-radio-button name="presence">Presence</paper-radio-button>
               <paper-radio-button name="absence">Absence</paper-radio-button>
             </paper-radio-group>
+          </bnb-collapse>
+          <paper-divider></paper-divider>
+          <bnb-collapse icon="notification:sms" header="Notifications">
+            <paper-toggle-button id="mail_notify" checked="[[page.mail_notify]]">by mail</paper-toggle-button>
+            <paper-toggle-button id="slack_notify" checked="{{page.slack_notify}}">by Slack</paper-toggle-button>
+            <div id="slackInformations" hidden$="[[!page.slack_notify]]">
+              <paper-input class="flex" id="slack_webhook" label="Webhook URL" value="[[page.slack_webhook]]"></paper-input>
+              <paper-input class="flex" id="slack_channel" label="Channel" value="[[page.slack_channel]]">
+                <div prefix>#</div>
+              </paper-input>
+            </div>
           </bnb-collapse>
           <paper-divider></paper-divider>
         </div>
@@ -100,23 +123,31 @@
     },
 
     closePage: function() {
-      this.$['name'].invalid = false;
-      this.$['url'].invalid = false;
+      this.validateFields();
       this.fire('show-page', {page: this.page});
     },
 
     saveTapped: function() {
-      this.$['name'].invalid = false;
-      this.$['url'].invalid = false;
-
       var page = {
         name: this.$['name'].value,
         url: this.$['url'].value,
         uptime_keyword: this.$.uptimeKeyword.value,
-        uptime_keyword_type: this.$.uptimeKeywordType.selected
+        uptime_keyword_type: this.$.uptimeKeywordType.selected,
+        mail_notify: this.$.mail_notify.checked,
+        slack_notify: this.$.slack_notify.checked,
+        slack_webhook: this.$.slack_webhook.value,
+        slack_channel: this.$.slack_channel.value
       }
 
       BnbService.updatePage(this.page.id, page, this.handleResponse, this.handleError, this);
+    },
+
+    validateFields: function() {
+      this.$['name'].invalid = false;
+      this.$['url'].invalid = false;
+      this.$.uptimeKeyword.invalid = false;
+      this.$.slack_webhook.invalid = false;
+      this.$.slack_channel.invalid = false;
     },
 
     handleResponse: function(data) {
@@ -141,10 +172,6 @@
           }
         }
       }
-    },
-
-    toggleMembers: function(selector) {
-      this.$.members.toggle();
     }
 
   });

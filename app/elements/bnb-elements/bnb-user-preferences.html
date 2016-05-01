@@ -1,0 +1,130 @@
+<link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-icons/social-icons.html">
+<link rel="import" href="../../bower_components/paper-divider/paper-divider.html">
+<link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="bnb-collapse.html">
+
+<dom-module id="bnb-user-preferences">
+
+  <style>
+    :host {
+      @apply(--layout-horizontal);
+    }
+
+    #content {
+      @apply(--layout-horizontal);
+      @apply(--layout-center-justified);
+    }
+
+    #container {
+      @apply(--layout-vertical);
+      width: 100%;
+      max-width: 1000px;
+      padding: 10px 22px 10px 22px;
+    }
+  </style>
+  <template>
+    <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="saveTapped">
+    </iron-a11y-keys>
+    <paper-header-panel class="flex">
+      <paper-toolbar>
+        <paper-icon-button icon="close" on-tap="closeTapped"></paper-icon-button>
+        <span class="title">User preferences</span>
+        <span class="flex"></span>
+        <paper-button on-tap="saveTapped">Save</paper-button>
+      </paper-toolbar>
+      <div id="content" class="fit">
+        <div id="container">
+          <bnb-collapse icon="icons:info" header="General" opened>
+            <paper-input id="name" label="Name" value="[[user.name]]" autofocus="true"></paper-input>
+          </bnb-collapse>
+          <paper-divider></paper-divider>
+        </div>
+      </div>
+
+      <paper-dialog id="discardDlg" modal>
+        <p>Discard edit.</p>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Cancel</paper-button>
+          <paper-button dialog-confirm autofocus on-tap="closePage">Discard</paper-button>
+        </div>
+      </paper-dialog>
+    </paper-header-panel>
+
+
+  </template>
+</dom-module>
+<script>
+(function() {
+  Polymer({
+    is: 'bnb-user-preferences',
+    properties: {
+      user: {
+        type: Object,
+        value: null
+      },
+      target: {
+        type: Object,
+        value: function() {
+          return this.$.content;
+        }
+      }
+    },
+
+    behaviors: [
+      Polymer.NeonAnimatableBehavior,
+      Polymer.IronResizableBehavior
+    ],
+
+    closeTapped: function() {
+      if (this.$['name'].value !== this.user.name) {
+        this.$.discardDlg.open();
+      }
+      else {
+        this.closePage();
+      }
+    },
+
+    closePage: function() {
+      this.$['name'].invalid = false;
+      this.fire('show-pages');
+    },
+
+    saveTapped: function() {
+      this.$['name'].invalid = false;
+
+      var user = {
+        name: this.$['name'].value
+      }
+
+      BnbService.updateUser(this.user.id, user, this.handleResponse, this.handleError, this);
+    },
+
+    handleResponse: function(data) {
+      this.user = data;
+      this.fire('message', {message: "User preferences have been updated"});
+      this.closePage();
+    },
+
+    handleError: function(error) {
+      if (error === null) {
+        this.fire('message', {message: "Error : can't save user preferences"});
+      }
+      else {
+        var errors = error.errors;
+        for (var prop in errors) {
+          if (errors.hasOwnProperty(prop)) {
+            var objId = prop;
+            if (this.$[objId] !== undefined) {
+              this.$[objId].invalid = true;
+              this.$[objId].errorMessage = errors[prop][0];
+            }
+          }
+        }
+      }
+    }
+  });
+
+})();
+</script>

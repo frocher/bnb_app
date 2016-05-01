@@ -33,6 +33,11 @@
       next();
     }
 
+    function loadUser(ctx, next) {
+      app.loadUser();
+      next();
+    }
+
     function loadMembers(ctx, next) {
       var id = ctx.params.id;
       app.loadMembers(id);
@@ -62,6 +67,10 @@
 
     page('/', loadPages, function() {
       app.route = 'home';
+    });
+
+    page('/preferences', loadUser, function() {
+      app.route = 'preferences';
     });
 
     page('/page/:id', loadPage, function() {

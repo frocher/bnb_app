@@ -8,6 +8,7 @@
 <link rel="import" href="bnb-add-page.html">
 <link rel="import" href="bnb-edit-page.html">
 <link rel="import" href="bnb-members-page.html">
+<link rel="import" href="bnb-user-preferences.html">
 
 <dom-module id="bnb-app">
   <style>
@@ -35,16 +36,17 @@
     <span id="version">v0.1</span>
 
     <neon-animated-pages id="animated" class="page" attr-for-selected="data-route" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]">
-      <neon-animatable     id="splash"       class="page" data-route="splash">Splash !!!</neon-animatable>
-      <bnb-signin          id="signin"       class="page" data-route="signin"></bnb-signin>
-      <bnb-signup          id="signup"       class="page" data-route="signup"></bnb-signup>
-      <bnb-forgot-password id="forgot"       class="page" data-route="forgot"></bnb-forgot-password>
-      <bnb-edit-password   id="editPassword" class="page" data-route="edit-password"></bnb-edit-password>
-      <bnb-pages           id="pages"        class="page" data-route="home" period="{{period}}" pages="{{pages}}"></bnb-pages>
-      <bnb-add-page        id="addPage"      class="page" data-route="add-page" pages="{{pages}}"></bnb-add-page>
-      <bnb-page            id="page"         class="page" data-route="page" period="{{period}}" page="{{page}}"></bnb-page>
-      <bnb-edit-page       id="editPage"     class="page" data-route="edit-page" page="{{page}}"></bnb-edit-page>
-      <bnb-members-page    id="editMembers"  class="page" data-route="edit-members" page="{{page}}"></bnb-members-page>
+      <neon-animatable      id="splash"          class="page" data-route="splash">Splash !!!</neon-animatable>
+      <bnb-signin           id="signin"          class="page" data-route="signin"></bnb-signin>
+      <bnb-signup           id="signup"          class="page" data-route="signup"></bnb-signup>
+      <bnb-forgot-password  id="forgot"          class="page" data-route="forgot"></bnb-forgot-password>
+      <bnb-edit-password    id="editPassword"    class="page" data-route="edit-password"></bnb-edit-password>
+      <bnb-pages            id="pages"           class="page" data-route="home" period="{{period}}" pages="{{pages}}"></bnb-pages>
+      <bnb-add-page         id="addPage"         class="page" data-route="add-page" pages="{{pages}}"></bnb-add-page>
+      <bnb-page             id="page"            class="page" data-route="page" period="{{period}}" page="{{page}}"></bnb-page>
+      <bnb-edit-page        id="editPage"        class="page" data-route="edit-page" page="{{page}}"></bnb-edit-page>
+      <bnb-members-page     id="editMembers"     class="page" data-route="edit-members" page="{{page}}"></bnb-members-page>
+      <bnb-user-preferences id="userPreferences" class="page" data-route="preferences" user="{{user}}"></bnb-user-preferences>
     </neon-animated-pages>
 
     <paper-toast id="message-toast"></paper-toast>
@@ -59,19 +61,20 @@
     is: 'bnb-app',
 
     listeners: {
-      'message'        : 'handleMessage',
-      'signedin'       : 'handleSignedIn',
-      'signedout'      : 'handleSignedOut',
-      'show-pages'     : 'handleShowPages',
-      'show-page'      : 'handleShowPage',
-      'edit-page'      : 'handleEditPage',
-      'edit-members'   : 'handleEditMembers',
-      'page-created'   : 'handlePageCreated',
-      'page-deleted'   : 'handlePageDeleted',
-      'period-changed' : 'handlePeriodChanged',
-      'add-member'     : 'handleAddMember',
-      'update-member'  : 'handleUpdateMember',
-      'remove-member'  : 'handleRemoveMember'
+      'message'          : 'handleMessage',
+      'signedin'         : 'handleSignedIn',
+      'signedout'        : 'handleSignedOut',
+      'show-pages'       : 'handleShowPages',
+      'show-page'        : 'handleShowPage',
+      'edit-page'        : 'handleEditPage',
+      'edit-preferences' : 'handleEditPreferences',
+      'edit-members'     : 'handleEditMembers',
+      'page-created'     : 'handlePageCreated',
+      'page-deleted'     : 'handlePageDeleted',
+      'period-changed'   : 'handlePeriodChanged',
+      'add-member'       : 'handleAddMember',
+      'update-member'    : 'handleUpdateMember',
+      'remove-member'    : 'handleRemoveMember'
     },
 
     properties: {
@@ -109,6 +112,10 @@
 
     loadPage: function(id) {
       BnbService.loadPage(id, {}, this.handleLoadPageResponse, this.handleGenericError, this);
+    },
+
+    loadUser: function() {
+      BnbService.loadUser(-1, {}, this.handleLoadUserResponse, this.handleGenericError, this);
     },
 
     loadMembers: function(id) {
@@ -150,6 +157,10 @@
     handleLoadPageResponse: function(data) {
       this.page = data;
       this.loadPageMeasures();
+    },
+
+    handleLoadUserResponse: function(data) {
+      this.user = data;
     },
 
     handleLoadStatsResponse: function(data) {
@@ -258,6 +269,10 @@
       page(path);
     },
 
+    handleEditPreferences: function(e) {
+      page('/preferences');
+    },
+
     handleEditMembers: function(e) {
       var path = '/edit-members/' + e.detail.page.id;
       page(path);
@@ -274,7 +289,7 @@
     },
 
     handleSignedIn: function(e) {
-      this.user = e.detail.user;
+      this.user = e.detail.user.data;
       page('/');
     },
 

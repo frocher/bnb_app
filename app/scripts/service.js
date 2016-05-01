@@ -27,6 +27,16 @@ var BnbService = (function() {
     _sendRequest(options, successCallback, errorCallback, callbackObj);
   };
 
+  var loadUser = function(id, params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/users/' + id, 'GET', params);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
+  var updateUser = function(id, params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/users/' + id, 'PUT', params);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
   var loadPages = function(params, successCallback, errorCallback, callbackObj) {
     var options = _generateOptions('/pages', 'GET', params);
     _sendRequest(options, successCallback, errorCallback, callbackObj);
@@ -205,6 +215,8 @@ var BnbService = (function() {
     signout: signout,
     forgotPassword: forgotPassword,
     updatePassword: updatePassword,
+    loadUser: loadUser,
+    updateUser: updateUser,
     loadPages: loadPages,
     loadPage: loadPage,
     createPage: createPage,
