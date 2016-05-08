@@ -52,7 +52,7 @@
 
     <paper-dialog id="customDlg" class="paper-date-picker-dialog" modal
       on-iron-overlay-closed="dismissDialog">
-      <paper-date-picker id="picker" date="[[date]]"></paper-date-picker>
+      <paper-date-picker id="picker"></paper-date-picker>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
         <paper-button dialog-confirm>OK</paper-button>
@@ -118,13 +118,13 @@
 
     startDateTapped: function(e) {
       this.periodType = 'start';
-      this.date = this.period.start;
+      this.$.picker.date = this.period.start;
       this.$.customDlg.open();
     },
 
     endDateTapped: function(e) {
       this.periodType = 'end';
-      this.date = this.period.end;
+      this.$.picker.date = this.period.end;
       this.$.customDlg.open();
     },
 
