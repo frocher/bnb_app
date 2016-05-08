@@ -155,6 +155,7 @@
 
       if (this.data && this.data.length > 0) {
         var chartData = this.createChartData();
+        var _this = this;
 
         if (this.chart) {
           if (!_.isEqual(this.oldData, this.data)) {
@@ -176,10 +177,10 @@
           this.chart.duration(500);
 
           this.chart.showLegend(true);
-          this.chart.interpolate("cardinal");
 
           this.chart.xAxis.tickFormat(function(d) {
-            return d3.time.format('%x')(new Date(d));
+            var format = _this.computeTickFormat(chartData);
+            return d3.time.format(format)(new Date(d));
           });
           this.chart.xAxis.showMaxMin(false);
 
@@ -222,7 +223,20 @@
     		}
       }
   		return resu;
-  	}
+  	},
+
+    computeTickFormat: function(chartData) {
+      var resu = '%x';
+      if (chartData.length > 0) {
+        var serie = chartData[0];
+        var first = serie.values[0].x;
+        var last  = serie.values[serie.values.length-1].x;
+        if ( (last - first) < (7*24*60*60*1000)) {
+          resu = '%x %H:%M';
+        }
+      }
+      return resu;
+    }
   });
 
 })();
