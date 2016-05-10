@@ -155,11 +155,11 @@
 
       if (this.data && this.hasValues(this.data)) {
         var chartData = this.createChartData();
-        var _this = this;
 
         if (this.chart) {
           if (!_.isEqual(this.oldData, this.data)) {
             var lines = d3.select(this.$.canvas).selectAll("svg");
+            this.updateChartTickFormat(this.chart, chartData);
             lines.datum(chartData).call(this.chart);
             this.oldData = this.data;
           }
@@ -177,11 +177,7 @@
           this.chart.duration(500);
 
           this.chart.showLegend(true);
-
-          this.chart.xAxis.tickFormat(function(d) {
-            var format = _this.computeTickFormat(chartData);
-            return d3.time.format(format)(new Date(d));
-          });
+          this.updateChartTickFormat(this.chart, chartData);
           this.chart.xAxis.showMaxMin(false);
 
           this.chart.yAxis.tickFormat(d3.format(this.symbol + ',.0'));
@@ -219,6 +215,13 @@
         resu.push(serie);
       }
       return resu;
+    },
+
+    updateChartTickFormat(chart, data) {
+      var tickFormat = this.computeTickFormat(data);
+      chart.xAxis.tickFormat(function(d) {
+        return d3.time.format(tickFormat)(new Date(d));
+      });
     },
 
     createValues: function(key) {
