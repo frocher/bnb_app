@@ -142,7 +142,7 @@
 
     updateChart: function() {
       if (this.data) {
-        if (this.data.length > 0) {
+        if (this.hasValues(this.data)) {
           this.selectedPage = 2;
         }
         else {
@@ -153,7 +153,7 @@
         this.selectedPage = 0;
       }
 
-      if (this.data && this.data.length > 0) {
+      if (this.data && this.hasValues(this.data)) {
         var chartData = this.createChartData();
         var _this = this;
 
@@ -197,6 +197,14 @@
 
       // Apply svg styles
       this.scopeSubtree(this.$.canvas, true);
+    },
+
+    hasValues: function(data) {
+      var resu = false;
+      for (var i = 0; i < data.length && !resu; i++) {
+        resu = data[i].values.length > 0;
+      }
+      return resu;
     },
 
     createChartData: function() {
