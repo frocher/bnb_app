@@ -25,4 +25,11 @@
     return sessionStorage.getItem('accessToken') !== null;
   };
 
+  var precache = document.querySelector('#precache');
+  precache.displayInstalledToast = function() {
+    if (!Polymer.dom(document).querySelector('platinum-sw-cache').disabled) {
+      Polymer.dom(document).querySelector('#caching-complete').show();
+    }
+  };
+
 })(wrap(document));
