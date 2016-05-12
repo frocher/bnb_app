@@ -290,6 +290,7 @@ gulp.task('default', ['clean'], function (cb) {
     'elements',
     ['images', 'fonts', 'html'],
     'vulcanize',
+    'cache-config',
     cb);
 });
 
