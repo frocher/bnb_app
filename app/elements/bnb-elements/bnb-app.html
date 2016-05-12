@@ -1,4 +1,6 @@
 <link rel="import" href="../../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../../bower_components/platinum-sw/platinum-sw-cache.html">
+<link rel="import" href="../../bower_components/platinum-sw/platinum-sw-register.html">
 <link rel="import" href="bnb-signin.html">
 <link rel="import" href="bnb-signup.html">
 <link rel="import" href="bnb-forgot-password.html">
@@ -50,6 +52,20 @@
     </neon-animated-pages>
 
     <paper-toast id="message-toast"></paper-toast>
+
+    <paper-toast id="caching-complete"
+                 duration="6000"
+                 text="Caching complete! This app will work offline.">
+    </paper-toast>
+    <platinum-sw-register auto-register
+                          clients-claim
+                          skip-waiting
+                          base-uri="bower_components/platinum-sw/bootstrap"
+                          on-service-worker-installed="displayInstalledToast">
+      <platinum-sw-cache default-cache-strategy="fastest"
+                         cache-config-file="cache-config.json">
+      </platinum-sw-cache>
+    </platinum-sw-register>
 
   </template>
 </dom-module>
@@ -103,6 +119,13 @@
       route: {
         type: String,
         observer: 'handleRouteChanged'
+      }
+    },
+
+    displayInstalledToast: function() {
+      // Check to make sure caching is actually enabled—it won't be in the dev environment.
+      if (!Polymer.dom(document).querySelector('platinum-sw-cache').disabled) {
+        Polymer.dom(document).querySelector('#caching-complete').show();
       }
     },
 
