@@ -139,7 +139,12 @@ var BnbService = (function() {
   };
 
   var _handleError = function(request, callback, callbackObj, error) {
-    callback.apply (callbackObj, [request.xhr.response]);
+    if (request.xhr.response === null) {
+      app.fire('message', {message: "Error : can't reach server. Try again later."});
+    }
+    else {
+      callback.apply (callbackObj, [request.xhr.response]);
+    }
   };
 
   var _getRequestHeaders = function(headers) {
