@@ -103,13 +103,13 @@
 
     handleResponse: function(data) {
       this.user = data;
-      this.fire('message', {message: "User preferences have been updated"});
+      this.fire('message', {message: 'User preferences have been updated'});
       this.closePage();
     },
 
     handleError: function(error) {
       if (error === null) {
-        this.fire('message', {message: "Error : can't save user preferences"});
+        this.fire('message', {message: 'Error : can\'t save user preferences'});
       }
       else {
         var errors = error.errors;
