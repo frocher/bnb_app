@@ -19,6 +19,8 @@
     var loadEl = document.getElementById('splash');
     loadEl.addEventListener('transitionend', loadEl.remove);
     loadEl.classList.remove('loading');
+
+    app.loadEnvironment();
   });
 
   app.isLogged = function() {

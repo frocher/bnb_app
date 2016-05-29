@@ -106,6 +106,10 @@
       }
     },
 
+    loadEnvironment: function() {
+      BnbService.loadEnvironment({}, this.handleLoadEnvironmentResponse, this.handleGenericError, this);
+    },
+
     loadPages: function() {
       BnbService.loadPages({}, this.handleLoadPagesResponse, this.handleGenericError, this);
     },
@@ -148,6 +152,12 @@
         this.exitAnimation = 'fade-out-animation';
       }
       this.$.animated.select(newValue);
+    },
+
+    handleLoadEnvironmentResponse: function(data) {
+      ga('create', data.GOOGLE_ANALYTICS_KEY, 'auto', {
+        'appName': 'Botnbot'
+      });
     },
 
     handleLoadPagesResponse: function(data) {

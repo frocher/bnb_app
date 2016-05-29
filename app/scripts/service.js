@@ -2,6 +2,11 @@ var BnbService = (function() {
 
   var BASE_URL = '/api/';
 
+  var loadEnvironment = function(params, successCallback, errorCallback, callbackObj) {
+    var options = _generateOptions('/environment', 'GET', params);
+    _sendRequest(options, successCallback, errorCallback, callbackObj);
+  };
+
   var signin = function(params, successCallback, errorCallback, callbackObj) {
     var options = _generateOptions('/auth/sign_in', 'POST', params);
     _sendRequest(options, successCallback, errorCallback, callbackObj);
@@ -215,6 +220,7 @@ var BnbService = (function() {
 
   return {
     BASE_URL: BASE_URL,
+    loadEnvironment: loadEnvironment,
     signin: signin,
     signup: signup,
     signout: signout,
