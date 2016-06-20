@@ -1,5 +1,6 @@
 {
 "name": "Botnbot",
+"start_url": "/?homescreen=1",
 "short_name": "Botnbot",
 "icons": [
 {
