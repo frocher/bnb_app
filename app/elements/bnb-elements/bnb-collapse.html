@@ -11,15 +11,18 @@
 		<style>
 			.header {
 				min-height: 48px;
+
+        cursor: pointer;
+
 				color: var(--primary-text-color);
 				@apply(--layout-horizontal);
 				@apply(--layout-center-center);
 				@apply(--paper-font-subhead);
-        cursor: pointer;
 			}
 
 			.icon {
 				margin-right: 24px;
+
 				--iron-icon-height: 32px;
 				--iron-icon-width: 32px;
 			}
@@ -29,9 +32,10 @@
 			}
 
 			.content {
+				padding-bottom: 12px;
+
 				color: var(--primary-text-color);
 				@apply(--paper-font-body);
-				padding-bottom: 12px;
 			}
 		</style>
 

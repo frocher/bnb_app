@@ -77,14 +77,13 @@ a:hover {
 }
 
 
-
-
 paper-material {
-  border-radius: 2px;
-  height: 100%;
-  padding: 16px 0px 16px 0px;
   width: calc(98.66% - 16px);
+  height: 100%;
   margin: 16px auto;
+  padding: 16px 0px 16px 0px;
+
+  border-radius: 2px;
   background: white;
 }
 
@@ -96,6 +95,7 @@ paper-material {
 
 paper-menu iron-icon {
   margin-right: 33px;
+
   opacity: 0.54;
 }
 
@@ -118,40 +118,47 @@ paper-checkbox.colored {
 
 
 paper-menu a {
-  text-decoration: none;
-  color: var(--menu-link-color);
   display: -ms-flexbox;
   display: -webkit-flex;
   display: flex;
-  -ms-flex-direction: row;
-  -webkit-flex-direction: row;
   flex-direction: row;
-  -ms-flex-align: center;
-  -webkit-align-items: center;
-  align-items: center;
+
+  min-height: 48px;
+  padding: 0px 16px;
+
+  text-decoration: none;
+
+  color: var(--menu-link-color);
+
   font-family: 'Roboto', 'Noto', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
   font-size: 14px;
   font-weight: 400;
   line-height: 24px;
-  min-height: 48px;
-  padding: 0px 16px;
+
+  -ms-flex-direction: row;
+  -webkit-flex-direction: row;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 #drawerToolbar {
-  border-bottom: var(--drawer-toolbar-border-color);
   height: 120px;
+
+  border-bottom: var(--drawer-toolbar-border-color);
 }
 
 #paperToggle {
   width: 45px;
   height: 45px;
-  border: none;
-  color: var(--drawer-menu-color);
-  background-color: transparent;
   margin-right: 16px;
   padding: 8px;
+
+  color: var(--drawer-menu-color);
+  border: none;
+  background-color: transparent;
 }
 
 /* Breakpoints */
@@ -173,10 +180,11 @@ paper-menu a {
   }
 
   paper-material {
-    --menu-container-display: none;
     width: calc(97.33% - 32px);
-    padding-left: 16px;
     padding-right: 16px;
+    padding-left: 16px;
+
+    --menu-container-display: none;
   }
 
   #drawer .paper-toolbar {
@@ -192,8 +200,8 @@ paper-menu a {
   }
 
   #mainToolbar .bottom {
-    padding-left: 50px;
     padding-bottom: 24px;
+    padding-left: 50px;
   }
 
   #mainToolbar.has-shadow .bottom {
@@ -201,8 +209,9 @@ paper-menu a {
   }
 
   .appname {
-    font-size: 24px;
     padding-bottom: 0px;
+
+    font-size: 24px;
   }
 }
 
@@ -210,14 +219,15 @@ paper-menu a {
 
   paper-material {
     width: calc(98% - 46px);
-    padding-left: 30px;
     padding-right: 30px;
+    padding-left: 30px;
   }
 
     #mainToolbar.has-shadow .bottom {
         margin-left: 50px;
         padding-bottom: 0;
         padding-left: 0;
+
         font-size: 24px;
     }
 

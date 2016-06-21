@@ -5,11 +5,12 @@
     }
 
     .links {
-      @apply(--layout-vertical);
       width: 70%;
       max-width: 380px;
       margin: 0 auto;
+
       text-align: center;
+      @apply(--layout-vertical);
     }
 
     .auth-form {
@@ -17,13 +18,15 @@
       max-width: 380px;
       margin: 4em auto 1em auto;
       padding: 1em 2em 1em 2em;
+
       background-color: var(--paper-card-background-color);
     }
 
     :host > ::content .actions {
       position: relative;
-      padding: 8px 8px 8px 24px;
+
       margin: 0;
+      padding: 8px 8px 8px 24px;
 
       color: var(--paper-dialog-button-color, --default-primary-color);
 

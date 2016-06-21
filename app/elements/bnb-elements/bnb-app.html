@@ -13,8 +13,8 @@
 <dom-module id="bnb-app">
   <style>
     :host {
-      @apply(--layout-vertical);
       background-color: var(--primary-background-color);
+      @apply(--layout-vertical);
     }
 
     .page {
@@ -23,12 +23,16 @@
 
     #version {
       display: flex;
+
       height:100%;
+
+      opacity: 0.5;
+      color: var(--disabled-text-color);
+
+      font-size: 12px;
+
       justify-content: flex-end;
       align-items: flex-end;
-      font-size: 12px;
-      color: var(--disabled-text-color);
-      opacity: 0.5;
     }
   </style>
 
