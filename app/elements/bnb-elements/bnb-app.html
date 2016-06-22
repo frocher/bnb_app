@@ -20,25 +20,9 @@
     .page {
       @apply(--layout-fit);
     }
-
-    #version {
-      display: flex;
-
-      height:100%;
-
-      opacity: 0.5;
-      color: var(--disabled-text-color);
-
-      font-size: 12px;
-
-      justify-content: flex-end;
-      align-items: flex-end;
-    }
   </style>
 
   <template>
-    <span id="version">v0.1</span>
-
     <neon-animated-pages id="animated" class="page" attr-for-selected="data-route" entry-animation="[[entryAnimation]]" exit-animation="[[exitAnimation]]">
       <neon-animatable      id="splash"          class="page" data-route="splash">Splash !!!</neon-animatable>
       <bnb-signin           id="signin"          class="page" data-route="signin"></bnb-signin>
