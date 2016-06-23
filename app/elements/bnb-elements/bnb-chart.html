@@ -182,7 +182,8 @@
             this.chart = nv.models.lineChart();
             this.chart.forceY([0]);
           }
-          this.chart.useInteractiveGuideline(true)
+          this.chart.margin({left: 40, right: 10});
+          this.chart.useInteractiveGuideline(true);
           this.chart.duration(500);
 
           this.chart.showLegend(true);
