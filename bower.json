@@ -20,6 +20,6 @@
   },
   "resolutions": {
     "mocha": "~2.3.4",
-    "lodash": "~4.6.0"
+    "lodash": "~4.13.0"
   }
 }
