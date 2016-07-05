@@ -1,5 +1,8 @@
 'use strict';
 
+// Include promise polyfill for node 0.10 compatibility
+require('es6-promise').polyfill();
+
 // Include Gulp & Tools We'll Use
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
