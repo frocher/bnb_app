@@ -217,6 +217,7 @@ gulp.task('cache-config', function(callback) {
       callback(error);
     } else {
       config.precache = files;
+      config.defaultCacheStrategy = 'networkFirst';
 
       var md5 = crypto.createHash('md5');
       md5.update(JSON.stringify(config.precache));
