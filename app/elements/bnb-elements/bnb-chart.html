@@ -471,7 +471,8 @@
           if (!_.isEqual(this.oldData, this.data)) {
             var lines = d3.select(this.$.canvas).selectAll("svg");
             this.updateChartTickFormat(this.chart, chartData);
-            lines.datum(chartData).call(this.chart);
+            lines.datum(chartData).transition().duration(500).call(this.chart);
+
             this.oldData = this.data;
           }
         }
