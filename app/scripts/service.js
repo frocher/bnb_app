@@ -1,6 +1,6 @@
 var BnbService = (function() {
 
-  var BASE_URL = '/api/';
+  var BASE_URL = 'api/';
 
   var loadEnvironment = function(params, successCallback, errorCallback, callbackObj) {
     var options = _generateOptions('/environment', 'GET', params);
