@@ -53,7 +53,7 @@
       </div>
       <div class="layout horizontal center-justified center">
         <paper-button class="facebook">
-          <iron-icon icon="bnb-icons:facebook"></iron-icon>
+          <iron-icon on-tap="facebookTapped" icon="bnb-icons:facebook"></iron-icon>
           <span>Facebook</span>
         </paper-button>
         <paper-button on-tap="githubTapped" class="github">
@@ -61,7 +61,7 @@
           <span>Github</span>
         </paper-button>
         <paper-button class="google">
-          <iron-icon icon="bnb-icons:gplus"></iron-icon>
+          <iron-icon on-tap="googleTapped" icon="bnb-icons:gplus"></iron-icon>
           <span>Google</span>
         </paper-button>
       </div>
@@ -75,8 +75,21 @@
   Polymer({
     is: 'bnb-oauth',
 
+    facebookTapped: function() {
+      this._callService('facebook');
+    },
+
     githubTapped: function() {
-      url = BnbService.BASE_URL + 'auth/github?auth_origin_url=http://localhost:9000/#!';
+      this._callService('github');
+    },
+
+    googleTapped: function() {
+      this._callService('google');
+    },
+
+    _callService: function(service) {
+      var origin = window.location.protocol + '//' + window.location.host + window.location.pathname;
+      url = BnbService.BASE_URL + 'auth/' + service + '?auth_origin_url=' + origin;
       window.location.replace(url);
     },
   });
