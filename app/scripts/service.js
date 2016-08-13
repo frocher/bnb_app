@@ -100,6 +100,12 @@ var BnbService = (function() {
     _sendRequest(options, successCallback, errorCallback, callbackObj);
   };
 
+  var storeCredentials = function(accessToken, uid, client) {
+    _setAccessToken(accessToken);
+    _setUid(uid);
+    _setClient(client);
+  };
+
   var _generateOptions = function(url, method, params, headers) {
     var options = {
       url: _getRequestUrl(url, params),
@@ -220,6 +226,7 @@ var BnbService = (function() {
 
   return {
     BASE_URL: BASE_URL,
+    storeCredentials: storeCredentials,
     loadEnvironment: loadEnvironment,
     signin: signin,
     signup: signup,

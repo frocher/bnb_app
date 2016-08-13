@@ -6,6 +6,21 @@
      * Middleware for authentication check
      */
     function authenticate(ctx, next) {
+      qstr = _parseQuery(ctx.querystring);
+
+      // Check if we find credentials in parameters (used for omniauth)
+      // if true : store credentials and remove them from the query string
+      if (qstr.auth_token) {
+        BnbService.storeCredentials(qstr.auth_token, qstr.uid, qstr.client_id);
+        _removeParameters();
+      }
+
+      // Check if we find a message in the query string.
+      // If true : display it to the user
+      if (qstr.message) {
+        app.showToast(qstr.message);        
+      }
+
       if (ctx.pathname==='/signin' || ctx.pathname==='/signup' || ctx.pathname==='/forgot' || ctx.pathname==='/edit-password') {
         next();
       }
@@ -99,5 +114,24 @@
       hashbang: true
     });
 
+    function _parseQuery(qstr) {
+      var query = {};
+      var a = qstr.split('&');
+      for (var i = 0; i < a.length; i++) {
+          var b = a[i].split('=');
+          query[decodeURIComponent(b[0])] = decodeURIComponent(b[1] || '');
+      }
+      return query;
+    }
+
+    /**
+     * Remove all query string from the url (and hash too)
+     */
+    function _removeParameters() {
+      var newLocation = window.location.protocol + '//'+
+              window.location.host+
+              window.location.pathname;
+      window.history.pushState('', document.title, newLocation);
+    }
   });
 </script>

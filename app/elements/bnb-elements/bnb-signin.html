@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/iron-a11y-keys/iron-a11y-keys.html">
+<link rel="import" href="bnb-oauth.html">
 
 <dom-module id="bnb-signin">
   <style>
@@ -19,6 +20,9 @@
       <div class="actions">
         <paper-button on-tap="signinSubmitTapped">Log in</paper-button>
       </div>
+
+      <bnb-oauth></bnb-oauth>
+
     </bnb-auth-form>
   </template>
 </dom-module>
