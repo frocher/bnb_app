@@ -52,16 +52,16 @@
         <paper-divider></paper-divider>
       </div>
       <div class="layout horizontal center-justified center">
-        <paper-button class="facebook">
-          <iron-icon on-tap="facebookTapped" icon="bnb-icons:facebook"></iron-icon>
+        <paper-button on-tap="facebookTapped" class="facebook">
+          <iron-icon icon="bnb-icons:facebook"></iron-icon>
           <span>Facebook</span>
         </paper-button>
         <paper-button on-tap="githubTapped" class="github">
           <iron-icon icon="bnb-icons:github"></iron-icon>
           <span>Github</span>
         </paper-button>
-        <paper-button class="google">
-          <iron-icon on-tap="googleTapped" icon="bnb-icons:gplus"></iron-icon>
+        <paper-button on-tap="googleTapped" class="google">
+          <iron-icon icon="bnb-icons:gplus"></iron-icon>
           <span>Google</span>
         </paper-button>
       </div>
@@ -84,7 +84,7 @@
     },
 
     googleTapped: function() {
-      this._callService('google');
+      this._callService('google_oauth2');
     },
 
     _callService: function(service) {
