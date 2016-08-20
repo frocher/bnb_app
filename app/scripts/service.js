@@ -205,7 +205,12 @@ var BnbService = (function() {
   };
 
   var _setAccessToken = function(token) {
-    sessionStorage.setItem('accessToken', token);
+    if (token === null) {
+      sessionStorage.removeItem('accessToken');
+    }
+    else {
+      sessionStorage.setItem('accessToken', token);
+    }
   };
 
   var _getClient = function() {
@@ -213,7 +218,12 @@ var BnbService = (function() {
   };
 
   var _setClient = function(client) {
-    sessionStorage.setItem('client', client);
+    if (client === null) {
+      sessionStorage.removeItem('client');
+    }
+    else {
+      sessionStorage.setItem('client', client);
+    }
   };
 
   var _getUid = function() {
@@ -221,7 +231,12 @@ var BnbService = (function() {
   };
 
   var _setUid = function _setUid(uid) {
-    sessionStorage.setItem('uid', uid);
+    if (uid === null) {
+      sessionStorage.removeItem('uid');
+    }
+    else {
+      sessionStorage.setItem('uid', uid);
+    }
   };
 
   return {
