@@ -18,7 +18,7 @@
       // Check if we find a message in the query string.
       // If true : display it to the user
       if (qstr.message) {
-        app.showToast(qstr.message);        
+        app.showToast(qstr.message);
       }
 
       if (ctx.pathname==='/signin' || ctx.pathname==='/signup' || ctx.pathname==='/forgot' || ctx.pathname==='/edit-password') {
@@ -116,6 +116,9 @@
 
     function _parseQuery(qstr) {
       var query = {};
+      if (qstr.indexOf('#') >= 0) {
+        qstr = qstr.slice(0, qstr.indexOf('#'));
+      }
       var a = qstr.split('&');
       for (var i = 0; i < a.length; i++) {
           var b = a[i].split('=');
