@@ -530,7 +530,7 @@
       return resu;
     },
 
-    updateChartTickFormat(chart, data) {
+    updateChartTickFormat: function(chart, data) {
       var tickFormat = this.computeTickFormat(data);
       chart.xAxis.tickFormat(function(d) {
         return d3.time.format(tickFormat)(new Date(d));
