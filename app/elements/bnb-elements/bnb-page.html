@@ -35,8 +35,9 @@
           <paper-menu class="dropdown-content" style="z-index:9999">
             <paper-item on-tap="editTapped" hidden$="{{!page.can_edit}}">Settings</paper-item>
             <paper-item on-tap="membersTapped">Members</paper-item>
-            <paper-divider hidden$="{{!page.can_delete}}"></paper-divider>
+            <paper-divider></paper-divider>
             <paper-item on-tap="deleteTapped" hidden$="{{!page.can_delete}}">Delete</paper-item>
+            <paper-item on-tap="leaveTapped" hidden$="{{page.can_delete}}">Leave</paper-item>
           </paper-menu>
         </paper-menu-button>
       </paper-toolbar>
@@ -56,10 +57,18 @@
         </div>
 
         <paper-dialog id="deleteDlg" modal>
-          <p>Delete page ?</p>
+          <p>Are you really sure you want to delete page ? All data will be erasen</p>
           <div class="buttons">
             <paper-button dialog-dismiss>Cancel</paper-button>
             <paper-button dialog-confirm autofocus on-tap="deletePage">Delete</paper-button>
+          </div>
+        </paper-dialog>
+
+        <paper-dialog id="leaveDlg" modal>
+          <p>Leave this page, sure ?</p>
+          <div class="buttons">
+            <paper-button dialog-dismiss>Cancel</paper-button>
+            <paper-button dialog-confirm autofocus on-tap="leavePage">Leave</paper-button>
           </div>
         </paper-dialog>
       </div>
@@ -141,17 +150,35 @@
     },
 
     deletePage: function(e) {
-      BnbService.deletePage(this.page.id, this.handleResponse, this.handleError, this);
+      BnbService.deletePage(this.page.id, this.handleDeleteResponse, this.handleDeleteError, this);
     },
 
-    handleResponse: function(data) {
+    handleDeleteResponse: function(data) {
       this.fire('page-deleted', {page: page});
       this.fire('message', {message: "Page has been deleted"});
     },
 
-    handleError: function(error) {
+    handleDeleteError: function(error) {
       this.fire('message', {message: "Error : can't delete page"});
+    },
+
+    leaveTapped: function(e) {
+      this.$.leaveDlg.open();
+    },
+
+    leavePage: function(e) {
+      BnbService.removeMember(this.page.id, -1, this.handleLeaveResponse, this.handleLeaveError, this);
+    },
+
+    handleLeaveResponse: function(data) {
+      this.fire('page-left', {page: page});
+      this.fire('message', {message: "You have left the page"});
+    },
+
+    handleLeaveError: function(error) {
+      this.fire('message', {message: "Error : can't leave page"});
     }
+
   });
 
 })();

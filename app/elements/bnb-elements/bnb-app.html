@@ -59,6 +59,7 @@
       'edit-members'     : 'handleEditMembers',
       'page-created'     : 'handlePageCreated',
       'page-deleted'     : 'handlePageDeleted',
+      'page-left'        : 'handlePageLeft',
       'period-changed'   : 'handlePeriodChanged',
       'add-member'       : 'handleAddMember',
       'update-member'    : 'handleUpdateMember',
@@ -282,6 +283,11 @@
     },
 
     handlePageDeleted: function(e) {
+      this.loadPages();
+      page('/');
+    },
+
+    handlePageLeft: function(e) {
       this.loadPages();
       page('/');
     },
