@@ -43,7 +43,7 @@ var BnbService = (function() {
   };
 
   var loadPages = function(params, successCallback, errorCallback, callbackObj) {
-    var options = _generateOptions('/pages', 'GET', params);
+    var options = _generateOptions('/pages', 'GET', _collect({per_page:9999}, params));
     _sendRequest(options, successCallback, errorCallback, callbackObj);
   };
 
@@ -237,6 +237,19 @@ var BnbService = (function() {
     else {
       sessionStorage.setItem('uid', uid);
     }
+  };
+
+  var _collect = function() {
+    var ret = {};
+    var len = arguments.length;
+    for (var i=0; i<len; i++) {
+      for (p in arguments[i]) {
+        if (arguments[i].hasOwnProperty(p)) {
+          ret[p] = arguments[i][p];
+        }
+      }
+    }
+    return ret;
   };
 
   return {
