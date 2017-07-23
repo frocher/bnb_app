@@ -1,9 +1,8 @@
 FROM nginx
 
-# curl
 RUN \
 apt-get update && \
-apt-get install -y curl xz-utils
+apt-get install -y gnupg
 
 # gpg keys listed at https://github.com/nodejs/node
 RUN set -ex \
@@ -23,6 +22,11 @@ RUN set -ex \
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 6.9.1
 
+# curl
+RUN \
+apt-get update && \
+apt-get install -y curl xz-utils
+
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz"
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc"
 RUN gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc
@@ -31,8 +35,9 @@ RUN tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-compon
 RUN rm "node-v$NODE_VERSION-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
 RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-# Install bower
+# Install bower and gulp
 RUN npm install -g bower
+RUN npm install -g gulp
 
 # Copy app
 ENV APP_HOME /myapp
@@ -42,7 +47,7 @@ COPY . $APP_HOME
 
 # build app
 RUN npm install --production
-RUN bower install --production
+RUN bower install --production --allow-root
 RUN gulp
 
 COPY dist /usr/share/nginx/html
