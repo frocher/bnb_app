@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>Botnbot</title>
+    <meta name="description" content="Botnbot description">
+    <link rel="shortcut icon" sizes="32x32" href="/images/icon-32x32.png">
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Roboto', 'Noto', sans-serif;
+        font-size: 13px;
+        line-height: 1.5;
+        min-height: 100vh;
+        color: #ffffff;
+        background-color: #303030;
+      }
+
+      /* styling for render while resources are loading */
+      bnb-app[unresolved] {
+        display: block;
+        min-height: 101vh;
+        line-height: 68px;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.3em;
+        color: #202020;
+        padding: 0 16px;
+        overflow: visible;
+      }
+    </style>
+
+    <link rel="import" href="/src/bnb-app.html">
+  </head>
+  <body>
+    <bnb-app></bnb-app>
+  </body>
+</html>

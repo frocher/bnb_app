@@ -1,0 +1,35 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/bnb-app.html",
+  "fragments": [
+    "src/bnb-home.html",
+    "src/bnb-edit-password.html",
+    "src/bnb-forgot-password.html",
+    "src/bnb-signin.html",
+    "src/bnb-signup.html",
+    "src/lazy-resources.html"
+  ],
+  "sources": [
+    "src/**/*",
+    "images/**/*",
+    "bower.json"
+  ],
+  "extraDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/*"
+  ],
+  "lint": {
+    "rules": [
+      "polymer-2"
+    ]
+  }
+  ,
+  "builds": [
+    {
+      "preset": "es5-bundled"
+    },
+    {
+      "preset": "es6-unbundled"
+    }
+  ]
+}

@@ -1,0 +1,204 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
+<link rel="import" href="bnb-common-styles.html">
+<link rel="import" href="bnb-data.html">
+<link rel="import" href="bnb-home.html">
+<link rel="import" href="bnb-signin.html">
+
+<dom-module id="bnb-app">
+  <template>
+    <style>
+      :host {
+        --dark-primary-color: #000000;
+        --default-primary-color:var(--paper-grey-900);
+        --light-primary-color: #303030;
+        --text-primary-color: #ffffff; /*text/icons*/
+        --accent-color: #FF5722;
+        --primary-background-color: #303030;
+        --primary-text-color: #ffffff;
+        --secondary-text-color: var(--paper-grey-300);
+        --disabled-text-color: #bdbdbd;
+        --divider-color: #B6B6B6;
+        --error-color: #db4437;
+
+        --paper-card-background-color: var(--paper-grey-800);
+        --paper-card-header-color: var(--text-primary-color);
+        --paper-dialog-button-color: var(--google-blue-300);
+        --paper-divider-color: #B6B6B6;
+        --paper-input-container-color: var(--secondary-text-color);
+        --paper-input-container-focus-color: var(--google-blue-300);
+
+
+        background-color: var(--primary-background-color);
+        @apply --layout-fit;
+        @apply --layout-vertical;
+      }
+
+      .page {
+        @apply --layout-fit;
+      }
+    </style>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
+
+    <bnb-data id="data" pages="{{pages}}"></bnb-data>
+
+    <neon-animated-pages class="page" selected="[[page]]" attr-for-selected="name" selected-attribute="visible">
+      <bnb-signin           name="signin"          class="page"></bnb-signin>
+      <bnb-signup           name="signup"          class="page"></bnb-signup>
+      <bnb-forgot-password  name="forgot-password" class="page"></bnb-forgot-password>
+      <bnb-edit-password    name="edit-password"   class="page"></bnb-edit-password>
+      <bnb-home             name="home"            class="page" period="{{period}}" pages="{{pages}}"></bnb-home>
+    </neon-animated-pages>
+
+    <paper-toast id="message-toast"></paper-toast>
+  </template>
+
+  <script src="../bower_components/moment/min/moment.min.js"></script>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class BnbApp extends Polymer.Element {
+      static get is() { return 'bnb-app'; }
+
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged'
+          },
+
+          pages: {
+            type: Array,
+            value: function() {
+              return [];
+            }
+          },
+
+          period: {
+            type: Object,
+            value: {start: moment().subtract(30, 'days').toDate(), end: moment().toDate()}
+          },
+
+          offline: {
+            type: Boolean,
+            value: false,
+            readOnly: true
+          }
+        };
+      }
+
+      static get observers() { return [
+        '_routePageChanged(routeData.page)'
+      ]}
+
+      ready() {
+        super.ready();
+        this.addEventListener('message', e => {this._handleMessage(e)})
+        this.addEventListener('signedin', e => {this._handleSignedIn()})
+        this.addEventListener('signedout', e => {this._handleSignedOut()})
+      }
+
+      _routePageChanged(page) {
+        if (page !== 'signin' && page !== 'signup' && page !== 'forgot-password' && page !== 'edit-password') {
+          if (!this.$.data.isLogged()) {
+            window.history.pushState({}, null, '/signin');
+            window.dispatchEvent(new CustomEvent('location-changed'));
+          }
+        }
+        this.page = page || 'home';
+      }
+
+      _pageChanged(page, oldPage) {
+        if (page !== null) {
+          // home and signin route are eagerly loaded
+          if (page === 'home' || page === 'signin') {
+            this._pageLoaded(Boolean(oldPage));
+          // other routes are lazy loaded
+          } else {
+            // When a load failed, it triggered a 404 which means we need to
+            // eagerly load the 404 page definition
+            let cb = this._pageLoaded.bind(this, Boolean(oldPage));
+            Polymer.importHref(
+              this.resolveUrl('bnb-' + page + '.html'),
+              cb, cb, true);
+          }
+        }
+      }
+
+      _pageLoaded(shouldResetLayout) {
+       this._ensureLazyLoaded();
+
+       if (this.page === 'home') {
+         this.$.data.loadPages();
+       }
+     }
+
+     _ensureLazyLoaded() {
+       // load lazy resources after render and set `loadComplete` when done.
+       if (!this.loadComplete) {
+         Polymer.RenderStatus.afterNextRender(this, () => {
+           Polymer.importHref(this.resolveUrl('lazy-resources.html'), () => {
+             this._notifyNetworkStatus();
+             this.loadComplete = true;
+             // Load pre-caching Service Worker
+             if ('serviceWorker' in navigator) {
+               navigator.serviceWorker.register('/service-worker.js');
+             }
+           });
+         });
+       }
+     }
+
+     _notifyNetworkStatus() {
+        let oldOffline = this.offline;
+        this._setOffline(!window.navigator.onLine);
+        // Show the snackbar if the user is offline when starting a new session
+        // or if the network status changed.
+        if (this.offline || (!this.offline && oldOffline === true)) {
+          if (!this._networkSnackbar) {
+            this._networkSnackbar = document.createElement('bnb-snackbar');
+            this.root.appendChild(this._networkSnackbar);
+          }
+          this._networkSnackbar.textContent = this.offline ?
+              'You are offline' : 'You are online';
+          this._networkSnackbar.open();
+        }
+      }
+
+      _onFallbackSelectionTriggered() {
+        this.page = '404';
+      }
+
+      _handleMessage(e) {
+        let toast = this.$['message-toast'];
+        toast.text = e.detail;
+        toast.show();
+      }
+
+      _handleSignedIn() {
+        window.history.pushState({}, null, '/home');
+        window.dispatchEvent(new CustomEvent('location-changed'));
+      }
+
+      _handleSignedOut() {
+        window.history.pushState({}, null, '/signin');
+        window.dispatchEvent(new CustomEvent('location-changed'));
+      }
+    }
+
+    window.customElements.define(BnbApp.is, BnbApp);
+  </script>
+</dom-module>

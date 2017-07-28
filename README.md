@@ -1,27 +1,33 @@
-## The Botnbot Application
+# \<Botnbot\>
 
-The Botnbot Application allows you to track your sites performance and uptime.
 
-The front-end is a single page application written using [Polymer](https://www.polymer-project.org/1.0/).
 
-It's still in a very alpha state. Don't use it in production !
+## Install the Polymer-CLI
 
-### Dependencies
+First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
 
-* Node.js
-* [The Botnbot Nexus](https://github.com/frocher/bnb_nexus)
+## Viewing Your Application
 
-### Quicklaunch for Development
-
-With Node.js installed, run the following lines from the root of your project :
-
-```sh
-npm install -g gulp bower && npm install && bower install
-gulp serve
+```
+$ polymer serve
 ```
 
-Note : the Botnbot Nexus must run and listen to port 3000
+## Building Your Application
 
-### The Docker way
+```
+$ polymer build
+```
 
-TODO...
+This will create builds of your application in the `build/` directory, optimized to be served in production. You can then serve the built versions by giving `polymer serve` a folder to serve from:
+
+```
+$ polymer serve build/default
+```
+
+## Running Tests
+
+```
+$ polymer test
+```
+
+Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.

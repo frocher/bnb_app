@@ -25,7 +25,7 @@ ENV NODE_VERSION 6.9.1
 # curl
 RUN \
 apt-get update && \
-apt-get install -y curl xz-utils
+apt-get install -y curl xz-utils git
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz"
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc"
@@ -37,7 +37,7 @@ RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 # Install bower and gulp
 RUN npm install -g bower
-RUN npm install -g gulp
+RUN npm install -g polymer-cli
 
 # Copy app
 ENV APP_HOME /myapp
@@ -46,10 +46,14 @@ WORKDIR $APP_HOME
 COPY . $APP_HOME
 
 # build app
-RUN npm install --production
 RUN bower install --production --allow-root
-RUN gulp
+RUN polymer build
 
-COPY dist /usr/share/nginx/html
+COPY build/default /usr/share/nginx/html
+
+# clean
+RUN npm uninstall -g bower
+RUN npm uninstall -g polymer-cli
+RUN apt-get purge -y curl git gnupg
 
 EXPOSE 80

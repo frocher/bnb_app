@@ -1,26 +1,36 @@
 {
-  "name": "bnb_app",
-  "version": "0.1.0",
+  "name": "botnbot",
+  "main": "index.html",
   "dependencies": {
-    "iron-elements": "PolymerElements/iron-elements#^1.0.0",
-    "paper-elements": "PolymerElements/paper-elements#^1.0.0",
-    "platinum-elements": "PolymerElements/platinum-elements#^1.0.0",
-    "neon-animation": "PolymerElements/neon-animation#^1.0.0",
-    "page": "visionmedia/page.js#~1.6.4",
-    "lodash": "lodash#^4.6.0",
-    "moment": "moment#^2.15.0",
-    "mocha": "mochajs/mocha#2.3.4",
-    "datepicker": "bendavis78/paper-date-picker#^1.2.0",
-    "paper-divider": "paper-divider#^1.0.0",
-    "vaadin-grid": "vaadin-grid#^1.0.0",
-    "nvd3": "nvd3#^1.8.0",
-    "polymer": "Polymer/polymer#^1.6.0"
+    "app-layout": "polymerelements/app-layout#^2.0.0",
+    "app-route": "polymerelements/app-route#^2.0.0",
+    "app-storage": "polymerelements/app-storage#^2.0.0",
+    "iron-a11y-keys": "polymerelements/iron-a11y-keys#^2.0.0",
+    "iron-icon": "polymerelements/iron-icon#^2.0.0",
+    "iron-icons": "polymerelements/iron-icons#^2.0.0",
+    "iron-flex-layout": "polymerelements/iron-flex-layout#^2.0.0",
+    "iron-iconset-svg" : "polymerelements/iron-iconset-svg#^2.0.0",
+    "iron-location": "frocher/iron-location#develop",
+    "iron-pages": "polymerelements/iron-pages#^2.0.0",
+    "moment": "moment#^2.18.0",
+    "neon-animation": "polymerelements/neon-animation#^2.0.0",
+    "paper-button": "polymerelements/paper-button#^2.0.0",
+    "paper-card": "polymerelements/paper-card#^2.0.0",
+    "paper-icon-button": "polymerelements/paper-icon-button#^2.0.0",
+    "paper-input": "polymerelements/paper-input#^2.0.0",
+    "paper-item": "polymerelements/paper-item#^2.0.0",
+    "paper-listbox": "polymerelements/paper-listbox#^2.0.0",
+    "paper-menu-button": "polymerelements/paper-menu-button#^2.0.0",
+    "paper-spinner": "polymerelements/paper-spinner#^2.0.0",
+    "paper-toast": "polymerelements/paper-toast#^2.0.0",
+    "polymer": "Polymer/polymer#^2.0.0",
+    "web-animations-js": "web-animations/web-animations-js#^2.2"
   },
   "devDependencies": {
-    "web-component-tester": "*"
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
   },
   "resolutions": {
-    "mocha": "~2.3.4",
-    "lodash": "^4.6.0"
+    "iron-location": "develop"
   }
 }

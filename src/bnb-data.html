@@ -1,0 +1,263 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
+
+<dom-module id="bnb-data">
+  <template>
+    <app-localstorage-document key="bnb-data" data="{{user}}"></app-localstorage-document>
+  </template>
+
+  <script>
+    const BASE_URL = "http://localhost:3000/";
+
+    class BnbData extends Polymer.Element {
+
+      static get is() { return 'bnb-data'; }
+
+      static get properties() {
+        return {
+          user: {
+            type: Object,
+            value: () => undefined,
+            notify: true
+          },
+
+          pages: {
+            type: Array,
+            notify: true
+          },
+
+          offline: Boolean,
+
+          loading: {
+            type: Boolean,
+            readOnly: true,
+            notify: true
+          },
+
+          failure: {
+            type: Boolean,
+            readOnly: true,
+            notify: true
+          }
+        }
+      }
+
+      isLogged() {
+        return sessionStorage.getItem('credentials') !== null;
+      }
+
+      signin(email, password) {
+        let url = this._getRequestUrl('/auth/sign_in', {email: email, password: password});
+
+        this._getResource({
+          url: url,
+          method: 'POST',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            let status = e.target.status;
+            if (status === 200) {
+              this._storeCredentials(e.target);
+              this.user = response.data;
+              this.dispatchEvent(new CustomEvent('signedin', {bubbles: true, composed: true, detail: response.data}));
+            }
+            else {
+              this._fireError(response.errors);
+            }
+          }
+        });
+      }
+
+      signout() {
+        sessionStorage.removeItem('credentials');
+        this.dispatchEvent(new CustomEvent('signedout', {bubbles: true, composed: true}));
+      }
+
+      signup(name, email, password, confirmation, successUrl) {
+        let url = this._getRequestUrl('/auth/', {
+          name: name,
+          email: email,
+          password: password,
+          password_confirmation: confirmation,
+          confirm_success_url: successUrl
+        });
+
+        this._getResource({
+          url: url,
+          method: 'POST',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            let status = e.target.status;
+            if (status === 200) {
+              this._fireMessage('Sign up successful. An activation email has been sent to you.');
+            }
+            else {
+              if (response.errors) {
+                this.dispatchEvent(new CustomEvent('signup_error', {bubbles: true, composed: true, detail: response.errors}));
+              }
+              else {
+                this._fireMessage('Unknown error. Can\'t signup.');
+              }
+            }
+          }
+        });
+      }
+
+      forgotPassword(email, redirectUrl) {
+        let url = this._getRequestUrl('/auth/password', {
+          email: email,
+          redirect_url: redirectUrl
+        });
+
+        this._getResource({
+          url: url,
+          method: 'POST',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            let status = e.target.status;
+            if (status === 200) {
+              this._fireMessage(response.message);
+            }
+            else {
+              this._fireError(response.errors);
+            }
+          }
+        });
+      }
+
+      updatePassword(password, passwordConfirmation, headers) {
+        let url = this._getRequestUrl('/auth/password', {
+          password: password,
+          password_confirmation: passwordConfirmation
+        });
+
+        this._getResource({
+          url: url,
+          method: 'PUT',
+          headers: headers,
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            let status = e.target.status;
+            if (status === 200) {
+              this._fireMessage(response.message);
+              this.dispatchEvent(new CustomEvent('update_password_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this.dispatchEvent(new CustomEvent('update_password_error', {bubbles: true, composed: true, detail: response.errors}));
+            }
+          }
+        });
+      }
+
+      loadPages() {
+        let url = this._getRequestUrl('/pages', {
+          per_page:9999
+        });
+        this._getResource({
+          url: url,
+          method: 'GET',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this.pages = response;
+            }
+            else {
+              this._fireError(response.errors);
+            }
+          }
+        });
+      }
+
+      _fireError(errors) {
+        let message = errors !== undefined ? errors[0] : 'Oops something went wrong.';
+        this._fireMessage(message);
+      }
+
+      _fireMessage(message) {
+        this.dispatchEvent(new CustomEvent('message', {bubbles: true, composed: true, detail: message}));
+      }
+
+      _storeCredentials(xhr) {
+        let credentials = {
+          'access-token': xhr.getResponseHeader('access-token'),
+          uid: xhr.getResponseHeader('uid'),
+          client: xhr.getResponseHeader('client'),
+          'token-type': 'Bearer'
+        };
+        sessionStorage.setItem('credentials', JSON.stringify(credentials));
+      }
+
+      _fetchCredentials() {
+        let credentials = sessionStorage.getItem('credentials');
+        if (credentials) {
+          return JSON.parse(credentials);
+        }
+        return null;
+      }
+
+      _deleteCredentials() {
+        return sessionStorage.removeItem('credentials');
+      }
+
+      _getResource(rq, attempts) {
+        this._setFailure(false);
+        let xhr = new XMLHttpRequest();
+
+        xhr.addEventListener('load', (e) => {
+          rq.onLoad.call(this, e);
+        });
+
+        xhr.addEventListener('error', (e) => {
+          this._setFailure(true);
+          if (rq.onError) {
+            rq.onError.call(this, e);
+          }
+          else {
+            this._fireMessage('Network failure. Try again.');
+          }
+        });
+
+        xhr.open(rq.method, rq.url);
+
+        let headers = this._fetchCredentials() || {};
+        if (rq.headers) {
+          headers = Object.assign(headers, rq.headers)
+        }
+        for (let header in headers) {
+          if (headers[header]) {
+            xhr.setRequestHeader(header, headers[header].toString());
+          }
+        }
+
+        xhr.send();
+      }
+
+      _getRequestUrl(url, params) {
+        let queryString = this._getQueryString(params);
+        if (queryString) {
+          return BASE_URL + url + '?' + queryString;
+        }
+        return BASE_URL + url;
+      }
+
+      _getQueryString(params) {
+        let queryParts = [];
+
+        for (let param in params) {
+          let value = params[param];
+          param = window.encodeURIComponent(param);
+
+          if (value !== null) {
+            param += '=' + window.encodeURIComponent(value);
+          }
+
+          queryParts.push(param);
+        }
+
+        return queryParts.join('&');
+      }
+    }
+    customElements.define(BnbData.is, BnbData);
+
+  </script>
+
+</dom-module>

@@ -1,0 +1,75 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="bnb-anchor.html">
+<link rel="import" href="bnb-common-styles.html">
+
+<dom-module id="bnb-auth-form">
+  <template>
+    <style include="bnb-common-styles">
+      :host {
+        @apply --layout-fit;
+        @apply --layout-vertical;
+      }
+
+
+      .auth-form {
+        width: 70%;
+        max-width: 380px;
+        margin: 4em auto 1em auto;
+	      @apply --layout-self-center
+      }
+
+      .links {
+        width: 70%;
+        max-width: 380px;
+        margin: 0 auto;
+
+        text-align: center;
+        @apply --layout-self-center
+      }
+
+      .card-content ::slotted(.actions) {
+        position: relative;
+
+        margin: 0;
+        padding: 8px 8px 8px 24px;
+
+        color: var(--paper-dialog-button-color);
+
+        @apply --layout-horizontal;
+        @apply --layout-end-justified;
+      }
+    </style>
+
+    <paper-card id="auth" heading="[[title]]" class="auth-form">
+      <div class="card-content">
+        <slot></slot>
+      </div>
+    </paper-card>
+
+    <div class="links">
+      <div class="layout vertical">
+        <template is="dom-repeat" items="{{buttons}}">
+          <bnb-anchor text="{{item.text}}" path="{{item.path}}"></bnb-anchor>
+        </template>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    class BnbAuthForm extends Polymer.Element {
+      static get is() { return 'bnb-auth-form'; }
+
+      static get properties() {
+        return {
+          title: String,
+          buttons: Array
+        }
+      }
+    }
+
+    window.customElements.define(BnbAuthForm.is, BnbAuthForm);
+  </script>
+
+</dom-module>
