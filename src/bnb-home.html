@@ -19,6 +19,14 @@
   <template>
     <style include="bnb-common-styles">
 
+      bnb-divider {
+        width: 100%;
+      }
+
+      paper-item {
+        cursor: pointer;
+      }
+
       #noData, #loading {
         display: flex;
         width: 100%;
@@ -30,19 +38,62 @@
       }
 
       #withData {
-        padding:24px;
-        @apply --layout-fit;
-        @apply --layout-wrap;
+        display: block;
+        position: relative;
         @apply --layout-horizontal;
-        @apply --layout-center-justified;
+        @apply --layout-center-center;
+        @apply --layout-wrap;
+        margin-top: 10px;
       }
 
-      bnb-divider {
-        width: 100%;
+      #withData > .item {
+        -webkit-flex: 1 calc(25% - 30px);
+        flex: 1 calc(25% - 30px);
+        max-width: calc(25% - 30px);
+        margin: 10px;
+        text-decoration: none;
       }
 
-      paper-item {
-        cursor: pointer;
+      @media (max-width: 1200px) {
+        #withData {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+        #withData > .item {
+          -webkit-flex: 1 calc(33% - 20px);
+          flex: 1 calc(33% - 20px);
+          max-width: calc(33% - 20px);
+          margin: 10px;
+          text-decoration: none;
+        }
+      }
+
+      @media (max-width: 700px) {
+        #withData {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+        #withData > .item {
+          -webkit-flex: 1 calc(50% - 20px);
+          flex: 1 calc(50% - 20px);
+          max-width: calc(50% - 20px);
+          margin: 10px;
+          text-decoration: none;
+        }
+      }
+
+      @media (max-width: 400px) {
+        #withData{
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+        #withData> .item {
+          -webkit-flex: 1 calc(100% - 10px);
+          flex: 1 calc(100% - 10px);
+          max-width: calc(100% - 10px);
+          margin: 5px;
+          text-decoration: none;
+        }
       }
     </style>
 
@@ -72,7 +123,7 @@
         <section id="noData">Don't you dare try the + button in the toolbar !</section>
         <section id="withData">
           <template is="dom-repeat" items="[[pages]]" sort="sortPages">
-            <bnb-page-card page="[[item]]"></bnb-page-card>
+            <bnb-page-card page="[[item]]" class="item"></bnb-page-card>
           </template>
         </section>
       </iron-pages>
@@ -117,7 +168,8 @@
       }
 
       preferencesTapped() {
-        this.dispatchEvent(new CustomEvent('edit-preferences', {bubbles: true, composed: true}));
+        window.history.pushState({}, null, '/user-preferences');
+        window.dispatchEvent(new CustomEvent('location-changed'));
       }
 
       signoutTapped() {

@@ -1,0 +1,148 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-date-picker/app-datepicker-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+
+<dom-module id="bnb-period-dropdown">
+  <template>
+    <style>
+      #startDate, #endDate {
+        cursor: pointer;
+      }
+      paper-menu-button {
+        margin-left: -0.5em;
+        padding: 0;
+      }
+      paper-item {
+        cursor: pointer;
+      }
+    </style>
+
+    <span id="periodSpan">
+      <span id="startDate" on-click="startDateTapped">[[formatDate(period.start)]]</span>
+       -
+     <span id="endDate" on-click="endDateTapped">[[formatDate(period.end)]]</span>
+    </span>
+    <paper-menu-button horizontal-align="right">
+      <paper-icon-button icon="arrow-drop-down" slot="dropdown-trigger"></paper-icon-button>
+      <paper-listbox slot="dropdown-content" attr-for-selected="data-period">
+        <paper-item on-tap="periodTapped" data-period="today">Today</paper-item>
+        <paper-item on-tap="periodTapped" data-period="this_week">This week</paper-item>
+        <paper-item on-tap="periodTapped" data-period="this_month">This&nbsp;month</paper-item>
+        <paper-item on-tap="periodTapped" data-period="yesterday">Yesterday</paper-item>
+        <paper-item on-tap="periodTapped" data-period="last_week">Last week</paper-item>
+        <paper-item on-tap="periodTapped" data-period="last_month">Last month</paper-item>
+        <paper-item on-tap="periodTapped" data-period="last_7_days">Last 7 days</paper-item>
+        <paper-item on-tap="periodTapped" data-period="last_30_days">Last 30 days</paper-item>
+      </paper-listbox>
+    </paper-menu-button>
+
+    <app-datepicker-dialog id="startDlg" date="{{startDate}}" theme="dark-theme" disable-days="[[disabledDays]]">
+    </app-datepicker-dialog>
+    <app-datepicker-dialog id="endDlg" date="{{endDate}}" theme="dark-theme" disable-days="[[disabledDays]]">
+    </app-datepicker-dialog>
+  </template>
+
+  <script>
+    class BnbPeriodDropdown extends Polymer.Element {
+      static get is() { return 'bnb-period-dropdown'; }
+
+      static get properties() {
+        return {
+          period: {
+            type: Object,
+            value: null,
+            notify: true
+          },
+          disabledDays: {
+            type: Array,
+            value: []
+          },
+          startDate: {
+            type: String,
+            observer: '_startDateChanged'
+          },
+          endDate: {
+            type: String,
+            observer: '_endDateChanged'
+          }
+        }
+      }
+
+      periodTapped(e) {
+        let type = e.currentTarget.dataset.period;
+        switch (type) {
+          case 'today':
+            this.period.start = moment().startOf('day').toDate();
+            this.period.end = moment().endOf('day').toDate();
+          break;
+          case 'this_week':
+            this.period.start = moment().startOf('week').toDate();
+            this.period.end = moment().endOf('week').toDate();
+          break;
+          case 'this_month':
+            this.period.start = moment().startOf('month').toDate();
+            this.period.end = moment().endOf('month').toDate();
+          break;
+          case 'yesterday':
+            this.period.start = moment().add(-1, 'days').startOf('day').toDate();
+            this.period.end = moment().add(-1, 'days').endOf('day').toDate();
+          break;
+          case 'last_week':
+            this.period.start = moment().add(-1, 'weeks').startOf('week').toDate();
+            this.period.end = moment().add(-1, 'weeks').endOf('week').toDate();
+          break;
+          case 'last_month':
+            this.period.start = moment().add(-1, 'months').startOf('month').toDate();
+            this.period.end = moment().add(-1, 'months').endOf('month').toDate();
+          break;
+          case 'last_7_days':
+            this.period.start = moment().add(-7, 'days').startOf('day').toDate();
+            this.period.end = moment().endOf('day').toDate();
+          break;
+          case 'last_30_days':
+            this.period.start = moment().add(-30, 'days').startOf('day').toDate();
+            this.period.end = moment().endOf('day').toDate();
+          break;
+        }
+        this.dispatchEvent(new CustomEvent('period-changed', {bubbles: true, composed: true, detail: this.period}));
+        this.notifyPath('period.start', this.period.start);
+        this.notifyPath('period.end', this.period.end);
+      }
+
+      startDateTapped(e) {
+        this.$.startDlg.open();
+      }
+
+      endDateTapped(e) {
+        this.$.endDlg.open();
+      }
+
+      formatDate(date) {
+        return moment(date).format('ll');
+      }
+
+      _startDateChanged(newVal, oldVal) {
+        if (oldVal) {
+          this.period.start = moment(newVal, "YYYY/MM/DD");
+          this.notifyPath('period.start', this.period.start);
+          this.dispatchEvent(new CustomEvent('period-changed', {bubbles: true, composed: true, detail: this.period}));
+        }
+      }
+
+      _endDateChanged(newVal, oldVal) {
+        if (oldVal) {
+          this.period.end = moment(newVal, "YYYY/MM/DD");
+          this.notifyPath('period.end', this.period.end);
+          this.dispatchEvent(new CustomEvent('period-changed', {bubbles: true, composed: true, detail: this.period}));
+        }
+      }
+    }
+    window.customElements.define(BnbPeriodDropdown.is, BnbPeriodDropdown);
+
+  </script>
+</dom-module>

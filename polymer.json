@@ -2,11 +2,16 @@
   "entrypoint": "index.html",
   "shell": "src/bnb-app.html",
   "fragments": [
-    "src/bnb-home.html",
+    "src/bnb-add-page.html",
+    "src/bnb-edit-members.html",
+    "src/bnb-edit-page.html",
     "src/bnb-edit-password.html",
     "src/bnb-forgot-password.html",
+    "src/bnb-home.html",
+    "src/bnb-page.html",
     "src/bnb-signin.html",
     "src/bnb-signup.html",
+    "src/bnb-user-preferences.html",
     "src/lazy-resources.html"
   ],
   "sources": [

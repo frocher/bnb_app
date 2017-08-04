@@ -1,0 +1,257 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+
+<dom-module id="bnb-chart">
+  <template>
+    <link rel="stylesheet" type="text/css" href="../bower_components/nvd3/build/nv.d3.css">
+    <style>
+      :host {
+        display: inline-block;
+      }
+
+      iron-pages {
+        width: 100%;
+        height: 100%;
+      }
+
+      #canvas {
+        position:relative;
+
+        width: 100%;
+        height: 100%;
+      }
+
+      #loading {
+        display: flex;
+
+        width: 100%;
+        height: 100%;
+
+        color: #999;
+
+        font-size: 24px;
+
+        align-items: center;
+        justify-content: center;
+      }
+
+      #canvas > svg {
+        width: 100% !important;
+      }
+
+      #noData {
+        display: flex;
+
+        width: 100%;
+        height: 100%;
+
+        color: #999;
+
+        font-size: 36px;
+
+        align-items: center;
+        justify-content: center;
+      }
+      #noData span {
+        margin-top: -50px;
+      }
+
+      /* Overload nvd3 styles */
+      .nv-x .tick line {
+        display: none;
+      }
+
+      .nv-y .tick line {
+        stroke:#b6b6b6;
+      }
+
+  		.nvd3 text {
+  			fill:#e0e0e0;
+  		}
+    </style>
+
+    <iron-pages selected="[[selectedPage]]">
+      <div id="loading">
+        <span>Loading&nbsp;</span>
+        <paper-spinner active></paper-spinner>
+      </div>
+      <div id="noData"><span>No data</span></div>
+      <div id="canvas"></div>
+    </iron-pages>
+  </template>
+
+  <script src="../bower_components/d3/d3.min.js"></script>
+  <script src="../bower_components/nvd3/build/nv.d3.min.js"></script>
+  <script src="../bower_components/lodash/lodash.min.js"></script>
+
+  <script>
+    class BnbChart extends Polymer.mixinBehaviors([Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'bnb-chart'; }
+
+      static get properties() {
+        return {
+          chart: {
+            notify: true
+          },
+          data: {
+            type: Object,
+            value: function () {
+              return null;
+            }
+          },
+          model: {
+            type: Array,
+            value: function () {
+              return [];
+            }
+          },
+          symbol: {
+            type: String,
+            value: ''
+          },
+          stacked: {
+            type: Boolean,
+            value: false
+          },
+          selectedPage: {
+            type: Number,
+            value: 0
+          }
+        }
+      }
+
+      static get observers() {
+        return [
+          'updateChart(data.*)'
+        ];
+      }
+
+      ready() {
+        super.ready();
+        this.addEventListener('iron-resize', this.onIronResize);
+      }
+
+      onIronResize() {
+        if (this.chart) {
+          this.chart.update();
+        }
+      }
+
+      updateChart() {
+        if (this.data) {
+          if (this.hasValues(this.data)) {
+            this.selectedPage = 2;
+          }
+          else {
+            this.selectedPage = 1;
+          }
+        }
+        else {
+          this.selectedPage = 0;
+        }
+
+        if (this.data && this.hasValues(this.data)) {
+          let chartData = this.createChartData();
+
+          if (this.chart) {
+            if (!_.isEqual(this.oldData, this.data)) {
+              var lines = d3.select(this.$.canvas).selectAll("svg");
+              this.updateChartTickFormat(this.chart, chartData);
+              lines.datum(chartData).transition().duration(500).call(this.chart);
+
+              this.oldData = this.data;
+            }
+          }
+          else {
+            if (this.stacked) {
+              this.chart = nv.models.stackedAreaChart();
+              this.chart.showControls(false);
+            }
+            else {
+              this.chart = nv.models.lineChart();
+              this.chart.forceY([0]);
+            }
+            this.chart.margin({left: 40, right: 10});
+            this.chart.useInteractiveGuideline(true);
+            this.chart.duration(500);
+
+            this.chart.showLegend(true);
+            this.updateChartTickFormat(this.chart, chartData);
+            this.chart.xAxis.showMaxMin(false);
+
+            this.chart.yAxis.tickFormat(d3.format(this.symbol + ',.0'));
+            this.chart.yAxis.showMaxMin(false);
+            this.chart.yAxis.ticks(5);
+
+            d3.select(this.$.canvas).append('svg')
+              .datum(chartData)
+              .call(this.chart);
+              nv.utils.windowResize(this.chart.update);
+          }
+        }
+
+        // Apply svg styles
+        this.scopeSubtree(this.$.canvas, true);
+      }
+
+      hasValues(data) {
+        let resu = false;
+        for (let i = 0; i < data.length && !resu; i++) {
+          resu = data[i].values.length > 0;
+        }
+        return resu;
+      }
+
+      createChartData() {
+        let resu = [];
+        for (let i = 0; i < this.model.length; i++) {
+          let serie = {};
+          serie.key = this.model[i].label;
+          serie.color = this.model[i].color;
+          serie.fillOpacity = 0.2;
+          serie.area = true;
+          serie.values = this.createValues(this.model[i].name);
+          resu.push(serie);
+        }
+        return resu;
+      }
+
+      updateChartTickFormat(chart, data) {
+        let tickFormat = this.computeTickFormat(data);
+        chart.xAxis.tickFormat(function(d) {
+          return d3.time.format(tickFormat)(new Date(d));
+        });
+      }
+
+      createValues(key) {
+        let item = _.find(this.data, function(i) { return i.key === key; });
+    		let resu = [];
+        if (item) {
+      		for (let i = 0; i < item.values.length; i++) {
+      			let time = new Date(item.values[i].time);
+      			resu.push( {x: time, y: item.values[i].value});
+      		}
+        }
+    		return resu;
+    	}
+
+      computeTickFormat(chartData) {
+        let resu = '%x';
+        if (chartData.length > 0) {
+          let serie = chartData[0];
+          let first = serie.values[0].x;
+          let last  = serie.values[serie.values.length-1].x;
+          if ( (last - first) < (7*24*60*60*1000)) {
+            resu = '%x %H:%M';
+          }
+        }
+        return resu;
+      }
+    }
+    window.customElements.define(BnbChart.is, BnbChart);
+
+  </script>
+
+</dom-module>

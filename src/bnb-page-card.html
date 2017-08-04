@@ -1,0 +1,113 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="bnb-data.html">
+
+<dom-module id="bnb-page-card">
+
+  <template>
+    <style>
+      paper-card {
+        display: block;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+
+      .card-content h2 {
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .card-content a {
+        display: block;
+        color: #9e9e9e;
+        text-decoration: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .card-content a:hover {
+        text-decoration: underline;
+      }
+
+      .hurt {
+        position:absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left:0;
+
+        -webkit-animation: pulse 5s infinite;
+        animation: pulse 5s infinite;
+
+        opacity: 1;
+        background-color: red;
+      }
+
+      @-webkit-keyframes pulse {
+        0% {opacity: 0}
+        50% {opacity: 0.3}
+        100% {opacity: 0}
+      }
+
+      @keyframes pulse {
+        0% {opacity: 0}
+        50% {opacity: 0.3}
+        100% {opacity: 0}
+      }
+    </style>
+
+    <paper-card image="[[_computeScreenshotUrl(page)]]" animated="true" on-tap="cardTapped">
+      <div class="card-content">
+        <h2>[[page.name]]</h2>
+        <a href="#" on-tap="urlTapped" title="Open url in a new tab">[[page.url]]</a>
+      </div>
+      <paper-ripple></paper-ripple>
+
+    </paper-card>
+
+  </template>
+
+  <script>
+
+    class BnbPageCard extends Polymer.Element {
+      static get is() { return 'bnb-page-card'; }
+
+      static get properties() {
+        return {
+          page: {
+            type: Object,
+            value: null
+          }
+        }
+      }
+
+      cardTapped(e) {
+        window.history.pushState({}, null, '/page/' + this.page.id);
+        window.dispatchEvent(new CustomEvent('location-changed'));
+      }
+
+      urlTapped(e) {
+        window.open(this.page.url, '_blank');
+        e.stopPropagation();
+      }
+
+      _computeScreenshotUrl(item) {
+        return BnbData.baseUrl + 'pages/' + item.id + '/screenshot?style=thumb';
+      }
+
+      _computeHurt(item) {
+        if (item.uptime_status === 0) {
+          return 'hurt';
+        }
+        return '';
+      }
+    }
+    window.customElements.define(BnbPageCard.is, BnbPageCard);
+  </script>
+
+</dom-module>

@@ -1,0 +1,218 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-layout.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="bnb-data.html">
+
+<dom-module id="bnb-edit-members">
+  <template>
+    <style>
+      h3 {
+        color: var(--secondary-text-color);
+      }
+
+      vaadin-grid {
+        --vaadin-grid-header-cell: {
+          height: 48px;
+          color: rgba(0, 0, 0, var(--dark-secondary-opacity));
+          font-size: 14px;
+        };
+
+        --vaadin-grid-body-cell: {
+          height: 48px;
+          color: rgba(0, 0, 0, var(--dark-primary-opacity));
+          font-size: 13px;
+        };
+
+        --vaadin-grid-body-row-hover-cell: {
+          background-color: var(--paper-grey-200);
+        };
+
+        --vaadin-grid-body-row-selected-cell: {
+          background-color: var(--paper-grey-100);
+        };
+      }
+
+      #content {
+        @apply --layout-horizontal;
+        @apply --layout-center-justified;
+      }
+
+      #container {
+        width: 100%;
+        max-width: 1000px;
+        padding: 10px 22px 10px 22px;
+      }
+
+      #email {
+        min-width: 200px;
+        margin-right: 16px;
+      }
+
+      #members {
+        max-height: 400px;
+      }
+    </style>
+    <bnb-data id="data" page="{{page}}"></bnb-data>
+    <app-header-layout fullbleed>
+      <app-header slot="header" fixed condenses shadow>
+        <app-toolbar>
+          <paper-icon-button icon="arrow-back" on-tap="closeTapped"></paper-icon-button>
+          <span class="title">Members</span>
+        </app-toolbar>
+      </app-header>
+      <div id="content">
+        <div id="container">
+          <div class="layout horizontal wrap end">
+            <paper-input id="email" class="flex" label="E-mail" on-input="emailChanged" required="true" error-message="You should enter a valid email address"></paper-input>
+            <paper-dropdown-menu id="roleMenu" label="Role" required="true" error-message="You should select a role">
+              <paper-listbox id="role" slot="dropdown-content" attr-for-selected="role">
+                <paper-item role="admin">Administrator</paper-item>
+                <paper-item role="master">Master</paper-item>
+                <paper-item role="editor">Editor</paper-item>
+                <paper-item role="guest">Guest</paper-item>
+              </paper-listbox>
+            </paper-dropdown-menu>
+
+            <iron-pages id="buttons" selected="0">
+              <section>
+                <paper-button id="addBtn" hidden$="[[!page.can_add_member]]" on-tap="addTapped">Add</paper-button>
+              </section>
+              <section>
+                <paper-button id="updateBtn" hidden$="[[!page.can_update_member]]" on-tap="updateTapped">Update</paper-button>
+                <paper-button id="removeBtn" hidden$="[[!page.can_remove_member]]" on-tap="removeTapped">Remove</paper-button>
+              </section>
+            </iron-pages>
+          </div>
+
+          <h3>Members</h3>
+          <vaadin-grid id="members" items="[[_computeMembers(page.members)]]" active-item="{{activeMember}}">
+            <vaadin-grid-column>
+              <template class="header">Name</template>
+              <template>
+                <div>[[item.username]]</div>
+              </template>
+            </vaadin-grid-column>
+            <vaadin-grid-column>
+              <template class="header">Email</template>
+              <template>
+                <div>[[item.email]]</div>
+              </template>
+            </vaadin-grid-column>
+            <vaadin-grid-column>
+              <template class="header">Role</template>
+              <template>
+                <div>[[item.role]]</div>
+              </template>
+            </vaadin-grid-column>
+          </vaadin-grid>
+        </div>
+      </div>
+    </app-header-layout>
+  </template>
+
+  <script src="../bower_components/lodash/lodash.min.js"></script>
+  <script>
+    class BnbEditMembers extends Polymer.mixinBehaviors([Polymer.NeonAnimatableBehavior, Polymer.IronResizableBehavior], Polymer.Element) {
+      static get is() { return 'bnb-edit-members'; }
+
+      static get properties() {
+        return {
+          page: Object,
+          target: Object,
+          activeMember: {
+            observer: '_activeMemberChanged'
+          }
+        }
+      }
+
+      ready() {
+        super.ready();
+        this.target = this.$.content;
+        this.addEventListener('create_page_member_error', e => {this._handleError(e.detail)})
+        this.addEventListener('update_page_member_error', e => {this._handleError(e.detail)})
+        this.addEventListener('delete_page_member_error', e => {this._handleError(e.detail)})
+
+      }
+
+      closeTapped() {
+        this.closePage();
+      }
+
+      closePage() {
+        this.$.email.invalid = false;
+        window.history.pushState({}, null, '/page/' + this.page.id);
+        window.dispatchEvent(new CustomEvent('location-changed'));
+      }
+
+      emailChanged() {
+        let value = this.$.email.value;
+        let member = _.find(this.page.members, function(o) { return o.email === value; });
+        if (member == undefined) {
+          this.$.buttons.selected = 0;
+        }
+        else {
+          this.$.buttons.selected = 1;
+        }
+      }
+
+      addTapped() {
+        if (this.validateInputs()) {
+          let email = this.$.email.value;
+          let role = this.$.role.selected;
+          this.$.data.createPageMember(this.page, {email: email, role:role});
+        }
+      }
+
+      updateTapped() {
+        if (this.validateInputs()) {
+          let email = this.$.email.value;
+          let role = this.$.role.selected;
+          let member = _.find(this.page.members, function(o) { return o.email === email; });
+          this.$.data.updatePageMember(this.page, {id: member.id, email: email, role:role});
+        }
+      }
+
+      removeTapped() {
+        if (this.validateInputs()) {
+          let email = this.$.email.value;
+          let member = _.find(this.page.members, function(o) { return o.email === email; });
+          this.$.data.deletePageMember(this.page, member.id);
+        }
+      }
+
+      validateInputs() {
+        let emailOK = this.$.email.validate();
+        let roleOK = this.$.roleMenu.validate();
+        return emailOK && roleOK;
+      }
+
+      _activeMemberChanged(item) {
+        this.$.members.selectedItems = item ? [item] : [];
+        if (item) {
+          this.$.email.value = item.email;
+          this.$.role.selected = item.role;
+          this.emailChanged();
+        }
+      }
+
+      _computeMembers(members) {
+        return members || [];
+      }
+
+      _handleError(detail) {
+        this.dispatchEvent(new CustomEvent('message', {bubbles: true, composed: true, detail: detail.message}));        
+      }
+    }
+    customElements.define(BnbEditMembers.is, BnbEditMembers);
+
+  </script>
+
+</dom-module>

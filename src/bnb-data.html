@@ -7,14 +7,15 @@
   </template>
 
   <script>
-    const BASE_URL = "http://localhost:3000/";
-
     class BnbData extends Polymer.Element {
-
       static get is() { return 'bnb-data'; }
+
+      static get baseUrl() { return 'http://localhost:3000/'; }
 
       static get properties() {
         return {
+          analyticsKey: String,
+
           user: {
             type: Object,
             value: () => undefined,
@@ -25,6 +26,13 @@
             type: Array,
             notify: true
           },
+
+          page: {
+            type: Object,
+            notify: true
+          },
+
+          period: Object,
 
           offline: Boolean,
 
@@ -46,6 +54,24 @@
         return sessionStorage.getItem('credentials') !== null;
       }
 
+      loadEnvironment() {
+        this._getResource({
+          url: this._getRequestUrl('/environment', {}),
+          method: 'GET',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this.analyticsKey = response.GOOGLE_ANALYTICS_KEY;
+              this.dispatchEvent(new CustomEvent('load_environment_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this._fireError(response.errors);
+              this.dispatchEvent(new CustomEvent('load_environment_error', {bubbles: true, composed: true, detail: response.errors}));
+            }
+          }
+        });
+      }
+
       signin(email, password) {
         let url = this._getRequestUrl('/auth/sign_in', {email: email, password: password});
 
@@ -54,8 +80,7 @@
           method: 'POST',
           onLoad(e) {
             let response = JSON.parse(e.target.responseText);
-            let status = e.target.status;
-            if (status === 200) {
+            if (e.target.status === 200) {
               this._storeCredentials(e.target);
               this.user = response.data;
               this.dispatchEvent(new CustomEvent('signedin', {bubbles: true, composed: true, detail: response.data}));
@@ -86,8 +111,7 @@
           method: 'POST',
           onLoad(e) {
             let response = JSON.parse(e.target.responseText);
-            let status = e.target.status;
-            if (status === 200) {
+            if (e.target.status === 200) {
               this._fireMessage('Sign up successful. An activation email has been sent to you.');
             }
             else {
@@ -113,8 +137,7 @@
           method: 'POST',
           onLoad(e) {
             let response = JSON.parse(e.target.responseText);
-            let status = e.target.status;
-            if (status === 200) {
+            if (e.target.status === 200) {
               this._fireMessage(response.message);
             }
             else {
@@ -136,8 +159,7 @@
           headers: headers,
           onLoad(e) {
             let response = JSON.parse(e.target.responseText);
-            let status = e.target.status;
-            if (status === 200) {
+            if (e.target.status === 200) {
               this._fireMessage(response.message);
               this.dispatchEvent(new CustomEvent('update_password_success', {bubbles: true, composed: true, detail: response}));
             }
@@ -149,22 +171,242 @@
       }
 
       loadPages() {
-        let url = this._getRequestUrl('/pages', {
-          per_page:9999
-        });
         this._getResource({
-          url: url,
+          url: this._getRequestUrl('/pages', {per_page:9999}),
           method: 'GET',
           onLoad(e) {
             let response = JSON.parse(e.target.responseText);
             if (e.target.status === 200) {
               this.pages = response;
+              this.dispatchEvent(new CustomEvent('load_pages_success', {bubbles: true, composed: true, detail: response}));
             }
             else {
               this._fireError(response.errors);
+              this.dispatchEvent(new CustomEvent('load_pages_error', {bubbles: true, composed: true, detail: response.errors}));
             }
           }
         });
+      }
+
+      loadPage(id, opts) {
+        this._getResource({
+          url: this._getRequestUrl('/pages/' + id, {}),
+          method: 'GET',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this.page = response;
+              if (opts.withMeasures) {
+                this.loadPageMeasures(this.page);
+              }
+              if (opts.withMembers) {
+                this.loadPageMembers(this.page);
+              }
+              this.dispatchEvent(new CustomEvent('load_page_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this._fireError(response.errors);
+              this.dispatchEvent(new CustomEvent('load_page_error', {bubbles: true, composed: true, detail: response.errors}));
+            }
+          }
+        });
+      }
+
+      loadPageMembers(page) {
+        this._getResource({
+          url: this._getRequestUrl('/pages/' + page.id + '/members', {}),
+          method: 'GET',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              page.members = response;
+              this.notifyPath('page.members', this.page.members);
+              this.dispatchEvent(new CustomEvent('load_page_members_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this._fireError(response.errors);
+              this.dispatchEvent(new CustomEvent('load_page_members_error', {bubbles: true, composed: true, detail: response.errors}));
+            }
+          }
+        });
+      }
+
+      loadPageMeasures(page) {
+        let start = this.period.start;
+        let end   = this.period.end;
+
+        this._getResource({
+          url: this._getRequestUrl('/pages/' + page.id + '/stats', {start: start, end: end}),
+          method: 'GET',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this._updateUptime(response.uptime[0]);
+              this._updateCount(response.performance.desktop);
+              this._updateCount(response.performance.mobile);
+              this._updateBytes(response.bytes.desktop);
+              this._updateBytes(response.bytes.mobile);
+              this._updateCount(response.requests.desktop);
+              this._updateCount(response.requests.mobile);
+
+              this.page.stats = response;
+              this.notifyPath('page.stats', this.page.stats);
+              this.dispatchEvent(new CustomEvent('load_page_measures_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this._fireError(response.errors);
+              this.dispatchEvent(new CustomEvent('load_page_measures_error', {bubbles: true, composed: true, detail: response.errors}));
+            }
+          }
+        });
+      }
+
+      createPage(name, url) {
+        this._getResource({
+          url: this._getRequestUrl('/pages', { name: name, url: url }),
+          method: 'POST',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this._fireMessage('Page created');
+              this.dispatchEvent(new CustomEvent('create_page_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this.dispatchEvent(new CustomEvent('create_page_error', {bubbles: true, composed: true, detail: response.errors}));
+            }
+          }
+        });
+      }
+
+      updatePage(id, page) {
+        this._getResource({
+          url: this._getRequestUrl('/pages/' + id, page),
+          method: 'PUT',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this.set('page', response);
+              this._fireMessage('Page has been updated');
+              this.dispatchEvent(new CustomEvent('update_page_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this.dispatchEvent(new CustomEvent('update_page_error', {bubbles: true, composed: true, detail: response.errors}));
+            }
+          }
+        });
+      }
+
+      createPageMember(page, member) {
+        this._getResource({
+          url: this._getRequestUrl('/pages/' + page.id + '/members', member),
+          method: 'POST',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this.loadPageMembers(page);
+              this.dispatchEvent(new CustomEvent('create_page_member_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this.dispatchEvent(new CustomEvent('create_page_member_error', {bubbles: true, composed: true, detail: response}));
+            }
+          }
+        });
+      }
+
+      updatePageMember(page, member) {
+        this._getResource({
+          url: this._getRequestUrl('/pages/' + page.id + '/members/'  + member.id, member),
+          method: 'PUT',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this.loadPageMembers(page);
+              this.dispatchEvent(new CustomEvent('update_page_member_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this.dispatchEvent(new CustomEvent('update_page_member_error', {bubbles: true, composed: true, detail: response}));
+            }
+          }
+        });
+      }
+
+      deletePageMember(page, memberId) {
+        this._getResource({
+          url: this._getRequestUrl('/pages/' + page.id + '/members/' + memberId, {}),
+          method: 'DELETE',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this.loadPageMembers(page);
+              this.dispatchEvent(new CustomEvent('delete_page_member_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this.dispatchEvent(new CustomEvent('delete_page_member_error', {bubbles: true, composed: true, detail: response}));
+            }
+          }
+        });
+      }
+
+      loadUser() {
+        this._getResource({
+          url: this._getRequestUrl('/users/-1', {}),
+          method: 'GET',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this.user = response;
+              this.dispatchEvent(new CustomEvent('load_user_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this.fireError(response.errors);
+              this.dispatchEvent(new CustomEvent('load_user_error', {bubbles: true, composed: true, detail: response.errors}));
+            }
+          }
+        });
+      }
+
+      updateUser(id, user) {
+        this._getResource({
+          url: this._getRequestUrl('/users/' + id, user),
+          method: 'PUT',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this._fireMessage('User preferences have been updated');
+              this.dispatchEvent(new CustomEvent('update_user_success', {bubbles: true, composed: true, detail: response}));
+            }
+            else {
+              this.dispatchEvent(new CustomEvent('update_user_error', {bubbles: true, composed: true, detail: response.errors}));
+            }
+          }
+        });
+      }
+
+      _updateUptime(data) {
+        data.summary = Math.round(data.summary * 10000) / 100;
+        for (let i = 0; i < data.values.length; i++) {
+          data.values[i].value = Math.round(data.values[i].value * 10000) / 100;
+        }
+      }
+
+      _updateCount(data) {
+        for (let iSeries = 0; iSeries < data.length; iSeries++) {
+          let serie = data[iSeries];
+          serie.summary = Math.round(serie.summary);
+          for (let iValue = 0; iValue < serie.values.length; iValue++) {
+            serie.values[iValue].value = Math.round(serie.values[iValue].value);
+          }
+        }
+      }
+
+      _updateBytes(data) {
+        for (let iSeries = 0; iSeries < data.length; iSeries++) {
+          let serie = data[iSeries];
+          serie.summary = Math.round(serie.summary*10/1024)/10;
+          for (let iValue = 0; iValue < serie.values.length; iValue++) {
+            serie.values[iValue].value = Math.round(serie.values[iValue].value*10/1024)/10;
+          }
+        }
       }
 
       _fireError(errors) {
@@ -234,9 +476,9 @@
       _getRequestUrl(url, params) {
         let queryString = this._getQueryString(params);
         if (queryString) {
-          return BASE_URL + url + '?' + queryString;
+          return BnbData.baseUrl + url + '?' + queryString;
         }
-        return BASE_URL + url;
+        return BnbData.baseUrl + url;
       }
 
       _getQueryString(params) {
