@@ -1,7 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animation.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="bnb-analytics.html">
 <link rel="import" href="bnb-common-styles.html">
@@ -58,7 +58,7 @@
     <bnb-data id="data" analyticsKey="{{analyticsKey}}" pages="{{pages}}" page="{{page}}" period="{{period}}" user="{{user}}">
     </bnb-data>
 
-    <neon-animated-pages class="view" selected="[[view]]" attr-for-selected="name" selected-attribute="visible">
+    <iron-pages class="view" selected="[[view]]" attr-for-selected="name" selected-attribute="visible">
       <bnb-add-page         name="add-page"         class="view"></bnb-add-page>
       <bnb-home             name="home"             class="view" period="{{period}}" pages="{{pages}}"></bnb-home>
       <bnb-edit-members     name="edit-members"     class="view" page="{{page}}"></bnb-edit-members>
@@ -69,7 +69,7 @@
       <bnb-signin           name="signin"           class="view"></bnb-signin>
       <bnb-signup           name="signup"           class="view"></bnb-signup>
       <bnb-user-preferences name="user-preferences" class="view" user="{{user}}"></bnb-user-preferences>
-    </neon-animated-pages>
+    </iron-pages>
 
     <paper-toast id="message-toast"></paper-toast>
   </template>

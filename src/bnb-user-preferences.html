@@ -3,7 +3,6 @@
 <link rel="import" href="../bower_components/iron-a11y-keys/iron-a11y-keys.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/social-icons.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
@@ -64,7 +63,7 @@
   </template>
 
   <script>
-    class BnbUserPreferences extends Polymer.mixinBehaviors([Polymer.NeonAnimatableBehavior, Polymer.IronResizableBehavior], Polymer.Element) {
+    class BnbUserPreferences extends Polymer.Element {
       static get is() { return 'bnb-user-preferences'; }
       static get properties() {
         return {

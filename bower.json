@@ -17,7 +17,6 @@
     "iron-resizable-behavior": "polymerelements/iron-resizable-behavior#^2.0.0",
     "lodash": "lodash#^4.17.0",
     "moment": "moment#^2.18.0",
-    "neon-animation": "polymerelements/neon-animation#^2.0.0",
     "nvd3": "nvd3#^1.8.0",
     "paper-button": "polymerelements/paper-button#^2.0.0",
     "paper-card": "polymerelements/paper-card#^2.0.0",

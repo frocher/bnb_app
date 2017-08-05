@@ -1,7 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-layout/app-layout.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../bower_components/neon-animation/neon-animatable.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -120,7 +119,7 @@
 
   <script src="../bower_components/lodash/lodash.min.js"></script>
   <script>
-    class BnbEditMembers extends Polymer.mixinBehaviors([Polymer.NeonAnimatableBehavior, Polymer.IronResizableBehavior], Polymer.Element) {
+    class BnbEditMembers extends Polymer.Element {
       static get is() { return 'bnb-edit-members'; }
 
       static get properties() {
@@ -208,7 +207,7 @@
       }
 
       _handleError(detail) {
-        this.dispatchEvent(new CustomEvent('message', {bubbles: true, composed: true, detail: detail.message}));        
+        this.dispatchEvent(new CustomEvent('message', {bubbles: true, composed: true, detail: detail.message}));
       }
     }
     customElements.define(BnbEditMembers.is, BnbEditMembers);
