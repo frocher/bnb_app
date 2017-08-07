@@ -54,7 +54,7 @@
       ready() {
         super.ready();
         this.target = this.$['signin-form'];
-        this.signinButtons = [{text:'Sign up', path:'signup'}, {text:'Forgot your password', path:'forgot-password'}];
+        this.signinButtons = [{text:'Sign up', path:'/signup'}, {text:'Forgot your password', path:'/forgot-password'}];
         this.addEventListener('signedin', e => {this._handleSignedIn()})
       }
 

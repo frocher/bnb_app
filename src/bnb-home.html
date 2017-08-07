@@ -135,7 +135,10 @@
 
       static get properties() {
         return {
-          pages: Array,
+          pages: {
+            type: Array,
+            value: null
+          },
           period: Object
         }
       }

@@ -1,16 +1,12 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
-<link rel="import" href="../bower_components/app-storage/app-localstorage/app-localstorage-document.html">
 
 <dom-module id="bnb-data">
-  <template>
-    <app-localstorage-document key="bnb-data" data="{{user}}"></app-localstorage-document>
-  </template>
-
   <script>
     class BnbData extends Polymer.Element {
       static get is() { return 'bnb-data'; }
 
       static get baseUrl() { return 'http://localhost:3000/'; }
+      //static get baseUrl() { return '/api/'; }
 
       static get properties() {
         return {

@@ -95,9 +95,7 @@
 
           pages: {
             type: Array,
-            value: function() {
-              return [];
-            }
+            value: null
           },
 
           page: {
@@ -125,11 +123,12 @@
 
       ready() {
         super.ready();
+        this.removeAttribute('unresolved');
         this.$.data.loadEnvironment();
-        this.addEventListener('message', e => {this._handleMessage(e)})
-        this.addEventListener('signedin', e => {this._handleSignedIn()})
-        this.addEventListener('signedout', e => {this._handleSignedOut()})
-        this.addEventListener('period-changed', e => {this._handlePeriodChanged()})
+        this.addEventListener('message', e => {this._handleMessage(e)});
+        this.addEventListener('signedin', e => {this._handleSignedIn()});
+        this.addEventListener('signedout', e => {this._handleSignedOut()});
+        this.addEventListener('period-changed', e => {this._handlePeriodChanged()});
       }
 
       _routeViewChanged(view) {
@@ -204,7 +203,7 @@
              this.loadComplete = true;
              // Load pre-caching Service Worker
              if ('serviceWorker' in navigator) {
-               navigator.serviceWorker.register('/service-worker.js');
+               navigator.serviceWorker.register('service-worker.js');
              }
            });
          });
