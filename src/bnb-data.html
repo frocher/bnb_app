@@ -5,8 +5,12 @@
     class BnbData extends Polymer.Element {
       static get is() { return 'bnb-data'; }
 
-      static get baseUrl() { return 'http://localhost:3000/'; }
-      //static get baseUrl() { return '/api/'; }
+      static get baseUrl() {
+        if (window.location.hostname === 'localhost') {
+          return 'http://localhost:3000/';
+        }
+        return '/api/';
+      }
 
       static get properties() {
         return {
