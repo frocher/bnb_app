@@ -2,11 +2,11 @@
 <link rel="import" href="../bower_components/iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="bnb-chart-styles.html">
 
 <dom-module id="bnb-chart">
   <template>
-    <link rel="stylesheet" type="text/css" href="../bower_components/nvd3/build/nv.d3.css">
-    <style>
+    <style include="bnb-chart-styles">
       :host {
         display: inline-block;
       }
@@ -57,19 +57,6 @@
       #noData span {
         margin-top: -50px;
       }
-
-      /* Overload nvd3 styles */
-      .nv-x .tick line {
-        display: none;
-      }
-
-      .nv-y .tick line {
-        stroke:#b6b6b6;
-      }
-
-  		.nvd3 text {
-  			fill:#e0e0e0;
-  		}
     </style>
 
     <iron-pages selected="[[selectedPage]]">
