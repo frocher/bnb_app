@@ -11,9 +11,9 @@
 <link rel="import" href="../bower_components/paper-radio-button/paper-radio-button.html">
 <link rel="import" href="../bower_components/paper-radio-group/paper-radio-group.html">
 <link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="bnb-actions.html">
 <link rel="import" href="bnb-collapse.html">
 <link rel="import" href="bnb-common-styles.html">
-<link rel="import" href="bnb-data.html">
 <link rel="import" href="bnb-divider.html">
 
 <dom-module id="bnb-edit-page">
@@ -48,7 +48,6 @@
 
     <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="saveTapped">
     </iron-a11y-keys>
-    <bnb-data id="data" page="{{page}}"></bnb-data>
     <app-header-layout fullbleed>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
@@ -98,14 +97,19 @@
   </template>
 
   <script>
-    class BnbEditPage extends Polymer.Element {
+    class BnbEditPage extends BnbActions(Polymer.Element) {
       static get is() { return 'bnb-edit-page'; }
 
       static get properties() {
         return {
           page: {
             type: Object,
-            notify: true
+            statePath: 'page'
+          },
+          errors: {
+            type: Object,
+            statePath: 'errors',
+            observer: '_errorsChanged'
           },
           target: Object
         }
@@ -114,9 +118,6 @@
       ready() {
         super.ready();
         this.target = this.$.content;
-        this.addEventListener('update_page_success', e => {this.handleSuccess(e.detail)})
-        this.addEventListener('update_page_error', e => {this.handleError(e.detail)})
-
       }
 
       closeTapped() {
@@ -130,11 +131,11 @@
 
       closePage() {
         this.validateFields();
-        window.history.pushState({}, null, '/page/' + this.page.id);
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.dispatch('updateRoute', 'page/' + this.page.id);
       }
 
       saveTapped() {
+        this.validateFields();
         let page = {
           name: this.$['name'].value,
           url: this.$['url'].value,
@@ -145,8 +146,7 @@
           slack_webhook: this.$.slack_webhook.value,
           slack_channel: this.$.slack_channel.value
         }
-
-        this.$.data.updatePage(this.page.id, page);
+        this.updatePage(this.page.id, page);
       }
 
       validateFields() {
@@ -156,28 +156,6 @@
         this.$.slack_webhook.invalid = false;
         this.$.slack_channel.invalid = false;
       }
-
-      handleSuccess(data) {
-        this.closePage();
-      }
-
-      handleError(errors) {
-        if (errors === null) {
-          this.dispatchEvent(new CustomEvent('message', {bubbles: true, composed: true, detail: "Error : can't save page"}));
-        }
-        else {
-          for (let prop in errors) {
-            if (errors.hasOwnProperty(prop)) {
-              let objId = prop;
-              if (this.$[objId] !== undefined) {
-                this.$[objId].invalid = true;
-                this.$[objId].errorMessage = errors[prop][0];
-              }
-            }
-          }
-        }
-      }
-
     }
 
     window.customElements.define(BnbEditPage.is, BnbEditPage);

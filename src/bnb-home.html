@@ -3,13 +3,14 @@
 <link rel="import" href="../bower_components/app-layout/app-layout.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-list-box/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
 <link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="bnb-actions.html">
 <link rel="import" href="bnb-common-styles.html">
-<link rel="import" href="bnb-data.html">
 <link rel="import" href="bnb-divider.html">
 <link rel="import" href="bnb-page-card.html">
 
@@ -95,8 +96,6 @@
       }
     </style>
 
-    <bnb-data id="data"></bnb-data>
-
     <app-header-layout fullbleed>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
@@ -130,14 +129,14 @@
   </template>
   <script>
 
-    class BnbHome extends Polymer.Element {
+    class BnbHome extends BnbActions(Polymer.Element) {
       static get is() { return 'bnb-home'; }
 
       static get properties() {
         return {
           pages: {
             type: Array,
-            value: null
+            statePath: 'pages'
           },
           period: Object
         }
@@ -164,17 +163,15 @@
       }
 
       addTapped() {
-        window.history.pushState({}, null, '/add-page');
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.dispatch('updateRoute', 'add-page');
       }
 
       preferencesTapped() {
-        window.history.pushState({}, null, '/user-preferences');
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.dispatch('updateRoute', 'user-preferences');
       }
 
       signoutTapped() {
-        this.$.data.signout();
+        this.signout();
       }
     }
 

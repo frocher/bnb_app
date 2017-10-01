@@ -6,9 +6,9 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="bnb-actions.html">
 <link rel="import" href="bnb-collapse.html">
 <link rel="import" href="bnb-common-styles.html">
-<link rel="import" href="bnb-data.html">
 <link rel="import" href="bnb-divider.html">
 
 <dom-module id="bnb-user-preferences">
@@ -33,7 +33,6 @@
 
     <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="saveTapped">
     </iron-a11y-keys>
-    <bnb-data id="data"></bnb-data>
     <app-header-layout fullbleed>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
@@ -63,11 +62,21 @@
   </template>
 
   <script>
-    class BnbUserPreferences extends Polymer.Element {
+    class BnbUserPreferences extends BnbActions(Polymer.Element) {
       static get is() { return 'bnb-user-preferences'; }
       static get properties() {
         return {
-          user: Object,
+          user: {
+            type: Object,
+            statePath: 'user'
+          },
+
+          errors: {
+            type: Object,
+            statePath: 'errors',
+            observer: '_errorsChanged'
+          },
+
           target: Object
         }
       }
@@ -75,9 +84,6 @@
       ready() {
         super.ready();
         this.target = this.$.content;
-        this.addEventListener('update_user_success', e => {this.handleSuccess(e.detail)})
-        this.addEventListener('update_user_error', e => {this.handleError(e.detail)})
-
       }
 
       closeTapped() {
@@ -91,8 +97,7 @@
 
       closePage() {
         this.$['name'].invalid = false;
-        window.history.pushState({}, null, '/home');
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.dispatch('updateRoute', 'home');
       }
 
       saveTapped() {
@@ -102,29 +107,7 @@
           name: this.$['name'].value
         }
 
-        this.$.data.updateUser(this.user.id, user);
-      }
-
-      handleSuccess(data) {
-        this.user = data;
-        this.closePage();
-      }
-
-      handleError(errors) {
-        if (errors === null) {
-          this.dispatchEvent(new CustomEvent('message', {bubbles: true, composed: true, detail: 'Error : can\'t save user preferences'}));
-        }
-        else {
-          for (let prop in errors) {
-            if (errors.hasOwnProperty(prop)) {
-              let objId = prop;
-              if (this.$[objId] !== undefined) {
-                this.$[objId].invalid = true;
-                this.$[objId].errorMessage = errors[prop][0];
-              }
-            }
-          }
-        }
+        this.updateUser(this.user.id, user);
       }
     }
 

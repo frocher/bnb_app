@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="bnb-actions.html">
 <link rel="import" href="bnb-common-styles.html">
 <link rel="import" href="bnb-divider.html">
 <link rel="import" href="bnb-icons.html">
@@ -43,7 +44,6 @@
         background-color: var(--paper-red-500);
       }
     </style>
-
     <div class="layout vertical center-justified">
 
       <div class="title layout horizontal center-justified center">
@@ -69,7 +69,7 @@
   </template>
 
   <script>
-    class BnbOAuth extends Polymer.Element {
+    class BnbOAuth extends BnbActions(Polymer.Element) {
       static get is() { return 'bnb-oauth'; }
 
       facebookTapped() {
@@ -86,7 +86,7 @@
 
       _callService(service) {
         var origin = window.location.protocol + '//' + window.location.host + window.location.pathname;
-        url = BnbService.BASE_URL + 'auth/' + service + '?auth_origin_url=' + origin;
+        var url = this.getRequestUrl('auth/' + service + '?auth_origin_url=' + origin);
         window.location.replace(url);
       }
     }

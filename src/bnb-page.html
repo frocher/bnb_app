@@ -1,11 +1,13 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-layout/app-layout.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="bnb-actions.html">
 <link rel="import" href="bnb-common-styles.html">
 <link rel="import" href="bnb-divider.html">
 <link rel="import" href="bnb-period-dropdown.html">
@@ -61,10 +63,10 @@
             <bnb-period-dropdown period="{{period}}"></bnb-period-dropdown>
           </paper-card>
 
-          <bnb-chart-card id="performanceChart" name="Load times" data="[[page.stats.performance]]" model="[[performanceModel]]"></bnb-chart-card>
-          <bnb-chart-card id="uptimeChart" name="Uptime" data="[[page.stats.uptime]]" model="[[uptimeModel]]"></bnb-chart-card>
-          <bnb-chart-card id="requestsChart" name="Assets count" stacked="true" data="[[page.stats.requests]]" model="[[requestsModel]]"></bnb-chart-card>
-          <bnb-chart-card id="bytesChart" name="Assets size" stacked="true" data="[[page.stats.bytes]]" model="[[bytesModel]]"></bnb-chart-card>
+          <bnb-chart-card id="performanceChart" name="Load times" data="[[stats.performance]]" model="[[performanceModel]]"></bnb-chart-card>
+          <bnb-chart-card id="uptimeChart" name="Uptime" data="[[stats.uptime]]" model="[[uptimeModel]]"></bnb-chart-card>
+          <bnb-chart-card id="requestsChart" name="Assets count" stacked="true" data="[[stats.requests]]" model="[[requestsModel]]"></bnb-chart-card>
+          <bnb-chart-card id="bytesChart" name="Assets size" stacked="true" data="[[stats.bytes]]" model="[[bytesModel]]"></bnb-chart-card>
         </div>
 
       </div>
@@ -74,7 +76,7 @@
       <p>Are you really sure you want to delete page ? All data will be lost</p>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button dialog-confirm autofocus on-tap="deletePage">Delete</paper-button>
+        <paper-button dialog-confirm autofocus on-tap="deletePageTapped">Delete</paper-button>
       </div>
     </paper-dialog>
 
@@ -82,19 +84,26 @@
       <p>Leave this page, sure ?</p>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button dialog-confirm autofocus on-tap="leavePage">Leave</paper-button>
+        <paper-button dialog-confirm autofocus on-tap="leavePageTapped">Leave</paper-button>
       </div>
     </paper-dialog>
 
   </template>
 
   <script>
-    class BnbPage extends Polymer.Element {
+    class BnbPage extends BnbActions(Polymer.Element) {
       static get is() { return 'bnb-page'; }
 
       static get properties() {
         return {
-          page: Object,
+          page: {
+            type: Object,
+            statePath: 'page'
+          },
+          stats: {
+            type: Object,
+            statePath: 'page_stats'
+          },
           period: Object,
           performanceModel: Object,
           uptimeModel: Object,
@@ -137,54 +146,32 @@
       }
 
       backTapped() {
-        window.history.pushState({}, null, '/home');
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.dispatch('updateRoute', 'home');
       }
 
       editTapped() {
-        window.history.pushState({}, null, '/edit-page/' + this.page.id);
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.dispatch('updateRoute', 'edit-page/' + this.page.id);
       }
 
       membersTapped() {
-        window.history.pushState({}, null, '/edit-members/' + this.page.id);
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.dispatch('updateRoute', 'edit-members/' + this.page.id);
       }
 
       deleteTapped() {
         this.$.deleteDlg.open();
       }
 
-      deletePage() {
-        BnbService.deletePage(this.page.id);
-      }
-
-      handleDeleteResponse(data) {
-        this.fire('page-deleted', {page: page});
-        this.fire('message', {message: "Page has been deleted"});
-      }
-
-      handleDeleteError(error) {
-        this.fire('message', {message: "Error : can't delete page"});
+      deletePageTapped() {
+        this.deletePage(this.page.id);
       }
 
       leaveTapped(e) {
         this.$.leaveDlg.open();
       }
 
-      leavePage(e) {
-        BnbService.removeMember(this.page.id, -1);
+      leavePageTapped(e) {
+        this.deletePageMember(this.page.id, -1);
       }
-
-      handleLeaveResponse(data) {
-        this.fire('page-left', {page: page});
-        this.fire('message', {message: "You have left the page"});
-      }
-
-      handleLeaveError(error) {
-        this.fire('message', {message: "Error : can't leave page"});
-      }
-
     }
     window.customElements.define(BnbPage.is, BnbPage);
 

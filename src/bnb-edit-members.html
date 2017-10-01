@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-layout/app-layout.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/neon-animation/web-animations.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
@@ -8,7 +9,7 @@
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
-<link rel="import" href="bnb-data.html">
+<link rel="import" href="bnb-actions.html">
 
 <dom-module id="bnb-edit-members">
   <template>
@@ -59,7 +60,6 @@
         max-height: 400px;
       }
     </style>
-    <bnb-data id="data" page="{{page}}"></bnb-data>
     <app-header-layout fullbleed>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
@@ -92,7 +92,7 @@
           </div>
 
           <h3>Members</h3>
-          <vaadin-grid id="members" items="[[_computeMembers(page.members)]]" active-item="{{activeMember}}">
+          <vaadin-grid id="membersGrid" items="[[_computeMembers(members)]]" active-item="{{activeMember}}">
             <vaadin-grid-column>
               <template class="header">Name</template>
               <template>
@@ -119,12 +119,20 @@
 
   <script src="../bower_components/lodash/lodash.min.js"></script>
   <script>
-    class BnbEditMembers extends Polymer.Element {
+    class BnbEditMembers extends BnbActions(Polymer.Element) {
       static get is() { return 'bnb-edit-members'; }
 
       static get properties() {
         return {
-          page: Object,
+          page: {
+            type: Object,
+            statePath: 'page'
+          },
+          members: {
+            type: Array,
+            statePath: 'page_members',
+            observer: '_membersChanged'
+          },
           target: Object,
           activeMember: {
             observer: '_activeMemberChanged'
@@ -135,26 +143,19 @@
       ready() {
         super.ready();
         this.target = this.$.content;
-        this.addEventListener('create_page_member_error', e => {this._handleError(e.detail)})
-        this.addEventListener('update_page_member_error', e => {this._handleError(e.detail)})
-        this.addEventListener('delete_page_member_error', e => {this._handleError(e.detail)})
-
       }
 
       closeTapped() {
-        this.closePage();
-      }
-
-      closePage() {
         this.$.email.invalid = false;
-        window.history.pushState({}, null, '/page/' + this.page.id);
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.$.email.value = '';
+        this.$.role.selected = -1;
+        this.dispatch('updateRoute', 'page/' + this.page.id);
       }
 
       emailChanged() {
         let value = this.$.email.value;
-        let member = _.find(this.page.members, function(o) { return o.email === value; });
-        if (member == undefined) {
+        let member = _.find(this.members, function(o) { return o.email === value; });
+        if (!member) {
           this.$.buttons.selected = 0;
         }
         else {
@@ -166,7 +167,7 @@
         if (this.validateInputs()) {
           let email = this.$.email.value;
           let role = this.$.role.selected;
-          this.$.data.createPageMember(this.page, {email: email, role:role});
+          this.createPageMember(this.page.id, {email: email, role:role});
         }
       }
 
@@ -174,16 +175,16 @@
         if (this.validateInputs()) {
           let email = this.$.email.value;
           let role = this.$.role.selected;
-          let member = _.find(this.page.members, function(o) { return o.email === email; });
-          this.$.data.updatePageMember(this.page, {id: member.id, email: email, role:role});
+          let member = _.find(this.members, function(o) { return o.email === email; });
+          this.updatePageMember(this.page.id, {id: member.id, email: email, role:role});
         }
       }
 
       removeTapped() {
         if (this.validateInputs()) {
           let email = this.$.email.value;
-          let member = _.find(this.page.members, function(o) { return o.email === email; });
-          this.$.data.deletePageMember(this.page, member.id);
+          let member = _.find(this.members, function(o) { return o.email === email; });
+          this.deletePageMember(this.page.id, member.id);
         }
       }
 
@@ -193,8 +194,12 @@
         return emailOK && roleOK;
       }
 
+      _membersChanged() {
+        this.emailChanged();
+      }
+
       _activeMemberChanged(item) {
-        this.$.members.selectedItems = item ? [item] : [];
+        this.$.membersGrid.selectedItems = item ? [item] : [];
         if (item) {
           this.$.email.value = item.email;
           this.$.role.selected = item.role;
@@ -204,10 +209,6 @@
 
       _computeMembers(members) {
         return members || [];
-      }
-
-      _handleError(detail) {
-        this.dispatchEvent(new CustomEvent('message', {bubbles: true, composed: true, detail: detail.message}));
       }
     }
     customElements.define(BnbEditMembers.is, BnbEditMembers);

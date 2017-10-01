@@ -2,8 +2,8 @@
 <link rel="import" href="../bower_components/iron-a11y-keys/iron-a11y-keys.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="bnb-actions.html">
 <link rel="import" href="bnb-auth-form.html">
-<link rel="import" href="bnb-data.html">
 <link rel="import" href="bnb-tools.html">
 
 <dom-module id="bnb-signup">
@@ -17,20 +17,18 @@
     <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="signupSubmitTapped">
     </iron-a11y-keys>
 
-    <bnb-data id="data"></bnb-data>
-
     <bnb-auth-form id="signup-form" name="signup" title="Sign up" buttons="[[signupButtons]]">
 
-      <paper-input id="signup-name" autofocus="true" label="Full name" type="text" value="{{fullname}}">
+      <paper-input id="name" autofocus="true" label="Full name" type="text" value="{{fullname}}">
       </paper-input>
 
-      <paper-input id="signup-email" label="E-mail" type="email" value="{{email}}">
+      <paper-input id="email" label="E-mail" type="email" value="{{email}}">
       </paper-input>
 
-      <paper-input id="signup-password" label="Password" autocomplete="off" type="password" value="{{password}}">
+      <paper-input id="password" label="Password" autocomplete="off" type="password" value="{{password}}">
       </paper-input>
 
-      <paper-input id="signup-password_confirmation" label="Retype password" autocomplete="off" type="password" value="{{password_confirmation}}">
+      <paper-input id="password_confirmation" label="Retype password" autocomplete="off" type="password" value="{{password_confirmation}}">
       </paper-input>
 
       <div class="actions">
@@ -40,7 +38,7 @@
   </template>
 
   <script>
-    class BnbSignUp extends Polymer.Element {
+    class BnbSignUp extends BnbActions(Polymer.Element) {
       static get is() { return 'bnb-signup'; }
 
       static get properties() {
@@ -62,6 +60,11 @@
             type: String,
             value: ''
           },
+          errors: {
+            type: Object,
+            statePath: 'errors',
+            observer: '_errorsChanged'
+          },
           signupButtons: Array
         }
       }
@@ -70,32 +73,29 @@
         super.ready();
         this.target = this.$['signup-form'];
         this.signupButtons = [{text:'Sign in', path:'/signin'}, {text:'Forgot your password', path:'/forgot-password'}];
-        this.addEventListener('signup_error', e => {this.handleSignupError(e.detail)})
       }
 
       signupSubmitTapped() {
-        this.$['signup-name'].invalid = false;
-        this.$['signup-email'].invalid = false;
-        this.$['signup-password'].invalid = false;
-        this.$['signup-password_confirmation'].invalid = false;
+        this.$['name'].invalid = false;
+        this.$['email'].invalid = false;
+        this.$['password'].invalid = false;
+        this.$['password_confirmation'].invalid = false;
 
-        this.$.data.signup(this.fullname, this.email, this.password, this.password_confirmation, this._homeUrl());
+        this.signup(this.fullname, this.email, this.password, this.password_confirmation, this._homeUrl());
       }
 
-      handleSignupError(errors) {
-        for (let prop in errors) {
-          if (errors.hasOwnProperty(prop)) {
-            let objId = 'signup-' + prop;
-            if (this.$[objId] !== undefined) {
-              this.$[objId].invalid = true;
-              this.$[objId].errorMessage = errors[prop][0];
+      _errorsChanged(newVal, oldVal) {
+        if (this.errors) {
+          for (let prop in this.errors) {
+            if (this.errors.hasOwnProperty(prop)) {
+              let objId = prop;
+              if (this.$[objId] !== undefined) {
+                this.$[objId].invalid = true;
+                this.$[objId].errorMessage = this.errors[prop][0];
+              }
             }
           }
         }
-      }
-
-      showToast(message) {
-        this.fire('message', {message: message});
       }
 
       _homeUrl() {

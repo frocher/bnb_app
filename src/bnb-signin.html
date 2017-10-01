@@ -2,8 +2,8 @@
 <link rel="import" href="../bower_components/iron-a11y-keys/iron-a11y-keys.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="bnb-actions.html">
 <link rel="import" href="bnb-auth-form.html">
-<link rel="import" href="bnb-data.html">
 <link rel="import" href="bnb-oauth.html">
 
 <dom-module id="bnb-signin">
@@ -14,8 +14,6 @@
         @apply --layout-center-justified;
       }
     </style>
-
-    <bnb-data id="data"></bnb-data>
 
     <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="signinSubmitTapped">
     </iron-a11y-keys>
@@ -39,14 +37,21 @@
 
 
   <script>
-    class BnbSignIn extends Polymer.Element {
+    class BnbSignIn extends BnbActions(Polymer.Element) {
       static get is() { return 'bnb-signin'; }
 
       static get properties() {
         return {
-          target: Object,
+          credentials: {
+            type: Object,
+            statePath: 'credentials',
+            observer: '_credentialsChanged'
+          },
+
           email: String,
           password: String,
+
+          target: Object,
           signinButtons: Array
         }
       }
@@ -55,14 +60,13 @@
         super.ready();
         this.target = this.$['signin-form'];
         this.signinButtons = [{text:'Sign up', path:'/signup'}, {text:'Forgot your password', path:'/forgot-password'}];
-        this.addEventListener('signedin', e => {this._handleSignedIn()})
       }
 
       signinSubmitTapped() {
-        this.$.data.signin(this.email, this.password);
+        this.signin(this.email, this.password);
       }
 
-      _handleSignedIn() {
+      _credentialsChanged() {
         this.email = '';
         this.password = '';
       }

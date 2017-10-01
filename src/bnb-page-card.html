@@ -2,7 +2,7 @@
 <link rel="import" href="../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
-<link rel="import" href="bnb-data.html">
+<link rel="import" href="bnb-actions.html">
 
 <dom-module id="bnb-page-card">
 
@@ -75,7 +75,10 @@
 
   <script>
 
-    class BnbPageCard extends Polymer.GestureEventListeners(Polymer.Element) {
+    class BnbPageCardGestures extends Polymer.GestureEventListeners(Polymer.Element) {
+    }
+
+    class BnbPageCard extends BnbActions(BnbPageCardGestures) {
       static get is() { return 'bnb-page-card'; }
 
       static get properties() {
@@ -88,8 +91,7 @@
       }
 
       cardTapped(e) {
-        window.history.pushState({}, null, '/page/' + this.page.id);
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.dispatch('updateRoute', 'page/' + this.page.id);
       }
 
       urlTapped(e) {
@@ -98,7 +100,7 @@
       }
 
       _computeScreenshotUrl(item) {
-        return BnbData.baseUrl + 'pages/' + item.id + '/screenshot?style=thumb';
+        return this.getRequestUrl('pages/' + item.id + '/screenshot?style=thumb');
       }
 
       _computeHurt(item) {

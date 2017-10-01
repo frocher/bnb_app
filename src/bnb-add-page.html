@@ -5,8 +5,8 @@
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="bnb-actions.html">
 <link rel="import" href="bnb-common-styles.html">
-<link rel="import" href="bnb-data.html">
 
 <dom-module id="bnb-add-page">
   <template>
@@ -29,7 +29,6 @@
 
     <iron-a11y-keys keys="enter" target="[[target]]" on-keys-pressed="createTapped">
     </iron-a11y-keys>
-    <bnb-data id="data"></bnb-data>
     <app-header-layout fullbleed>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
@@ -58,23 +57,31 @@
   </template>
 
   <script>
-    class BnbAddPage extends Polymer.Element {
+    class BnbAddPage extends BnbActions(Polymer.Element) {
       static get is() { return 'bnb-add-page'; }
 
       static get properties() {
         return {
           target: Object,
           pageName: String,
-          url: String
+          url: String,
+          routePath: {
+            type: String,
+            reflectToAttribute: true,
+            statePath: 'route',
+            observer: '_routePathChanged'
+          },
+          errors: {
+            type: Object,
+            statePath: 'errors',
+            observer: '_errorsChanged'
+          }
         }
       }
 
       ready() {
         super.ready();
-        this.clearFields();
         this.target = this.$.content;
-        this.addEventListener('create_page_success', e => {this.handleSuccess(e.detail)})
-        this.addEventListener('create_page_error', e => {this.handleError(e.detail)})
       }
 
       closeTapped() {
@@ -90,28 +97,7 @@
         this.$['name'].invalid = false;
         this.$['url'].invalid = false;
 
-        this.$.data.createPage(this.pageName, this.url, this.handleResponse, this.handleError);
-      }
-
-      handleSuccess(data) {
-        this.closePage();
-      }
-
-      handleError(errors) {
-        if (errors === null) {
-          this.dispatchEvent(new CustomEvent('message', {bubbles: true, composed: true, detail: "Error : can't create page"}));
-        }
-        else {
-          for (let prop in errors) {
-            if (errors.hasOwnProperty(prop)) {
-              var objId = prop;
-              if (this.$[objId] !== undefined) {
-                this.$[objId].invalid = true;
-                this.$[objId].errorMessage = errors[prop][0];
-              }
-            }
-          }
-        }
+        this.createPage(this.pageName, this.url, this.handleResponse, this.handleError);
       }
 
       clearFields() {
@@ -123,8 +109,13 @@
 
       closePage() {
         this.clearFields();
-        window.history.pushState({}, null, '/home');
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this.dispatch('updateRoute', 'home');
+      }
+
+      _routePathChanged(newVal, oldVal) {
+        if (newVal === 'add-page') {
+          this.clearFields();
+        }
       }
     }
     window.customElements.define(BnbAddPage.is, BnbAddPage);
