@@ -45,17 +45,7 @@
             </bnb-value-chip>
           </template>
         </div>
-        <bnb-chart id="chart" stacked="[[stacked]]" data="[[getData(data)]]" model="[[model]]"></bnb-chart>
-      </div>
-      <div class="card-actions" hidden$="[[hasNoDomain(data)]]">
-        <paper-tabs selected="0" style="width:100px">
-          <paper-tab on-tap="desktopTapped">
-            <iron-icon icon="hardware:computer"></iron-icon>
-          </paper-tab>
-          <paper-tab on-tap="mobileTapped">
-            <iron-icon icon="hardware:smartphone"></iron-icon>
-          </paper-tab>
-        </paper-tabs>
+        <bnb-chart id="chart" type="[[type]]" data="[[getData(data)]]" model="[[model]]"></bnb-chart>
       </div>
     </paper-card>
   </template>
@@ -83,13 +73,9 @@
               return [];
             }
           },
-          stacked: {
-            type: Boolean,
-            value: false
-          },
-          target: {
+          type: {
             type: String,
-            value: 'desktop'
+            value: 'line'
           }
         }
       }
@@ -97,13 +83,6 @@
       ready() {
         super.ready();
         this._polyfillFind();
-      }
-
-      hasNoDomain(data) {
-        if (this.data) {
-          return this.data instanceof Array;
-        }
-        return true;
       }
 
       getData() {
@@ -132,22 +111,6 @@
           return item.suffix;
         }
         return "";
-      }
-
-      desktopTapped() {
-        this.switchToTarget("desktop");
-      }
-
-      mobileTapped() {
-        this.switchToTarget("mobile");
-      }
-
-      switchToTarget(newTarget) {
-        if (this.target !== newTarget) {
-          this.target = newTarget;
-          this.$.values.items = this.data[this.target];
-          this.$.chart.data = this.data[this.target];
-        }
       }
 
       _polyfillFind() {

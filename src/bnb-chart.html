@@ -98,9 +98,9 @@
             type: String,
             value: ''
           },
-          stacked: {
-            type: Boolean,
-            value: false
+          type: {
+            type: String,
+            value: 'line'
           },
           selectedPage: {
             type: Number,
@@ -152,13 +152,19 @@
             }
           }
           else {
-            if (this.stacked) {
-              this.chart = nv.models.stackedAreaChart();
-              this.chart.showControls(false);
-            }
-            else {
-              this.chart = nv.models.lineChart();
-              this.chart.forceY([0]);
+            switch (this.type) {
+              case 'area':
+                this.chart = nv.models.stackedAreaChart();
+                this.chart.showControls(false);
+                break;
+              case 'line':
+                this.chart = nv.models.lineChart();
+                this.chart.forceY([0]);
+                break;
+              case 'bar':
+                this.chart = nv.models.multiBarChart();
+                this.chart.showControls(true);
+                break;
             }
             this.chart.margin({left: 40, right: 10});
             this.chart.useInteractiveGuideline(true);

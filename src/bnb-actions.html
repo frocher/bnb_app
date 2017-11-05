@@ -485,12 +485,9 @@
             let response = JSON.parse(e.target.responseText);
             if (e.target.status === 200) {
               this._updateUptime(response.uptime[0]);
-              this._updateCount(response.performance.desktop);
-              this._updateCount(response.performance.mobile);
-              this._updateBytes(response.bytes.desktop);
-              this._updateBytes(response.bytes.mobile);
-              this._updateCount(response.requests.desktop);
-              this._updateCount(response.requests.mobile);
+              this._updateCount(response.performance);
+              this._updateBytes(response.bytes);
+              this._updateCount(response.requests);
 
               dispatch('fetchPageStatsSuccess', response);
             }

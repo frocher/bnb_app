@@ -63,10 +63,11 @@
             <bnb-period-dropdown period="{{period}}"></bnb-period-dropdown>
           </paper-card>
 
-          <bnb-chart-card id="performanceChart" name="Load times" data="[[stats.performance]]" model="[[performanceModel]]"></bnb-chart-card>
-          <bnb-chart-card id="uptimeChart" name="Uptime" data="[[stats.uptime]]" model="[[uptimeModel]]"></bnb-chart-card>
-          <bnb-chart-card id="requestsChart" name="Assets count" stacked="true" data="[[stats.requests]]" model="[[requestsModel]]"></bnb-chart-card>
-          <bnb-chart-card id="bytesChart" name="Assets size" stacked="true" data="[[stats.bytes]]" model="[[bytesModel]]"></bnb-chart-card>
+          <bnb-chart-card id="lighthouseChart" name="Lighthouse" type="bar" data="[[stats.lighthouse]]" model="[[lighthouseModel]]"></bnb-chart-card>
+          <bnb-chart-card id="performanceChart" name="Performance" type="line" data="[[stats.performance]]" model="[[performanceModel]]"></bnb-chart-card>
+          <bnb-chart-card id="uptimeChart" name="Uptime" type="line" data="[[stats.uptime]]" model="[[uptimeModel]]"></bnb-chart-card>
+          <bnb-chart-card id="requestsChart" name="Assets count" type="area" data="[[stats.requests]]" model="[[requestsModel]]"></bnb-chart-card>
+          <bnb-chart-card id="bytesChart" name="Assets size" type="area" data="[[stats.bytes]]" model="[[bytesModel]]"></bnb-chart-card>
         </div>
 
       </div>
@@ -114,12 +115,19 @@
 
       ready() {
         super.ready();
+
+        this.lighthouseModel = [
+          {name: 'pwa', color: '#4A148C', label: 'pwa'},
+          {name: 'performance', color: '#7B1FA2', label: 'performance'},
+          {name: 'accessibility', color: '#9C27B0', label: 'accessibility'},
+          {name: 'best_practices', color: '#BA68C8', label: 'best practices'}
+        ];
+
         this.performanceModel = [
-          {name: 'response_start', color: '#E65100', label: 'response time', suffix: 'ms'},
+          {name: 'first_byte', color: '#E65100', label: 'first byte', suffix: 'ms'},
           {name: 'first_paint', color: '#F57C00', label: 'first paint', suffix: 'ms'},
           {name: 'speed_index', color: '#FF9800', label: 'speed index'},
-          {name: 'dom_ready', color: '#FFB74D', label: 'dom ready', suffix: 'ms'},
-          {name: 'page_load', color: '#FFE0B2', label: 'fully loaded', suffix: 'ms'}
+          {name: 'interactive', color: '#FFB74D', label: 'interactive', suffix: 'ms'}
         ];
 
         this.uptimeModel = [
