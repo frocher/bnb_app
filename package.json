@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "start": "node ./start.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,7 +21,14 @@
   },
   "homepage": "https://github.com/frocher/bnb_app#readme",
   "dependencies": {
+    "command-line-args": "^4.0.7",
+    "compression": "^1.7.0",
+    "express": "~4.15.2",
+    "express-http-proxy": "^1.0.0",
+    "morgan": "~1.8.1",
+    "prpl-server": "^1.0.0",
     "redux": "^3.7.0",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "superagent": "^3.5.0"
   }
 }

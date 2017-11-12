@@ -48,6 +48,7 @@ WORKDIR $APP_HOME
 COPY . $APP_HOME
 
 # build app
+RUN npm install
 RUN bower install --production --allow-root
 RUN polymer build
 
@@ -56,8 +57,6 @@ RUN npm uninstall -g bower
 RUN npm uninstall -g polymer-cli
 RUN apt-get purge -y curl git gnupg
 
-# prpl-server
-RUN npm install -g prpl-server
 
 EXPOSE 8080
-CMD ["prpl-server","--host", "0.0.0.0", "--root","build","--config","build/polymer.json"]
+CMD ["npm","start"]

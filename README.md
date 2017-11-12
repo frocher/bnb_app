@@ -1,16 +1,24 @@
 # \<Botnbot\>
 
 
-
 ## Install the Polymer-CLI
 
 First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
 
 ## Viewing Your Application
 
+You can use either
+
 ```
-$ polymer serve
+npm start -- --dev
 ```
+
+or
+
+```
+polymer serve --proxy-path=api --proxy-target=http://localhost:3000/
+```
+
 
 ## Building Your Application
 
@@ -18,10 +26,10 @@ $ polymer serve
 $ polymer build
 ```
 
-This will create builds of your application in the `build/` directory, optimized to be served in production. You can then serve the built versions by giving `polymer serve` a folder to serve from:
+This will create builds of your application in the `build/` directory, optimized to be served in production. You can then serve the built versions :
 
 ```
-$ polymer serve build/default
+$ npm start
 ```
 
 ## Running Tests
