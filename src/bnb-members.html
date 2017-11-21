@@ -11,7 +11,7 @@
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
 <link rel="import" href="bnb-actions.html">
 
-<dom-module id="bnb-edit-members">
+<dom-module id="bnb-members">
   <template>
     <style>
       h3 {
@@ -119,8 +119,8 @@
 
   <script src="../bower_components/lodash/dist/lodash.min.js"></script>
   <script>
-    class BnbEditMembers extends BnbActions(Polymer.Element) {
-      static get is() { return 'bnb-edit-members'; }
+    class BnbMembers extends BnbActions(Polymer.Element) {
+      static get is() { return 'bnb-members'; }
 
       static get properties() {
         return {
@@ -211,7 +211,7 @@
         return members || [];
       }
     }
-    customElements.define(BnbEditMembers.is, BnbEditMembers);
+    customElements.define(BnbMembers.is, BnbMembers);
 
   </script>
 

@@ -59,7 +59,7 @@
     <iron-pages class="view" selected="[[view]]" attr-for-selected="name" selected-attribute="visible" fallback-selection="404">
       <bnb-add-page         name="add-page"         class="view"></bnb-add-page>
       <bnb-home             name="home"             class="view" period="{{period}}"></bnb-home>
-      <bnb-edit-members     name="edit-members"     class="view"></bnb-edit-members>
+      <bnb-members          name="members"          class="view"></bnb-members>
       <bnb-edit-page        name="edit-page"        class="view"></bnb-edit-page>
       <bnb-edit-password    name="edit-password"    class="view"></bnb-edit-password>
       <bnb-forgot-password  name="forgot-password"  class="view"></bnb-forgot-password>
@@ -181,7 +181,7 @@
        else if (this.view === 'user-preferences') {
          this.loadUser();
        }
-       else if (this.view === 'page' || this.view === 'edit-page' || this.view === 'edit-members') {
+       else if (this.view === 'page' || this.view === 'edit-page' || this.view === 'members') {
          let pageId = Number(this.subroute.path.substring(1));
          if (!this.page || this.page.id !== pageId) {
            this.loadPage(pageId);
