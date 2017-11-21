@@ -33,10 +33,6 @@
     {
       "preset": "es5-bundled",
       "basePath": "es5-bundled"
-    },
-    {
-      "preset": "es6-unbundled",
-      "basePath": "es6-unbundled"
     }
   ]
 }
