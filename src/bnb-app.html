@@ -175,18 +175,20 @@
        this._ensureLazyLoaded();
        this.$.analytics.sendPath(this.route);
 
-       if (this.view === 'home') {
-         this.loadPages();
-       }
-       else if (this.view === 'user-preferences') {
-         this.loadUser();
-       }
-       else if (this.view === 'page' || this.view === 'edit-page' || this.view === 'members') {
-         let pageId = Number(this.subroute.path.substring(1));
-         if (!this.page || this.page.id !== pageId) {
-           this.loadPage(pageId);
-           this.loadPageStats(pageId);
-           this.loadPageMembers(pageId);
+       if (this.isLogged()) {
+         if (this.view === 'home') {
+           this.loadPages();
+         }
+         else if (this.view === 'user-preferences') {
+           this.loadUser();
+         }
+         else if (this.view === 'page' || this.view === 'edit-page' || this.view === 'members') {
+           let pageId = Number(this.subroute.path.substring(1));
+           if (!this.page || this.page.id !== pageId) {
+             this.loadPage(pageId);
+             this.loadPageStats(pageId);
+             this.loadPageMembers(pageId);
+           }
          }
        }
      }
