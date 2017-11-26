@@ -1,5 +1,5 @@
 const commandLineArgs = require('command-line-args');
-const proxy = require('express-http-proxy');
+const proxy = require('http-proxy-middleware');
 
 const optionDefinitions = [
   { name: 'dev', alias: 'd', type: Boolean }
@@ -49,8 +49,13 @@ function launchPrplServer() {
   app.use(compression());
   app.use(logger('dev'));
 
-  const apiPath = process.env.API || 'localhost:3000';
-  app.use('/api', proxy(apiPath));
+  const apiPath = process.env.API || 'http://localhost:3000';
+  const options = {
+    pathRewrite: {
+      '^/api/' : '/'
+    }
+  };
+  app.use('/api', proxy(`${apiPath}/`, options));
   app.use('/auth', proxy(`${apiPath}/auth/`));
   app.use('/omniauth', proxy(`${apiPath}/omniauth`));
 
