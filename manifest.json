@@ -1,7 +1,7 @@
 {
   "name": "Botnbot",
   "short_name": "Botnbot",
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "icons": [
     {
