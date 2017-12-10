@@ -73,8 +73,6 @@
     <paper-toast id="message-toast" duration="4000"></paper-toast>
   </template>
 
-  <script src="../bower_components/moment/min/moment.min.js"></script>
-
   <script>
     class BnbApp extends BnbActions(Polymer.Element) {
       static get is() { return 'bnb-app'; }
@@ -117,8 +115,7 @@
 
           period: {
             type: Object,
-            value: {start: moment().subtract(30, 'days').toDate(), end: moment().toDate()},
-            notify: true
+            statePath: 'period'
           },
 
           offline: {
@@ -202,7 +199,7 @@
              this.loadComplete = true;
              // Load pre-caching Service Worker
              if ('serviceWorker' in navigator) {
-               navigator.serviceWorker.register('service-worker.js');
+               navigator.serviceWorker.register('service-worker.js', {scope: '/'});
              }
            });
          });
