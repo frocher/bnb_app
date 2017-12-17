@@ -65,7 +65,7 @@
     <paper-card image="[[_computeScreenshotUrl(page)]]" animated="true" on-tap="cardTapped">
       <div class="card-content">
         <h2>[[page.name]]</h2>
-        <a href="#" on-tap="urlTapped" title="Open url in a new tab">[[page.url]]</a>
+        <a href="[[page.url]]" on-tap="urlTapped" target="_blank" title="Open url in a new tab">[[page.url]]</a>
       </div>
       <paper-ripple></paper-ripple>
 
@@ -95,7 +95,6 @@
       }
 
       urlTapped(e) {
-        window.open(this.page.url, '_blank');
         e.stopPropagation();
       }
 
