@@ -18,10 +18,6 @@
   <template>
     <style include="bnb-common-styles">
 
-      bnb-divider {
-        width: 100%;
-      }
-
       paper-item {
         cursor: pointer;
       }
@@ -101,25 +97,25 @@
         <app-toolbar>
           <span>All pages</span>
           <div class="flex"></div>
-          <paper-icon-button icon="add" on-tap="addTapped"></paper-icon-button>
+          <paper-icon-button icon="add" on-tap="_addTapped"></paper-icon-button>
           <paper-menu-button horizontal-align="right">
             <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
             <paper-listbox slot="dropdown-content">
-              <paper-item on-tap="preferencesTapped">User preferences</paper-item>
+              <paper-item on-tap="_preferencesTapped">User preferences</paper-item>
               <bnb-divider></bnb-divider>
-              <paper-item on-tap="signoutTapped">Log out</paper-item>
+              <paper-item on-tap="_signoutTapped">Log out</paper-item>
             </paper-listbox>
           </paper-menu-button>
         </app-toolbar>
       </app-header>
-      <iron-pages selected="[[computeSelected(pages)]]">
+      <iron-pages selected="[[selectedSection]]">
         <section id="loading">
           <span>Loading&nbsp;</span>
           <paper-spinner active></paper-spinner>
         </section>
         <section id="noData">Don't you dare try the + button in the toolbar !</section>
         <section id="withData">
-          <template is="dom-repeat" items="[[pages]]" sort="sortPages">
+          <template is="dom-repeat" items="[[pages]]" sort="_sortPages">
             <bnb-page-card page="[[item]]" class="item"></bnb-page-card>
           </template>
         </section>
@@ -136,41 +132,44 @@
         return {
           pages: {
             type: Array,
-            statePath: 'pages'
+            statePath: 'pages',
+            observer: '_pagesChanged'
+          },
+          selectedSection: {
+            type: Number,
+            value: 0
           }
         }
       }
 
-      computeSelected(pages) {
-        if (pages === null || pages === undefined) {
-          return 0;
-        }
-        if (pages.length === 0) {
-          return 1;
-        }
-        return 2;
-      }
-
-      sortPages(first, second) {
+      _sortPages(first, second) {
         let a = first.name.toUpperCase();
         let b = second.name.toUpperCase();
         return a.localeCompare(b);
       }
 
-      selectedChanged() {
-        this.page = this.pages[this.selected];
-      }
-
-      addTapped() {
+      _addTapped() {
         this.dispatch('updateRoute', 'add-page');
       }
 
-      preferencesTapped() {
+      _preferencesTapped() {
         this.dispatch('updateRoute', 'user-preferences');
       }
 
-      signoutTapped() {
+      _signoutTapped() {
         this.signout();
+      }
+
+      _pagesChanged() {
+        if (this.pages === null || this.pages === undefined) {
+          this.selectedSection = 0;
+        }
+        if (this.pages.length === 0) {
+          this.selectedSection = 1;
+        }
+        else {
+          this.selectedSection = 2;
+        }
       }
     }
 
