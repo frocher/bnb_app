@@ -63,7 +63,7 @@
             <bnb-period-dropdown period="{{period}}"></bnb-period-dropdown>
           </paper-card>
 
-          <bnb-chart-card id="lighthouseChart" name="Lighthouse" type="bar" data="[[stats.lighthouse]]" model="[[lighthouseModel]]"></bnb-chart-card>
+          <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" data="[[stats.lighthouse]]" model="[[lighthouseModel]]"></bnb-chart-card>
           <bnb-chart-card id="performanceChart" name="Performance" type="line" data="[[stats.performance]]" model="[[performanceModel]]"></bnb-chart-card>
           <bnb-chart-card id="uptimeChart" name="Uptime" type="line" data="[[stats.uptime]]" model="[[uptimeModel]]"></bnb-chart-card>
           <bnb-chart-card id="requestsChart" name="Assets count" type="area" data="[[stats.requests]]" model="[[requestsModel]]"></bnb-chart-card>
@@ -120,7 +120,8 @@
           {name: 'pwa', color: '#4A148C', label: 'pwa'},
           {name: 'performance', color: '#7B1FA2', label: 'performance'},
           {name: 'accessibility', color: '#9C27B0', label: 'accessibility'},
-          {name: 'best_practices', color: '#BA68C8', label: 'best practices'}
+          {name: 'best_practices', color: '#BA68C8', label: 'best practices'},
+          {name: 'seo', color: '#E1BEE7', label: 'seo'}
         ];
 
         this.performanceModel = [
