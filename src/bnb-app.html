@@ -143,6 +143,13 @@
       }
 
       _routeViewChanged(view) {
+        // Check if we find credentials in parameters (used for omniauth)
+        // if true : store credentials and remove them from the query string
+        if (this._getUrlParameter('auth_token')) {
+          this.storeCredentials(this._getUrlParameter('auth_token'), this._getUrlParameter('uid'), this._getUrlParameter('client_id'));
+          this._removeParameters();
+        }
+
         if (view !== 'signin' && view !== 'signup' && view !== 'forgot-password' && view !== 'edit-password') {
           if (!this.isLogged()) {
             this.dispatch('updateRoute', 'signin');
@@ -233,6 +240,23 @@
         if (this.view === 'page') {
           this.loadPageStats(this.page.id);
         }
+      }
+
+      _getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+      }
+
+      /**
+       * Remove all query string from the url (and hash too)
+       */
+      _removeParameters() {
+        var newLocation = window.location.protocol + '//'+
+                window.location.host+
+                window.location.pathname;
+        window.history.pushState('', document.title, newLocation);
       }
     }
 

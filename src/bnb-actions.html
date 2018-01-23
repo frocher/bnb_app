@@ -719,6 +719,20 @@
     }
 
     /**
+     * Store credentials in session storage.
+     */
+    storeCredentials(accessToken, uid, client) {
+      let credentials = {
+        'access-token': accessToken,
+        uid: uid,
+        client: client,
+        'token-type': 'Bearer'
+      };
+
+      sessionStorage.setItem('credentials', JSON.stringify(credentials));
+    }
+
+    /**
      * Extract credentials from session storage.
      * @return {Object} credentials or undefined if user is not logged in
      */

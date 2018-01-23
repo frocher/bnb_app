@@ -85,7 +85,7 @@
       }
 
       _callService(service) {
-        var origin = window.location.protocol + '//' + window.location.host + window.location.pathname;
+        var origin = window.location.protocol + '//' + window.location.host;
         var url = this.getRequestUrl('auth/' + service + '?auth_origin_url=' + origin);
         window.location.replace(url);
       }
