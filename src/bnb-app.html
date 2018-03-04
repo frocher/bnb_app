@@ -57,17 +57,18 @@
     <bnb-analytics id="analytics" key="[[analyticsKey]]"></bnb-analytics>
 
     <iron-pages class="view" selected="[[view]]" attr-for-selected="name" selected-attribute="visible" fallback-selection="404">
-      <bnb-add-page         name="add-page"         class="view"></bnb-add-page>
-      <bnb-home             name="home"             class="view" period="{{period}}"></bnb-home>
-      <bnb-members          name="members"          class="view"></bnb-members>
-      <bnb-edit-page        name="edit-page"        class="view"></bnb-edit-page>
-      <bnb-edit-password    name="edit-password"    class="view"></bnb-edit-password>
-      <bnb-forgot-password  name="forgot-password"  class="view"></bnb-forgot-password>
-      <bnb-page             name="page"             class="view" period="{{period}}"></bnb-page>
-      <bnb-signin           name="signin"           class="view"></bnb-signin>
-      <bnb-signup           name="signup"           class="view"></bnb-signup>
-      <bnb-user-preferences name="user-preferences" class="view"></bnb-user-preferences>
-      <bnb-404-warning      name="404"              class="view"></bnb-404-warning>
+      <bnb-add-page           name="add-page"           class="view"></bnb-add-page>
+      <bnb-home               name="home"               class="view" period="{{period}}"></bnb-home>
+      <bnb-members            name="members"            class="view"></bnb-members>
+      <bnb-edit-page          name="edit-page"          class="view"></bnb-edit-page>
+      <bnb-edit-password      name="edit-password"      class="view"></bnb-edit-password>
+      <bnb-forgot-password    name="forgot-password"    class="view"></bnb-forgot-password>
+      <bnb-lighthouse-details name="lighthouse-details" class="view"></bnb-lighthouse-details>
+      <bnb-page               name="page"               class="view" period="{{period}}"></bnb-page>
+      <bnb-signin             name="signin"             class="view"></bnb-signin>
+      <bnb-signup             name="signup"             class="view"></bnb-signup>
+      <bnb-user-preferences   name="user-preferences"   class="view"></bnb-user-preferences>
+      <bnb-404-warning        name="404"                class="view"></bnb-404-warning>
     </iron-pages>
 
     <paper-toast id="message-toast" duration="4000"></paper-toast>
@@ -186,12 +187,14 @@
          else if (this.view === 'user-preferences') {
            this.loadUser();
          }
-         else if (this.view === 'page' || this.view === 'edit-page' || this.view === 'members') {
+         // FIXME : implement a better way to load data. Perhaps, this should be treated by reducers
+         else if (this.view === 'page' || this.view === 'edit-page' || this.view === 'members' || this.view === 'lighthouse-details') {
            let pageId = Number(this.subroute.path.substring(1));
            if (!this.page || this.page.id !== pageId) {
              this.loadPage(pageId);
              this.loadPageStats(pageId);
              this.loadPageMembers(pageId);
+             this.loadLighthouseDetails(pageId);
            }
          }
        }

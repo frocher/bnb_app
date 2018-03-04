@@ -43,7 +43,10 @@
     page_members: undefined,
 
     // Statistics of current page
-    page_stats: undefined
+    page_stats: undefined,
+
+    // Lighthouse details of current page
+    lighthouse_details: undefined
   };
 
   const reducer = (state, action) => {
@@ -169,6 +172,16 @@
       case 'PAGE_STATS_FETCH_SUCCESS':
         return Object.assign({}, state, {
           page_stats: action.stats
+        });
+
+      case 'LIGHTHOUSE_DETAILS_START':
+        return Object.assign({}, state, {
+          lighthouse_details: null
+        });
+
+      case 'LIGHTHOUSE_DETAILS_FETCH_SUCCESS':
+        return Object.assign({}, state, {
+          lighthouse_details: action.details
         });
 
       case 'PAGE_CREATE_SUCCESS':

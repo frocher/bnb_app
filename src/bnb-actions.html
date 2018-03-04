@@ -190,6 +190,27 @@
           }
         },
 
+        fetchLighthouseDetailsStart() {
+          return {
+            type: 'LIGHTHOUSE_DETAILS_START'
+          }
+        },
+
+        fetchLighthouseDetailsSuccess(details) {
+          return {
+            type: 'LIGHTHOUSE_DETAILS_FETCH_SUCCESS',
+            details: details
+          }
+        },
+
+        fetchLighthouseDetailsError(errors) {
+          return {
+            type: 'LIGHTHOUSE_DETAILS_FETCH_ERROR',
+            errors: errors
+          }
+        },
+
+
         createPageSuccess() {
           return {
             type: 'PAGE_CREATE_SUCCESS'
@@ -490,6 +511,28 @@
             }
             else {
               dispatch('fetchPageStatsError', response.errors);
+            }
+          }
+        });
+      });
+    }
+
+    loadLighthouseDetails(pageId) {
+      this.dispatch((dispatch) => {
+        dispatch('fetchLighthouseDetailsStart');
+
+        let start = this.period.start;
+        let end   = this.period.end;
+        this._getResource({
+          url: this.getRequestUrl('/pages/' + pageId + '/lighthouse', {start: start, end: end}),
+          method: 'GET',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              dispatch('fetchLighthouseDetailsSuccess', response);
+            }
+            else {
+              dispatch('fetchLighthouseDetailsError', response.errors);
             }
           }
         });

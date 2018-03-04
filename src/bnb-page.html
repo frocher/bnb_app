@@ -63,7 +63,7 @@
             <bnb-period-dropdown period="{{period}}"></bnb-period-dropdown>
           </paper-card>
 
-          <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" data="[[stats.lighthouse]]" model="[[lighthouseModel]]"></bnb-chart-card>
+          <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" data="[[stats.lighthouse]]" model="[[lighthouseModel]]" has-details="true"></bnb-chart-card>
           <bnb-chart-card id="performanceChart" name="Performance" type="line" data="[[stats.performance]]" model="[[performanceModel]]"></bnb-chart-card>
           <bnb-chart-card id="uptimeChart" name="Uptime" type="line" data="[[stats.uptime]]" model="[[uptimeModel]]"></bnb-chart-card>
           <bnb-chart-card id="requestsChart" name="Assets count" type="area" data="[[stats.requests]]" model="[[requestsModel]]"></bnb-chart-card>
@@ -106,6 +106,7 @@
             statePath: 'page_stats'
           },
           period: Object,
+          lighthouseModel: Object,
           performanceModel: Object,
           uptimeModel: Object,
           requestsModel: Object,
@@ -152,6 +153,8 @@
           {name: 'font', color: '#F48FB1', label: 'font', suffix: 'kb'},
           {name: 'other', color: '#F8BBD0', label: 'other', suffix: 'kb'}
         ];
+
+        this.$.lighthouseChart.addEventListener('details', this.lightHouseChartDetailsTapped.bind(this));
       }
 
       backTapped() {
@@ -180,6 +183,10 @@
 
       leavePageTapped(e) {
         this.deletePageMember(this.page.id, -1);
+      }
+
+      lightHouseChartDetailsTapped(e) {
+        this.dispatch('updateRoute', 'lighthouse-details/' + this.page.id);
       }
     }
     window.customElements.define(BnbPage.is, BnbPage);

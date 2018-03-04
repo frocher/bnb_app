@@ -1,7 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../bower_components/iron-icons/hardware-icons.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 <link rel="import" href="bnb-chart.html">
@@ -21,7 +21,6 @@
 
       #chips {
         text-align: center;
-
         align-items: stretch;
         @apply --layout-horizontal;
         @apply --layout-wrap;
@@ -40,18 +39,20 @@
     <paper-card heading="[[name]]">
       <div class="card-content">
         <div id="chips">
-          <template is="dom-repeat" id="values" items="[[getData(data)]]">
+          <template is="dom-repeat" id="values" items="[[data]]">
             <bnb-value-chip text="[[computeLabel(item)]]" value="[[item.summary]]" suffix="[[computeSuffix(item)]]">
             </bnb-value-chip>
           </template>
         </div>
-        <bnb-chart id="chart" type="[[type]]" data="[[getData(data)]]" model="[[model]]"></bnb-chart>
+          <bnb-chart id="chart" type="[[type]]" data="[[data]]" model="[[model]]"></bnb-chart>
+      </div>
+      <div class="card-actions" hidden$='[[!hasDetails]]'>
+        <paper-button on-tap="_detailsTapped"><iron-icon icon="icons:toc"></iron-icon>Details</paper-button>
       </div>
     </paper-card>
   </template>
 
   <script>
-
     class BnbChartCard extends Polymer.Element {
       static get is() { return 'bnb-chart-card'; }
 
@@ -62,9 +63,9 @@
             value: ''
           },
           data: {
-            type: Object,
+            type: Array,
             value: function () {
-              return {};
+              return [];
             }
           },
           model: {
@@ -76,6 +77,10 @@
           type: {
             type: String,
             value: 'line'
+          },
+          hasDetails: {
+            type: Boolean,
+            value: false
           }
         }
       }
@@ -85,24 +90,12 @@
         this._polyfillFind();
       }
 
-      getData() {
-        if (this.data) {
-          if (this.data instanceof Array) {
-            return this.data;
-          }
-          else {
-            return this.data[this.target];
-          }
-        }
-        return undefined;
-      }
-
       computeLabel(o) {
         let item = this.model.find(function(i) { return i.name === o.key; });
         if (item) {
           return item.label;
         }
-        return "";
+        return '';
       }
 
       computeSuffix(o) {
@@ -110,14 +103,18 @@
         if (item) {
           return item.suffix;
         }
-        return "";
+        return '';
+      }
+
+      _detailsTapped() {
+        this.dispatchEvent(new CustomEvent('details'));
       }
 
       _polyfillFind() {
         if (!Array.prototype.find) {
           Object.defineProperty(Array.prototype, 'find', {
             value: function(predicate) {
-              if (this == null) {
+              if (!this) {
                 throw new TypeError('"this" is null or not defined');
               }
 

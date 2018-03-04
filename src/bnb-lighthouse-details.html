@@ -1,0 +1,128 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-layout.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-sorter.html">
+<link rel="import" href="bnb-actions.html">
+<link rel="import" href="bnb-common-styles.html">
+
+<dom-module id="bnb-lighthouse-details">
+  <template>
+    <style include="bnb-common-styles">
+      :host {
+        @apply --layout-vertical;
+      }
+      
+      #content {
+        padding: 8px;
+      }
+
+      vaadin-grid {
+        --vaadin-grid-header-cell: {
+          color: rgba(0, 0, 0, var(--dark-secondary-opacity));
+          font-size: 14px;
+          height: auto;
+        };
+
+        --vaadin-grid-body-cell: {
+          color: rgba(0, 0, 0, var(--dark-primary-opacity));
+          font-size: 13px;
+        };
+
+        --vaadin-grid-body-row-hover-cell: {
+          background-color: var(--paper-grey-200);
+        };
+
+        --vaadin-grid-body-row-selected-cell: {
+          background-color: var(--paper-grey-100);
+        };
+      }
+    </style>
+
+    <app-header-layout fullbleed>
+      <app-header slot="header" fixed condenses shadow>
+        <app-toolbar>
+          <paper-icon-button icon="arrow-back" on-tap="backTapped"></paper-icon-button>
+          <span>[[page.name]]</span>
+        </app-toolbar>
+      </app-header>
+
+      <div id="content" class="fit">
+        <vaadin-grid id="grid" items="[[lighthouseDetails]]">
+          <vaadin-grid-column>
+            <template class="header">
+              <vaadin-grid-sorter path="time" direction="desc">time</vaadin-grid-sorter>
+            </template>
+            <template>[[_formatTime(item.time)]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column width="100px" flex-grow="0">
+            <template class="header">pwa</template>
+            <template>[[item.pwa]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column width="100px" flex-grow="0">
+            <template class="header">performance</template>
+            <template>[[item.performance]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column width="100px" flex-grow="0">
+            <template class="header">best practices</template>
+            <template>[[item.best_practices]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column width="100px" flex-grow="0">
+            <template class="header">accessibility</template>
+            <template>[[item.accessibility]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column width="100px" flex-grow="0">
+            <template class="header">seo</template>
+            <template>[[item.seo]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column width="100px" flex-grow="0">
+            <template class="header">report</template>
+            <template>
+              <a href="[[_computeUrl(item.time)]]" target="_blank">Show</a>
+            </template>
+          </vaadin-grid-column>
+        </vaadin-grid>
+      </div>
+    </app-header-layout>
+
+  </template>
+
+  <script src="../bower_components/moment/min/moment.min.js"></script>
+
+  <script>
+    class BnbLighthouseDetails extends BnbActions(Polymer.Element) {
+      static get is() { return 'bnb-lighthouse-details'; }
+
+      static get properties() {
+        return {
+          page: {
+            type: Object,
+            statePath: 'page'
+          },
+          lighthouseDetails: {
+            type: Object,
+            statePath: 'lighthouse_details'
+          }
+        }
+      }
+
+      backTapped() {
+        this.dispatch('updateRoute', 'page/' + this.page.id);
+      }
+
+      _formatTime(time) {
+        return moment(time).format('lll');
+      }
+
+      _computeUrl(time) {
+        if (time) {
+          let key = moment(time).format('YYYYMMDDHHmmss');
+          return this.getRequestUrl('/pages/' + this.page.id + '/lighthouse/' + key);
+        }
+        return '';
+      }
+    }
+    window.customElements.define(BnbLighthouseDetails.is, BnbLighthouseDetails);
+
+  </script>
+
+</dom-module>
