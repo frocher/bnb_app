@@ -210,6 +210,25 @@
           }
         },
 
+        fetchUptimeDetailsStart() {
+          return {
+            type: 'UPTIME_DETAILS_START'
+          }
+        },
+
+        fetchUptimeDetailsSuccess(details) {
+          return {
+            type: 'UPTIME_DETAILS_FETCH_SUCCESS',
+            details: details
+          }
+        },
+
+        fetchUptimeDetailsError(errors) {
+          return {
+            type: 'UPTIME_DETAILS_FETCH_ERROR',
+            errors: errors
+          }
+        },
 
         createPageSuccess() {
           return {
@@ -533,6 +552,28 @@
             }
             else {
               dispatch('fetchLighthouseDetailsError', response.errors);
+            }
+          }
+        });
+      });
+    }
+
+    loadUptimeDetails(pageId) {
+      this.dispatch((dispatch) => {
+        dispatch('fetchUptimeDetailsStart');
+
+        let start = this.period.start;
+        let end   = this.period.end;
+        this._getResource({
+          url: this.getRequestUrl('/pages/' + pageId + '/uptime', {start: start, end: end}),
+          method: 'GET',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              dispatch('fetchUptimeDetailsSuccess', response);
+            }
+            else {
+              dispatch('fetchUptimeDetailsError', response.errors);
             }
           }
         });

@@ -67,6 +67,7 @@
       <bnb-page               name="page"               class="view" period="{{period}}"></bnb-page>
       <bnb-signin             name="signin"             class="view"></bnb-signin>
       <bnb-signup             name="signup"             class="view"></bnb-signup>
+      <bnb-uptime-details     name="uptime-details"     class="view"></bnb-uptime-details>
       <bnb-user-preferences   name="user-preferences"   class="view"></bnb-user-preferences>
       <bnb-404-warning        name="404"                class="view"></bnb-404-warning>
     </iron-pages>
@@ -188,13 +189,15 @@
            this.loadUser();
          }
          // FIXME : implement a better way to load data. Perhaps, this should be treated by reducers
-         else if (this.view === 'page' || this.view === 'edit-page' || this.view === 'members' || this.view === 'lighthouse-details') {
+         else if (this.view === 'page' || this.view === 'edit-page' || this.view === 'members' || 
+                  this.view === 'lighthouse-details' || this.view === 'uptime-details') {
            let pageId = Number(this.subroute.path.substring(1));
            if (!this.page || this.page.id !== pageId) {
              this.loadPage(pageId);
              this.loadPageStats(pageId);
              this.loadPageMembers(pageId);
              this.loadLighthouseDetails(pageId);
+             this.loadUptimeDetails(pageId);
            }
          }
        }

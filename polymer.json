@@ -12,6 +12,7 @@
     "src/bnb-page.html",
     "src/bnb-signin.html",
     "src/bnb-signup.html",
+    "src/bnb-uptime-details.html",
     "src/bnb-user-preferences.html",
     "src/lazy-resources.html"
   ],

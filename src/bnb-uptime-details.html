@@ -7,7 +7,7 @@
 <link rel="import" href="bnb-actions.html">
 <link rel="import" href="bnb-common-styles.html">
 
-<dom-module id="bnb-lighthouse-details">
+<dom-module id="bnb-uptime-details">
   <template>
     <style include="bnb-common-styles">
       :host {
@@ -16,6 +16,14 @@
       
       #content {
         padding: 8px;
+      }
+
+      .down {
+        color: #B71C1C;
+      }
+
+      .up {
+        color: #1B5E20;
       }
 
       a {
@@ -55,39 +63,37 @@
       </app-header>
 
       <div id="content" class="fit">
-        <vaadin-grid id="grid" items="[[lighthouseDetails]]">
-          <vaadin-grid-column>
+        <vaadin-grid id="grid" items="[[uptimeDetails]]">
+          <vaadin-grid-column width="155px" flex-grow="0">
             <template class="header">
               <vaadin-grid-sorter path="time" direction="desc">time</vaadin-grid-sorter>
             </template>
             <template>[[_formatTime(item.time)]]</template>
           </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">pwa</template>
-            <template>[[item.pwa]]</template>
+          <vaadin-grid-column width="70px" flex-grow="0">
+            <template class="header">Status</template>
+            <template>
+              <div class$="[[_statusClass(item.value)]]">
+                [[_formatStatus(item.value)]]
+              </div>
+            </template>
           </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">performance</template>
-            <template>[[item.performance]]</template>
+          <vaadin-grid-column width="60px" flex-grow="0">
+            <template class="header">Code</template>
+            <template>[[item.error_code]]</template>
           </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">best practices</template>
-            <template>[[item.best_practices]]</template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">accessibility</template>
-            <template>[[item.accessibility]]</template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="100px" flex-grow="0">
-            <template class="header">seo</template>
-            <template>[[item.seo]]</template>
+          <vaadin-grid-column flex-grow="1">
+            <template class="header">Message</template>
+            <template>[[item.error_message]]</template>
           </vaadin-grid-column>
           <vaadin-grid-column width="52px" flex-grow="0">
-            <template class="header">report</template>
+            <template class="header"></template>
             <template>
-              <a href="[[_computeUrl(item.time_key)]]" title="Show report" target="_blank">
-                <paper-icon-button icon="visibility"></paper-icon-button>
-              </a>
+              <div hidden$="[[!item.time_key]]">
+                <a href="[[_computeUrl(item.time_key)]]" title="Show content" target="_blank">
+                  <paper-icon-button icon="visibility"></paper-icon-button>
+                </a>
+              </div>
             </template>
           </vaadin-grid-column>
         </vaadin-grid>
@@ -99,8 +105,8 @@
   <script src="../bower_components/moment/min/moment.min.js"></script>
 
   <script>
-    class BnbLighthouseDetails extends BnbActions(Polymer.Element) {
-      static get is() { return 'bnb-lighthouse-details'; }
+    class BnbUptimeDetails extends BnbActions(Polymer.Element) {
+      static get is() { return 'bnb-uptime-details'; }
 
       static get properties() {
         return {
@@ -108,9 +114,9 @@
             type: Object,
             statePath: 'page'
           },
-          lighthouseDetails: {
+          uptimeDetails: {
             type: Object,
-            statePath: 'lighthouse_details'
+            statePath: 'uptime_details'
           }
         }
       }
@@ -123,14 +129,26 @@
         return moment(time).format('lll');
       }
 
+      _statusClass(value) {
+        return value === 0 ? 'down' : 'up';
+      }
+
+      _formatStatus(value) {
+        return value === 0 ? 'Down' : 'Up';
+      }
+
+      _statusClass(value) {
+        return value === 0 ? 'down' : 'up';
+      }
+
       _computeUrl(key) {
         if (key) {
-          return this.getRequestUrl('pages/' + this.page.id + '/lighthouse/' + key);
+          return this.getRequestUrl('pages/' + this.page.id + '/uptime/' + key);
         }
         return '';
       }
     }
-    window.customElements.define(BnbLighthouseDetails.is, BnbLighthouseDetails);
+    window.customElements.define(BnbUptimeDetails.is, BnbUptimeDetails);
 
   </script>
 </dom-module>

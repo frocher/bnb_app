@@ -65,7 +65,7 @@
 
           <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" data="[[stats.lighthouse]]" model="[[lighthouseModel]]" has-details="true"></bnb-chart-card>
           <bnb-chart-card id="performanceChart" name="Performance" type="line" data="[[stats.performance]]" model="[[performanceModel]]"></bnb-chart-card>
-          <bnb-chart-card id="uptimeChart" name="Uptime" type="line" data="[[stats.uptime]]" model="[[uptimeModel]]"></bnb-chart-card>
+          <bnb-chart-card id="uptimeChart" name="Uptime" type="line" data="[[stats.uptime]]" model="[[uptimeModel]]"  has-details="true"></bnb-chart-card>
           <bnb-chart-card id="requestsChart" name="Assets count" type="area" data="[[stats.requests]]" model="[[requestsModel]]"></bnb-chart-card>
           <bnb-chart-card id="bytesChart" name="Assets size" type="area" data="[[stats.bytes]]" model="[[bytesModel]]"></bnb-chart-card>
         </div>
@@ -155,6 +155,7 @@
         ];
 
         this.$.lighthouseChart.addEventListener('details', this.lightHouseChartDetailsTapped.bind(this));
+        this.$.uptimeChart.addEventListener('details', this.uptimeChartDetailsTapped.bind(this));
       }
 
       backTapped() {
@@ -187,6 +188,10 @@
 
       lightHouseChartDetailsTapped(e) {
         this.dispatch('updateRoute', 'lighthouse-details/' + this.page.id);
+      }
+
+      uptimeChartDetailsTapped(e) {
+        this.dispatch('updateRoute', 'uptime-details/' + this.page.id);
       }
     }
     window.customElements.define(BnbPage.is, BnbPage);
