@@ -49,8 +49,11 @@
     lighthouse_details: undefined,
 
     // Uptime details of current page
-    uptime_details: undefined
-};
+    uptime_details: undefined,
+
+    // Assets details of current page
+    assets_details: undefined
+  };
 
   const reducer = (state, action) => {
     state = state || initial;
@@ -195,6 +198,16 @@
       case 'UPTIME_DETAILS_FETCH_SUCCESS':
         return Object.assign({}, state, {
           uptime_details: action.details
+        });
+
+      case 'ASSETS_DETAILS_START':
+        return Object.assign({}, state, {
+          assets_details: null
+        });
+
+      case 'ASSETS_DETAILS_FETCH_SUCCESS':
+        return Object.assign({}, state, {
+          assets_details: action.details
         });
 
       case 'PAGE_CREATE_SUCCESS':

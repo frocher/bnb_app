@@ -3,6 +3,7 @@
   "shell": "src/bnb-app.html",
   "fragments": [
     "src/bnb-add-page.html",
+    "src/bnb-bytes-details.html",
     "src/bnb-edit-page.html",
     "src/bnb-edit-password.html",
     "src/bnb-forgot-password.html",
@@ -10,6 +11,7 @@
     "src/bnb-lighthouse-details.html",
     "src/bnb-members.html",
     "src/bnb-page.html",
+    "src/bnb-requests-details.html",
     "src/bnb-signin.html",
     "src/bnb-signup.html",
     "src/bnb-uptime-details.html",

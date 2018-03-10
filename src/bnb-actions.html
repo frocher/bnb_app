@@ -230,6 +230,26 @@
           }
         },
 
+        fetchAssetsDetailsStart() {
+          return {
+            type: 'ASSETS_DETAILS_START'
+          }
+        },
+
+        fetchAssetsDetailsSuccess(details) {
+          return {
+            type: 'ASSETS_DETAILS_FETCH_SUCCESS',
+            details: details
+          }
+        },
+
+        fetchAssetsDetailsError(errors) {
+          return {
+            type: 'ASSETS_DETAILS_FETCH_ERROR',
+            errors: errors
+          }
+        },
+
         createPageSuccess() {
           return {
             type: 'PAGE_CREATE_SUCCESS'
@@ -574,6 +594,28 @@
             }
             else {
               dispatch('fetchUptimeDetailsError', response.errors);
+            }
+          }
+        });
+      });
+    }
+
+    loadAssetsDetails(pageId) {
+      this.dispatch((dispatch) => {
+        dispatch('fetchAssetsDetailsStart');
+
+        let start = this.period.start;
+        let end   = this.period.end;
+        this._getResource({
+          url: this.getRequestUrl('/pages/' + pageId + '/assets', {start: start, end: end}),
+          method: 'GET',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              dispatch('fetchAssetsDetailsSuccess', response);
+            }
+            else {
+              dispatch('fetchAssetsDetailsError', response.errors);
             }
           }
         });
