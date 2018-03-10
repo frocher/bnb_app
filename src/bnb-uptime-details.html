@@ -18,6 +18,10 @@
         padding: 8px;
       }
 
+      .center {
+        text-align: center;
+      }
+
       .down {
         color: #fff;
         border-radius: 4px;
@@ -44,12 +48,15 @@
         --vaadin-grid-header-cell: {
           color: rgba(0, 0, 0, var(--dark-secondary-opacity));
           font-size: 14px;
+          text-align: center;
           height: auto;
+          border-right: 1px dotted rgba(0, 0, 0, var(--dark-primary-opacity));
         };
 
         --vaadin-grid-body-cell: {
           color: rgba(0, 0, 0, var(--dark-primary-opacity));
           font-size: 13px;
+          border-right: 1px dotted rgba(0, 0, 0, var(--dark-primary-opacity));
         };
 
         --vaadin-grid-body-row-hover-cell: {
@@ -88,7 +95,7 @@
           </vaadin-grid-column>
           <vaadin-grid-column width="60px" flex-grow="0">
             <template class="header">Code</template>
-            <template>[[item.error_code]]</template>
+            <template><div class="center">[[item.error_code]]</div></template>
           </vaadin-grid-column>
           <vaadin-grid-column flex-grow="1">
             <template class="header">Message</template>

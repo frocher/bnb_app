@@ -22,18 +22,25 @@
         color: rgba(0, 0, 0, var(--dark-primary-opacity));
       }
 
+      .right {
+        text-align: right;
+      }
+
       vaadin-grid {
         height: auto;
 
         --vaadin-grid-header-cell: {
           color: rgba(0, 0, 0, var(--dark-secondary-opacity));
           font-size: 14px;
+          text-align: center;
           height: auto;
+          border-right: 1px dotted rgba(0, 0, 0, var(--dark-primary-opacity));
         };
 
         --vaadin-grid-body-cell: {
           color: rgba(0, 0, 0, var(--dark-primary-opacity));
           font-size: 13px;
+          border-right: 1px dotted rgba(0, 0, 0, var(--dark-primary-opacity));
         };
 
         --vaadin-grid-body-row-hover-cell: {
@@ -64,27 +71,27 @@
           </vaadin-grid-column>
           <vaadin-grid-column width="100px" flex-grow="0">
             <template class="header">html</template>
-            <template>[[_formatBytes(item.html_bytes)]]</template>
+            <template><div class="right">[[_formatBytes(item.html_bytes)]]</div></template>
           </vaadin-grid-column>
           <vaadin-grid-column width="100px" flex-grow="0">
             <template class="header">css</template>
-            <template>[[_formatBytes(item.css_bytes)]]</template>
+            <template><div class="right">[[_formatBytes(item.css_bytes)]]</div></template>
           </vaadin-grid-column>
           <vaadin-grid-column width="100px" flex-grow="0">
             <template class="header">javascript</template>
-            <template>[[_formatBytes(item.js_bytes)]]</template>
+            <template><div class="right">[[_formatBytes(item.js_bytes)]]</div></template>
           </vaadin-grid-column>
           <vaadin-grid-column width="100px" flex-grow="0">
             <template class="header">image</template>
-            <template>[[_formatBytes(item.image_bytes)]]</template>
+            <template><div class="right">[[_formatBytes(item.image_bytes)]]</div></template>
           </vaadin-grid-column>
           <vaadin-grid-column width="100px" flex-grow="0">
             <template class="header">font</template>
-            <template>[[_formatBytes(item.font_bytes)]]</template>
+            <template><div class="right">[[_formatBytes(item.font_bytes)]]</div></template>
           </vaadin-grid-column>
           <vaadin-grid-column width="100px" flex-grow="0">
               <template class="header">other</template>
-              <template>[[_formatBytes(item.other_bytes)]]</template>
+              <template><div class="right">[[_formatBytes(item.other_bytes)]]</div></template>
             </vaadin-grid-column>
             <vaadin-grid-column width="52px" flex-grow="0">
             <template class="header"></template>
@@ -128,7 +135,7 @@
       }
 
       _formatBytes(bytes) {
-        return Math.round(bytes / 1024);
+        return Math.round(bytes / 1024).toLocaleString();
       }
 
       _computeUrl(key) {
