@@ -59,13 +59,13 @@
     <iron-pages class="view" selected="[[view]]" attr-for-selected="name" selected-attribute="visible" fallback-selection="404">
       <bnb-add-page            name="add-page"            class="view"></bnb-add-page>
       <bnb-bytes-details       name="bytes-details"       class="view"></bnb-bytes-details>
-      <bnb-home                name="home"                class="view" period="{{period}}"></bnb-home>
+      <bnb-home                name="home"                class="view"></bnb-home>
       <bnb-members             name="members"             class="view"></bnb-members>
       <bnb-edit-page           name="edit-page"           class="view"></bnb-edit-page>
       <bnb-edit-password       name="edit-password"       class="view"></bnb-edit-password>
       <bnb-forgot-password     name="forgot-password"     class="view"></bnb-forgot-password>
       <bnb-lighthouse-details  name="lighthouse-details"  class="view"></bnb-lighthouse-details>
-      <bnb-page                name="page"                class="view" period="{{period}}"></bnb-page>
+      <bnb-page                name="page"                class="view"></bnb-page>
       <bnb-performance-details name="performance-details" class="view"></bnb-performance-details>
       <bnb-requests-details    name="requests-details"    class="view"></bnb-requests-details>
       <bnb-signin              name="signin"              class="view"></bnb-signin>
@@ -120,7 +120,8 @@
 
           period: {
             type: Object,
-            statePath: 'period'
+            statePath: 'period',
+            observer: '_periodChanged'
           },
 
           offline: {
@@ -139,7 +140,6 @@
         super.ready();
         this.removeAttribute('unresolved');
         this.loadEnvironment();
-        this.addEventListener('period-changed', e => {this._handlePeriodChanged()});
       }
 
       _routePathChanged(path, oldPath) {
@@ -192,7 +192,7 @@
            this.loadUser();
          }
          // FIXME : implement a better way to load data. Perhaps, this should be treated by reducers
-         else if (this.view === 'page' || this.view === 'edit-page' || this.view === 'members' || 
+         else if (this.view === 'page' || this.view === 'edit-page' || this.view === 'members' ||
                   this.view === 'lighthouse-details' || this.view === 'performance-details'
                   || this.view === 'uptime-details'
                   || this.view === 'requests-details' || this.view === 'bytes-details') {
@@ -248,8 +248,8 @@
         }
       }
 
-      _handlePeriodChanged() {
-        if (this.view === 'page') {
+      _periodChanged(newVal, oldVal) {
+        if (this.view === 'page' && this.page) {
           this.loadPageStats(this.page.id);
         }
       }

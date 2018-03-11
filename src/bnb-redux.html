@@ -74,6 +74,11 @@
           message: {text: action.message, counter: state.message.counter + 1}
         });
 
+      case 'UPDATE_PERIOD':
+        return Object.assign({}, state, {
+          period: action.period
+        });
+
       case 'SIGN_IN_SUCCESS':
         sessionStorage.setItem('credentials', JSON.stringify(action.credentials));
         return Object.assign({}, state, {

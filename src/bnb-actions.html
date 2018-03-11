@@ -19,6 +19,13 @@
           }
         },
 
+        updatePeriod(period) {
+          return {
+            type: 'UPDATE_PERIOD',
+            period: period
+          }
+        },
+
         fetchAnalyticsKeySuccess(key) {
           return {
             type: 'ANALYTICS_KEY_FETCH_SUCCESS',

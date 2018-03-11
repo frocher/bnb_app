@@ -60,7 +60,7 @@
         <div id="charts">
           <paper-card id="chartsFilter">
             <span>Stats for&nbsp;</span>
-            <bnb-period-dropdown period="{{period}}"></bnb-period-dropdown>
+            <bnb-period-dropdown></bnb-period-dropdown>
           </paper-card>
 
           <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" data="[[stats.lighthouse]]" model="[[lighthouseModel]]" has-details="true"></bnb-chart-card>
@@ -105,7 +105,6 @@
             type: Object,
             statePath: 'page_stats'
           },
-          period: Object,
           lighthouseModel: Object,
           performanceModel: Object,
           uptimeModel: Object,

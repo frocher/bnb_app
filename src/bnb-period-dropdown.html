@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="bnb-actions.html">
 
 <dom-module id="bnb-period-dropdown">
   <template>
@@ -49,15 +50,15 @@
   </template>
 
   <script>
-    class BnbPeriodDropdown extends Polymer.Element {
+    class BnbPeriodDropdown extends BnbActions(Polymer.Element) {
       static get is() { return 'bnb-period-dropdown'; }
 
       static get properties() {
         return {
           period: {
             type: Object,
-            value: null,
-            notify: true
+            reflectToAttribute: true,
+            statePath: 'period'
           },
           disabledDays: {
             type: Array,
@@ -76,43 +77,42 @@
 
       periodTapped(e) {
         let type = e.currentTarget.dataset.period;
+        let period = {};
         switch (type) {
           case 'today':
-            this.period.start = moment().startOf('day').toDate();
-            this.period.end = moment().endOf('day').toDate();
+            period.start = moment().startOf('day').toDate();
+            period.end = moment().endOf('day').toDate();
           break;
           case 'this_week':
-            this.period.start = moment().startOf('week').toDate();
-            this.period.end = moment().endOf('week').toDate();
+            period.start = moment().startOf('week').toDate();
+            period.end = moment().endOf('week').toDate();
           break;
           case 'this_month':
-            this.period.start = moment().startOf('month').toDate();
-            this.period.end = moment().endOf('month').toDate();
+            period.start = moment().startOf('month').toDate();
+            period.end = moment().endOf('month').toDate();
           break;
           case 'yesterday':
-            this.period.start = moment().add(-1, 'days').startOf('day').toDate();
-            this.period.end = moment().add(-1, 'days').endOf('day').toDate();
+            period.start = moment().add(-1, 'days').startOf('day').toDate();
+            period.end = moment().add(-1, 'days').endOf('day').toDate();
           break;
           case 'last_week':
-            this.period.start = moment().add(-1, 'weeks').startOf('week').toDate();
-            this.period.end = moment().add(-1, 'weeks').endOf('week').toDate();
+            period.start = moment().add(-1, 'weeks').startOf('week').toDate();
+            period.end = moment().add(-1, 'weeks').endOf('week').toDate();
           break;
           case 'last_month':
-            this.period.start = moment().add(-1, 'months').startOf('month').toDate();
-            this.period.end = moment().add(-1, 'months').endOf('month').toDate();
+            period.start = moment().add(-1, 'months').startOf('month').toDate();
+            period.end = moment().add(-1, 'months').endOf('month').toDate();
           break;
           case 'last_7_days':
-            this.period.start = moment().add(-7, 'days').startOf('day').toDate();
-            this.period.end = moment().endOf('day').toDate();
+            period.start = moment().add(-7, 'days').startOf('day').toDate();
+            period.end = moment().endOf('day').toDate();
           break;
           case 'last_30_days':
-            this.period.start = moment().add(-30, 'days').startOf('day').toDate();
-            this.period.end = moment().endOf('day').toDate();
+            period.start = moment().add(-30, 'days').startOf('day').toDate();
+            period.end = moment().endOf('day').toDate();
           break;
         }
-        this.dispatchEvent(new CustomEvent('period-changed', {bubbles: true, composed: true, detail: this.period}));
-        this.notifyPath('period.start', this.period.start);
-        this.notifyPath('period.end', this.period.end);
+        this.dispatch('updatePeriod', period);
       }
 
       startDateTapped(e) {
@@ -129,17 +129,21 @@
 
       _startDateChanged(newVal, oldVal) {
         if (oldVal) {
-          this.period.start = moment(newVal, "YYYY/MM/DD");
-          this.notifyPath('period.start', this.period.start);
-          this.dispatchEvent(new CustomEvent('period-changed', {bubbles: true, composed: true, detail: this.period}));
+          let period = {
+            start: moment(newVal, "YYYY/MM/DD"),
+            end: this.period.end
+          };
+          this.dispatch('updatePeriod', period);
         }
       }
 
       _endDateChanged(newVal, oldVal) {
         if (oldVal) {
-          this.period.end = moment(newVal, "YYYY/MM/DD");
-          this.notifyPath('period.end', this.period.end);
-          this.dispatchEvent(new CustomEvent('period-changed', {bubbles: true, composed: true, detail: this.period}));
+          let period = {
+            start: this.period.start,
+            end: moment(newVal, "YYYY/MM/DD"),
+          };
+          this.dispatch('updatePeriod', period);
         }
       }
     }
