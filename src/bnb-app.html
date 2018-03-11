@@ -181,51 +181,68 @@
       }
 
       _viewLoaded(shouldResetLayout) {
-       this._ensureLazyLoaded();
-       this.$.analytics.sendPath(this.route);
+        this._ensureLazyLoaded();
+        this.$.analytics.sendPath(this.route);
 
-       if (this.isLogged()) {
-         if (this.view === 'home') {
-           this.loadPages();
-         }
-         else if (this.view === 'user-preferences') {
-           this.loadUser();
-         }
-         // FIXME : implement a better way to load data. Perhaps, this should be treated by reducers
-         else if (this.view === 'page' || this.view === 'edit-page' || this.view === 'members' ||
-                  this.view === 'lighthouse-details' || this.view === 'performance-details'
-                  || this.view === 'uptime-details'
-                  || this.view === 'requests-details' || this.view === 'bytes-details') {
-           let pageId = Number(this.subroute.path.substring(1));
-           if (!this.page || this.page.id !== pageId) {
-             this.loadPage(pageId);
-             this.loadPageStats(pageId);
-             this.loadPageMembers(pageId);
-             this.loadLighthouseDetails(pageId);
-             this.loadUptimeDetails(pageId);
-             this.loadAssetsDetails(pageId);
-           }
-         }
-       }
-     }
+        if (this.isLogged()) {
+          this._loadCurrentViewData();
+        }
+      }
 
-     _ensureLazyLoaded() {
-       // load lazy resources after render and set `loadComplete` when done.
-       if (!this.loadComplete) {
-         Polymer.RenderStatus.afterNextRender(this, () => {
-           Polymer.importHref(this.resolveUrl('lazy-resources.html'), () => {
-             this._notifyNetworkStatus();
-             this.loadComplete = true;
-             // Load pre-caching Service Worker
-             if ('serviceWorker' in navigator) {
-               navigator.serviceWorker.register('service-worker.js', {scope: '/'});
-             }
-           });
-         });
-       }
-     }
+      _loadCurrentViewData() {
+        if (this.view === 'home') {
+          this.loadPages();
+        }
+        else if (this.view === 'user-preferences') {
+          this.loadUser();
+        }
+        else if (this.view === 'page') {
+          let pageId = Number(this.subroute.path.substring(1));
+          this.loadPage(pageId);
+          this.loadPageStats(pageId);
+        }
+        else if (this.view === 'edit-page') {
+          let pageId = Number(this.subroute.path.substring(1));
+          this.loadPage(pageId);
+        }
+        else if (this.view === 'members') {
+          let pageId = Number(this.subroute.path.substring(1));
+          this.loadPage(pageId);
+          this.loadPageMembers(pageId);
+        }
+        else if (this.view === 'lighthouse-details' || this.view === 'performance-details') {
+          let pageId = Number(this.subroute.path.substring(1));
+          this.loadPage(pageId);
+          this.loadLighthouseDetails(pageId);
+        }
+        else if (this.view === 'uptime-details') {
+          let pageId = Number(this.subroute.path.substring(1));
+          this.loadPage(pageId);
+          this.loadUptimeDetails(pageId);
+        }
+        else if (this.view === 'requests-details' || this.view === 'bytes-details') {
+          let pageId = Number(this.subroute.path.substring(1));
+          this.loadAssetsDetails(pageId);
+        }
+      }
 
-     _notifyNetworkStatus() {
+      _ensureLazyLoaded() {
+        // load lazy resources after render and set `loadComplete` when done.
+        if (!this.loadComplete) {
+          Polymer.RenderStatus.afterNextRender(this, () => {
+            Polymer.importHref(this.resolveUrl('lazy-resources.html'), () => {
+              this._notifyNetworkStatus();
+              this.loadComplete = true;
+              // Load pre-caching Service Worker
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js', {scope: '/'});
+              }
+            });
+          });
+        }
+      }
+
+      _notifyNetworkStatus() {
         let oldOffline = this.offline;
         this._setOffline(!window.navigator.onLine);
         // Show the snackbar if the user is offline when starting a new session
@@ -249,9 +266,7 @@
       }
 
       _periodChanged(newVal, oldVal) {
-        if (this.view === 'page' && this.page) {
-          this.loadPageStats(this.page.id);
-        }
+        this._loadCurrentViewData();
       }
 
       _getUrlParameter(name) {
