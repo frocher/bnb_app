@@ -1,4 +1,5 @@
 module.exports = {
+  navigateFallbackWhitelist: [/^\/nothing\//],
   staticFileGlobs: [
     'manifest.json',
     'bower_components/webcomponentsjs/*.js',
@@ -14,6 +15,14 @@ module.exports = {
           name: 'items-cache'
         }
       }
+    },
+    {
+      urlPattern: /\/api\//,
+      handler: 'networkFirst'
+    },
+    {
+      urlPattern: /\/omniauth\//,
+      handler: 'networkOnly'
     }
   ]
 };
