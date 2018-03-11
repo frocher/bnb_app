@@ -140,9 +140,13 @@
         super.ready();
         this.removeAttribute('unresolved');
         this.loadEnvironment();
+        this.scrollPositions = new Map();
       }
 
       _routePathChanged(path, oldPath) {
+        // Store view scroll position
+        this.scrollPositions.set(this.route.path, window.scrollY);
+
         window.history.pushState({}, null, '/' + path);
         window.dispatchEvent(new CustomEvent('location-changed'));
       }
@@ -176,6 +180,14 @@
             Polymer.importHref(
               this.resolveUrl('bnb-' + view + '.html'),
               cb, cb, true);
+          }
+
+          // Restore scroll position
+          if (this.scrollPositions && this.scrollPositions.has(this.route.path)) {
+            window.scroll(0, this.scrollPositions.get(this.route.path));
+          }
+          else {
+            window.scroll(0, 0);
           }
         }
       }
