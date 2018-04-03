@@ -5,6 +5,9 @@ module.exports = {
     'bower_components/webcomponentsjs/*.js',
     'images/*'
   ],
+  importScripts: [
+    'push-handler.js'
+  ],
   runtimeCaching: [
     {
       urlPattern: /\/data\/images\/.*/,

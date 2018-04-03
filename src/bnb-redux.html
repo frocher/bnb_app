@@ -18,6 +18,9 @@
     // Google Analytics key
     analyticsKey: null,
 
+    // Push notification key
+    pushKey: null,
+
     // Text for message toast
     message: {
       text: '',
@@ -64,9 +67,10 @@
           route: action.route
         });
 
-      case 'ANALYTICS_KEY_FETCH_SUCCESS':
+      case 'ENVIRONMENT_FETCH_SUCCESS':
         return Object.assign({}, state, {
-          analyticsKey: action.analyticsKey
+          analyticsKey: action.analyticsKey,
+          pushKey: action.pushKey
         });
 
       case 'UPDATE_MESSAGE':
@@ -86,7 +90,7 @@
           route: 'home'
         });
 
-      case 'ANALYTICS_KEY_FETCH_ERROR':
+      case 'ENVIRONMENT_FETCH_ERROR':
       case 'SIGN_IN_ERROR':
       case 'USER_FETCH_ERROR':
       case 'PAGES_FETCH_ERROR':
@@ -253,6 +257,7 @@
       case 'PAGE_MEMBER_CREATE_ERROR':
       case 'PAGE_MEMBER_UPDATE_ERROR':
       case 'PAGE_MEMBER_DELETE_ERROR':
+      case 'SUBSCRIPTION_ERROR':
         return Object.assign({}, state, {
           message: {text: action.message, counter: state.message.counter + 1}
         });

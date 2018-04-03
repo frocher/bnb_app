@@ -26,16 +26,17 @@
           }
         },
 
-        fetchAnalyticsKeySuccess(key) {
+        fetchEnvironmentSuccess(keys) {
           return {
-            type: 'ANALYTICS_KEY_FETCH_SUCCESS',
-            analyticsKey: key
+            type: 'ENVIRONMENT_FETCH_SUCCESS',
+            analyticsKey: keys.GOOGLE_ANALYTICS_KEY,
+            pushKey: keys.PUSH_KEY,
           }
         },
 
-        fetchAnalyticsKeyError(message) {
+        fetchEnvironmentError(message) {
           return {
-            type: 'ANALYTICS_KEY_FETCH_ERROR',
+            type: 'ENVIRONMENT_FETCH_ERROR',
             message: message
           }
         },
@@ -131,6 +132,19 @@
         updateUserError(errors) {
           return {
             type: 'USER_UPDATE_ERROR',
+            errors: errors
+          }
+        },
+
+        saveSubscriptionSuccess() {
+          return {
+            type: 'SUBSCRIPTION_SUCCESS'
+          }
+        },
+
+        saveSubscriptionError(errors) {
+          return {
+            type: 'SUBSCRIPTION_ERROR',
             errors: errors
           }
         },
@@ -376,10 +390,10 @@
           onLoad(e) {
             let response = JSON.parse(e.target.responseText);
             if (e.target.status === 200) {
-              dispatch('fetchAnalyticsKeySuccess', response.GOOGLE_ANALYTICS_KEY);
+              dispatch('fetchEnvironmentSuccess', response);
             }
             else {
-              dispatch('fetchAnalyticsKeyError', response.errors);
+              dispatch('fetchEnvironmentKeyError', response.errors);
             }
           }
         });
@@ -771,6 +785,24 @@
             }
             else {
               dispatch('updateUserError', response.errors);
+            }
+          }
+        });
+      });
+    }
+
+    saveSubscription(subscription) {
+      this.dispatch((dispatch) => {
+        this._getResource({
+          url: this.getRequestUrl('/users/-1/save-subscription', { subscription: JSON.stringify(subscription) }),
+          method: 'POST',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              dispatch('saveSubscriptionSuccess');
+            }
+            else {
+              dispatch('saveSubscriptionError', response.errors);
             }
           }
         });

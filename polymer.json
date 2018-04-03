@@ -25,6 +25,7 @@
   ],
   "extraDependencies": [
     "manifest.json",
+    "push-handler.js",
     "bower_components/webcomponentsjs/*"
   ],
   "lint": {

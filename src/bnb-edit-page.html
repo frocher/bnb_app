@@ -74,6 +74,7 @@
           <bnb-divider></bnb-divider>
           <bnb-collapse icon="notification:sms" header="Notifications">
             <paper-toggle-button id="mail_notify" checked="[[page.mail_notify]]">by mail</paper-toggle-button>
+            <paper-toggle-button id="push_notify" checked="[[page.push_notify]]">by push</paper-toggle-button>
             <paper-toggle-button id="slack_notify" checked="{{page.slack_notify}}">by Slack</paper-toggle-button>
             <div id="slackInformations" hidden$="[[!page.slack_notify]]">
               <paper-input class="flex" id="slack_webhook" label="Webhook URL" value="[[page.slack_webhook]]"></paper-input>
@@ -142,6 +143,7 @@
           uptime_keyword: this.$.uptimeKeyword.value,
           uptime_keyword_type: this.$.uptimeKeywordType.selected,
           mail_notify: this.$.mail_notify.checked,
+          push_notify: this.$.push_notify.checked,
           slack_notify: this.$.slack_notify.checked,
           slack_webhook: this.$.slack_webhook.value,
           slack_channel: this.$.slack_channel.value

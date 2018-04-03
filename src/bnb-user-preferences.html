@@ -47,7 +47,7 @@
         <div id="container">
           <bnb-collapse icon="icons:info" header="General" opened>
             <paper-input id="name" label="Name" value="[[user.name]]" autofocus="true"></paper-input>
-            <paper-toggle-button on-tap="notificationsTapped" disabled="[[!isNotificationsEnabled()]]">Activate notifications</paper-toggle-button>
+            <paper-toggle-button id="pushButton" disabled="[[!isNotificationsEnabled()]]">Send me notifications on this device</paper-toggle-button>
           </bnb-collapse>
           <bnb-divider></bnb-divider>
         </div>
@@ -72,13 +72,16 @@
             type: Object,
             statePath: 'user'
           },
-
+          pushKey: {
+            type: String,
+            statePath: 'pushKey',
+            observer: 'pushKeyChanged'
+          },
           errors: {
             type: Object,
             statePath: 'errors',
             observer: '_errorsChanged'
           },
-
           target: Object
         }
       }
@@ -88,20 +91,53 @@
         this.target = this.$.content;
 
         if (this.isNotificationsEnabled()) {
-          navigator.serviceWorker.pushManager.getSubscription()
-            .then(function(subscription) {
-              let isSubscribed = !(subscription === null);
-              if (isSubscribed) {
-                console.log('User IS subscribed.');
-              } else {
-                console.log('User is NOT subscribed.');
-              }
-            });
+          this.$.pushButton.addEventListener('checked-changed', this.notificationsChanged.bind(this));
+
+          this.getNotificationPermissionState().then((state) => {
+            this.$.pushButton.checked = state === 'granted';
+          });
         }
       }
 
-      notificationsTapped(e) {
-        console.log('salut');
+      notificationsChanged() {
+        this.$.pushButton.disabled = true;
+
+        if (this.$.pushButton.checked) {
+          this.askPermission()
+          .then(() => {
+            return this.subscribeUserToPush()
+          })
+          .then((subscription) => {
+            if (subscription) {
+              this.sendSubscriptionToBackEnd(subscription);
+            }
+
+            return subscription;
+          })
+          .then((subscription) => {
+            this.$.pushButton.disabled = false;
+            this.$.pushButton.checked = subscription !== null;
+          })
+          .catch((err) => {
+            this.getNotificationPermissionState().then((state) => {
+              this.$.pushButton.disabled = state === 'denied';
+            });
+            this.$.pushButton.checked = false;
+          });
+        }
+        else {
+          this.unsubscribeUserFromPush();
+        }
+      }
+
+      pushKeyChanged() {
+        if (this.isNotificationsEnabled()) {
+          this.$.pushButton.addEventListener('checked-changed', this.notificationsChanged.bind(this));
+          this.$.pushButton.disabled = !this.isNotificationsEnabled();
+          this.getNotificationPermissionState().then((state) => {
+            this.$.pushButton.checked = state === 'granted';
+          });
+        }
       }
 
       closeTapped() {
@@ -128,8 +164,85 @@
         this.updateUser(this.user.id, user);
       }
 
+      askPermission() {
+        return new Promise((resolve, reject) => {
+          const permissionResult = Notification.requestPermission((result) => {
+            resolve(result);
+          });
+
+          if (permissionResult) {
+            permissionResult.then(resolve, reject);
+          }
+        })
+        .then((permissionResult) => {
+          if (permissionResult !== 'granted') {
+            throw new Error('We weren\'t granted permission.');
+          }
+        });
+      }
+
+      getNotificationPermissionState() {
+        if (navigator.permissions) {
+          return navigator.permissions.query({name: 'notifications'})
+          .then((result) => {
+            return result.state;
+          });
+        }
+
+        return new Promise((resolve) => {
+          resolve(Notification.permission);
+        });
+      }
+
       isNotificationsEnabled() {
-        return 'serviceWorker' in navigator && 'PushManager' in window;
+        return this.pushKey && 'serviceWorker' in navigator && 'PushManager' in window;
+      }
+
+      getSWRegistration() {
+        return navigator.serviceWorker.getRegistration();
+      }
+
+      subscribeUserToPush() {
+        return this.getSWRegistration()
+        .then((registration) => {
+          const subscribeOptions = {
+            userVisibleOnly: true,
+            applicationServerKey: this.urlB64ToUint8Array(this.pushKey)
+          };
+
+          return registration.pushManager.subscribe(subscribeOptions);
+        })
+        .then((pushSubscription) => {
+          return pushSubscription;
+        });
+      }
+
+      unsubscribeUserFromPush() {
+        return this.getSWRegistration()
+          .then((registration) => {
+            return registration.pushManager.getSubscription();
+          })
+          .then((subscription) => {
+            if (subscription) {
+              return subscription.unsubscribe();
+            }
+          })
+          .then((subscription) =>  {
+            this.$.pushButton.disabled = false;
+            this.$.pushButton.checked = false;
+          })
+          .catch((err) => {
+            console.error('Failed to subscribe the user.', err);
+            this.getNotificationPermissionState()
+            .then((permissionState) => {
+              this.$.pushButton.disabled = permissionState === 'denied';
+              this.$.pushButton.checked = false;
+            });
+          });
+      }
+
+      sendSubscriptionToBackEnd(subscription) {
+        this.saveSubscription(subscription);
       }
 
       urlB64ToUint8Array(base64String) {
