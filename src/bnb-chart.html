@@ -138,6 +138,7 @@
           if (this.chart) {
             if (!_.isEqual(this.oldData, this.data)) {
               this.chart.data.datasets = chartData.datasets;
+              this.chart.options.scales.xAxes[0].time.unit = this.computeTickFormat(chartData);
               this.chart.update();
 
               this.oldData = this.data;
@@ -172,6 +173,12 @@
               scales: {
                 xAxes: [{
                   type: 'time',
+                  time: {
+                    unit: this.computeTickFormat(chartData),
+                    displayFormats: {
+                      hour: 'MMM D hA'
+                    }
+                  },
                   ticks: {
                     fontColor: '#fff'
                   }
@@ -245,7 +252,20 @@
       		}
         }
     		return resu;
-    	}
+      }
+
+      computeTickFormat(chartData) {
+        let resu = 'day';
+        if (chartData.datasets.length > 0) {
+          let dataset = chartData.datasets[0];
+          let first = dataset.data[0].x;
+          let last  = dataset.data[dataset.data.length-1].x;
+          if ( (last - first) < (7*24*60*60*1000)) {
+            resu = 'hour';
+          }
+        }
+        return resu;
+      }
     }
     window.customElements.define(BnbChart.is, BnbChart);
   </script>
