@@ -15,7 +15,7 @@
     "url": "git+https://github.com/frocher/bnb_app.git"
   },
   "author": "Fred Rocher",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/frocher/bnb_app/issues"
   },
