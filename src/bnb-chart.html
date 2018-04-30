@@ -172,6 +172,7 @@
               },
               scales: {
                 xAxes: [{
+                  stacked: this.type === 'bar',
                   type: 'time',
                   time: {
                     unit: this.computeTickFormat(chartData),
@@ -184,7 +185,7 @@
                   }
                 }],
                 yAxes: [{
-                  stacked: this.type === 'area',
+                  stacked: this.type === 'area' || this.type === 'bar',
                   ticks: {
                     fontColor: '#fff',
                     beginAtZero: true
@@ -200,6 +201,15 @@
                       sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
                   });
                   return 'Total: ' + Math.round(sum);
+                };
+            }
+            else if (this.type === 'bar') {
+              options.tooltips.callbacks.footer = function(tooltipItems, data) {
+                  let sum = 0;
+                  tooltipItems.forEach(function(tooltipItem) {
+                      sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
+                  });
+                  return 'Average: ' + Math.round(sum/tooltipItems.length);
                 };
             }
 
