@@ -1,16 +1,20 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/app-layout/app-layout.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/neon-animation/web-animations.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-item/paper-item.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
 <link rel="import" href="../bower_components/paper-menu-button/paper-menu-button.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="bnb-actions.html">
 <link rel="import" href="bnb-common-styles.html">
+<link rel="import" href="bnb-budget-bar.html">
+<link rel="import" href="bnb-budget-card.html">
 <link rel="import" href="bnb-divider.html">
-<link rel="import" href="bnb-period-dropdown.html">
+<link rel="import" href="bnb-period-bar.html">
 <link rel="import" href="bnb-chart-card.html">
 
 <dom-module id="bnb-page">
@@ -18,11 +22,6 @@
     <style include="bnb-common-styles">
       :host {
         @apply --layout-vertical;
-      }
-
-      #chartsFilter {
-        margin:16px;
-        padding:16px;
       }
 
       #charts {
@@ -40,8 +39,7 @@
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
           <paper-icon-button icon="arrow-back" on-tap="backTapped"></paper-icon-button>
-          <span>[[page.name]]</span>
-          <div class="flex"></div>
+          <span main-title>[[page.name]]</span>
           <paper-menu-button horizontal-align="right">
             <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
             <paper-listbox slot="dropdown-content">
@@ -53,21 +51,30 @@
             </paper-listbox>
           </paper-menu-button>
         </app-toolbar>
+        <paper-tabs selected="{{selectedTab}}" sticky>
+          <paper-tab>Statistics</paper-tab>
+          <paper-tab>Budget</paper-tab>
+        </paper-tabs>
       </app-header>
 
       <div id="content" class="fit">
-
         <div id="charts">
-          <paper-card id="chartsFilter">
-            <span>Stats for&nbsp;</span>
-            <bnb-period-dropdown></bnb-period-dropdown>
-          </paper-card>
-
-          <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" data="[[stats.lighthouse]]" model="[[lighthouseModel]]" has-details="true"></bnb-chart-card>
-          <bnb-chart-card id="performanceChart" name="Performance" type="line" data="[[stats.performance]]" model="[[performanceModel]]" has-details="true"></bnb-chart-card>
-          <bnb-chart-card id="uptimeChart" name="Uptime" type="line" data="[[stats.uptime]]" model="[[uptimeModel]]" has-details="true"></bnb-chart-card>
-          <bnb-chart-card id="requestsChart" name="Assets count" type="area" data="[[stats.requests]]" model="[[requestsModel]]" has-details="true"></bnb-chart-card>
-          <bnb-chart-card id="bytesChart" name="Assets size" type="area" data="[[stats.bytes]]" model="[[bytesModel]]" has-details="true"></bnb-chart-card>
+          <iron-pages selected="[[selectedTab]]">
+            <section>
+              <bnb-period-bar></bnb-period-bar>
+              <bnb-chart-card id="lighthouseChart" name="Lighthouse scores" type="bar" data="[[stats.lighthouse]]" model="[[lighthouseModel]]" has-details="true"></bnb-chart-card>
+              <bnb-chart-card id="performanceChart" name="Performance" type="line" data="[[stats.performance]]" model="[[performanceModel]]" has-details="true"></bnb-chart-card>
+              <bnb-chart-card id="uptimeChart" name="Uptime" type="line" data="[[stats.uptime]]" model="[[uptimeModel]]" has-details="true"></bnb-chart-card>
+              <bnb-chart-card id="requestsChart" name="Assets count" type="area" data="[[stats.requests]]" model="[[requestsModel]]" has-details="true"></bnb-chart-card>
+              <bnb-chart-card id="bytesChart" name="Assets size" type="area" data="[[stats.bytes]]" model="[[bytesModel]]" has-details="true"></bnb-chart-card>
+            </section>
+            <section>
+              <bnb-budget-bar id="budgetBar"></bnb-budget-bar>
+              <template is="dom-repeat" items="[[budgets]]">
+                <bnb-budget-card budget-info="[[item]]" on-close="budgetCloseTapped"></bnb-budget-card>
+              </template>
+            </section>
+          </iron-pages>
         </div>
 
       </div>
@@ -103,13 +110,25 @@
           },
           stats: {
             type: Object,
-            statePath: 'page_stats'
+            statePath: 'page_stats',
+            observer: '_statsChanged'
+          },
+          selectedTab: {
+            type: Number,
+            reflectToAttribute: true,
+            value: 0
           },
           lighthouseModel: Object,
           performanceModel: Object,
           uptimeModel: Object,
           requestsModel: Object,
-          bytesModel: Object
+          bytesModel: Object,
+          budgets: Array,
+          _budgets: {
+            type: Array,
+            statePath: 'budgets',
+            observer: '_budgetsChanged'
+          }
         }
       }
 
@@ -158,6 +177,46 @@
         this.$.uptimeChart.addEventListener('details', this.uptimeChartDetailsTapped.bind(this));
         this.$.requestsChart.addEventListener('details', this.requestsChartDetailsTapped.bind(this));
         this.$.bytesChart.addEventListener('details', this.bytesChartDetailsTapped.bind(this));
+
+        this.$.budgetBar.addEventListener('add', this.handleAddBudget.bind(this));
+      }
+
+      _statsChanged() {
+        if (this.stats) {
+          this._updateBudgets();
+        }
+        else {
+          this.budgets = [];
+        }
+      }
+
+      _budgetsChanged() {
+        if (this.stats) {
+          this._updateBudgets();
+        }
+      }
+
+      _updateBudgets() {
+        let budgets = [];
+        if (this._budgets) {
+          for (let i = 0; i < this._budgets.length; i++) {
+            let budget = this.createBudgetObject(this._budgets[i]);
+            budgets.push(budget);
+          }
+          budgets.sort( (a,b) => {
+            if (a.category > b.category) {
+              return 1;
+            }
+            else if (a.category < b.category) {
+              return -1;
+            }
+            else {
+              return a.item > b.item ? 1 : -1;
+            }
+          });
+
+        }
+        this.budgets = budgets;
       }
 
       backTapped() {
@@ -206,6 +265,105 @@
 
       bytesChartDetailsTapped(e) {
         this.dispatch('updateRoute', 'bytes-details/' + this.page.id);
+      }
+
+      handleAddBudget(e) {
+        this.createBudget(this.page.id, e.detail.category, e.detail.item, e.detail.budget);
+      }
+
+      createBudgetName(category, item) {
+        const data = [
+          {name: 'Lighthouse', values: ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Average']},
+          {name: 'Performance', values: ['First byte', 'First paint', 'Speed index', 'Interactive']},
+          {name: 'Assets count', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total']},
+          {name: 'Assets size', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total']}
+        ];
+        return data[category].name + '/' + data[category].values[item];
+      }
+
+      createBudgetObject(src) {
+        let model;
+        let data;
+        switch (src.category) {
+          case 0:
+            model = this.lighthouseModel;
+            data = this.stats.lighthouse;
+            break;
+          case 1:
+            model = this.performanceModel;
+            data = this.stats.performance;
+            break;
+          case 2:
+            model = this.requestsModel;
+            data = this.stats.requests;
+            break;
+          case 3:
+            model = this.bytesModel;
+            data = this.stats.bytes;
+            break;
+        }
+
+        let budgetModel;
+        let budgetData;
+        if (src.item >= data.length) {
+          switch (src.category) {
+            case 0:
+              budgetModel = {label: 'average', color: '#D500F9'};
+              budgetData = {key: 'average', values: this.createAverageData(data)};
+              break;
+            case 2:
+              budgetModel = {label: 'total', color: '#00B0FF'};
+              budgetData = {key: 'total', values: this.createTotalData(data)};
+              break;
+            case 3:
+              budgetModel = {label: 'total', color: '#FF80AB'};
+              budgetData = {key: 'total', values: this.createTotalData(data)};
+              break;
+          }
+        }
+        else {
+          budgetModel = model[src.item];
+          budgetData = data[src.item];
+        }
+
+        return {
+          id: src.id,
+          category: src.category,
+          item: src.item,
+          name: this.createBudgetName(src.category, src.item),
+          model: budgetModel,
+          data: budgetData,
+          budget: src.budget
+        };
+      }
+
+      createTotalData(data) {
+        let total = [];
+        for(let iSet = 0; iSet < data.length; iSet++) {
+          for(let iData = 0; iData < data[iSet].values.length; iData++) {
+            if (total[iData] === undefined) {
+              total[iData] = JSON.parse(JSON.stringify(data[iSet].values[iData]));
+            }
+            else {
+              total[iData].value = Math.round(total[iData].value + data[iSet].values[iData].value);
+            }
+          }
+        }
+        return total;
+      }
+
+      createAverageData(data) {
+        let average = this.createTotalData(data);
+        if (data.length > 0) {
+          for (let i = 0; i < average.length; i++) {
+            average[i].value = Math.round(average[i].value / data.length);
+          }
+        }
+        return average;
+      }
+
+      budgetCloseTapped(e) {
+        this.deleteBudget(this.page.id, e.detail.id);
       }
     }
     window.customElements.define(BnbPage.is, BnbPage);

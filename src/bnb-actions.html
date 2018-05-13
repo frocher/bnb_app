@@ -312,6 +312,47 @@
           }
         },
 
+        fetchBudgetsSuccess(budgets) {
+          return {
+            type: 'BUDGETS_FETCH_SUCCESS',
+            budgets: budgets
+          }
+        },
+
+        fetchBudgetsError(errors) {
+          return {
+            type: 'BUDGETS_FETCH_ERROR',
+            errors: errors
+          }
+        },
+
+        createBudgetSuccess() {
+          return {
+            type: 'BUDGET_CREATE_SUCCESS'
+          }
+        },
+
+        createBudgetError(errors) {
+          return {
+            type: 'BUDGET_CREATE_ERROR',
+            errors: errors
+          }
+        },
+
+        deleteBudgetSuccess(budget) {
+          return {
+            type: 'BUDGET_DELETE_SUCCESS',
+            budget: budget
+          }
+        },
+
+        deleteBudgetError(errors) {
+          return {
+            type: 'BUDGET_DELETE_ERROR',
+            errors: errors
+          }
+        },
+
         createPageMemberSuccess(member) {
           return {
             type: 'PAGE_MEMBER_CREATE_SUCCESS',
@@ -691,6 +732,62 @@
             }
             else {
               dispatch('deletePageError', response.errors);
+            }
+          }
+        });
+      });
+    }
+
+    loadBudgets(pageId) {
+      this.dispatch((dispatch) => {
+        this._getResource({
+          url: this.getRequestUrl('/pages/' + pageId + '/budgets', {}),
+          method: 'GET',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              dispatch('fetchBudgetsSuccess', response);
+            }
+            else {
+              dispatch('fetchBudgetsError', response.errors);
+            }
+          }
+        });
+      });
+    }
+
+    createBudget(pageId, category, item, budget) {
+      this.dispatch((dispatch) => {
+        this._getResource({
+          url: this.getRequestUrl('/pages/' + pageId + '/budgets', { category: category, item: item, budget: budget }),
+          method: 'POST',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this.loadBudgets(pageId);
+              dispatch('createBudgetSuccess');
+            }
+            else {
+              dispatch('createBudgetError', response.errors);
+            }
+          }
+        });
+      });
+    }
+
+    deleteBudget(pageId, budgetId) {
+      this.dispatch((dispatch) => {
+        this._getResource({
+          url: this.getRequestUrl('/pages/' + pageId + '/budgets/' + budgetId, {}),
+          method: 'DELETE',
+          onLoad(e) {
+            let response = JSON.parse(e.target.responseText);
+            if (e.target.status === 200) {
+              this.loadBudgets(pageId);
+              dispatch('deleteBudgetSuccess', response);
+            }
+            else {
+              dispatch('deleteBudgetError', response.errors);
             }
           }
         });

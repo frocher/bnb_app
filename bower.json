@@ -7,6 +7,7 @@
     "app-route": "polymerelements/app-route#^2.0.0",
     "app-storage": "polymerelements/app-storage#^2.0.0",
     "chart.js": "^2.7.0",
+    "chartjs-plugin-annotation": "^0.5.0",
     "iron-a11y-keys": "polymerelements/iron-a11y-keys#^2.0.0",
     "iron-collapse": "polymerelements/iron-collapse#^2.0.0",
     "iron-icon": "polymerelements/iron-icon#^2.0.0",
@@ -45,6 +46,7 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
   },
   "resolutions": {
-    "iron-location": "develop"
+    "iron-location": "develop",
+    "lodash": "^4.17.0"
   }
 }

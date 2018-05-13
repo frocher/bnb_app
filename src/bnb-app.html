@@ -214,6 +214,7 @@
           let pageId = Number(this.subroute.path.substring(1));
           this.loadPage(pageId);
           this.loadPageStats(pageId);
+          this.loadBudgets(pageId);
         }
         else if (this.view === 'edit-page') {
           let pageId = Number(this.subroute.path.substring(1));

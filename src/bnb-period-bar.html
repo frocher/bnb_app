@@ -1,0 +1,31 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="bnb-common-styles.html">
+<link rel="import" href="bnb-period-dropdown.html">
+
+<dom-module id="bnb-period-bar">
+  <template>
+    <style include="bnb-common-styles">
+      :host {
+        display: flex;
+      }
+
+      paper-card {
+        width: 100%;
+        margin: 16px;
+        padding: 16px;
+      }
+    </style>
+    <paper-card>
+      <span>Stats for&nbsp;</span>
+      <bnb-period-dropdown></bnb-period-dropdown>
+    </paper-card>
+  </template>
+
+  <script>
+    class BnbPeriodBar extends Polymer.Element {
+      static get is() { return 'bnb-period-bar'; }
+    }
+    window.customElements.define(BnbPeriodBar.is, BnbPeriodBar);
+  </script>
+</dom-module>

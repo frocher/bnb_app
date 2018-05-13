@@ -239,6 +239,21 @@
           route: 'home'
         });
 
+      case 'BUDGETS_FETCH_SUCCESS':
+        return Object.assign({}, state, {
+          budgets: action.budgets
+        });
+
+      case 'BUDGETS_CREATE_SUCCESS':
+        return Object.assign({}, state, {
+          message: {text: 'Budget has been added', counter: state.message.counter + 1}
+        });
+
+      case 'BUDGETS_DELETE_SUCCESS':
+        return Object.assign({}, state, {
+          message: {text: 'Budget has been removed', counter: state.message.counter + 1}
+        });
+
       case 'PAGE_MEMBER_CREATE_SUCCESS':
         return Object.assign({}, state, {
           message: {text: 'Member has been added', counter: state.message.counter + 1}
@@ -254,6 +269,8 @@
           message: {text: 'Member has been removed', counter: state.message.counter + 1}
         });
 
+      case 'BUDGET_CREATE_ERROR':
+      case 'BUDGET_DELETE_ERROR':
       case 'PAGE_MEMBER_CREATE_ERROR':
       case 'PAGE_MEMBER_UPDATE_ERROR':
       case 'PAGE_MEMBER_DELETE_ERROR':
