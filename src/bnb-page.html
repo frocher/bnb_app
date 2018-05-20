@@ -69,9 +69,9 @@
               <bnb-chart-card id="bytesChart" name="Assets size" type="area" data="[[stats.bytes]]" model="[[bytesModel]]" has-details="true"></bnb-chart-card>
             </section>
             <section>
-              <bnb-budget-bar id="budgetBar"></bnb-budget-bar>
+              <bnb-budget-bar id="budgetBar" can-add="[[page.can_create_budget]]"></bnb-budget-bar>
               <template is="dom-repeat" items="[[budgets]]">
-                <bnb-budget-card budget-info="[[item]]" on-close="budgetCloseTapped"></bnb-budget-card>
+                <bnb-budget-card budget-info="[[item]]" can-delete="[[page.can_delete_budget]]" on-close="budgetCloseTapped"></bnb-budget-card>
               </template>
             </section>
           </iron-pages>

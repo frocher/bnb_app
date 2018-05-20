@@ -31,6 +31,10 @@
         @apply --layout-horizontal;
       }
 
+      #budgetTools[hidden] {
+        display: none;
+      }
+
       #itemField {
         margin-left: 5px;
       }
@@ -51,7 +55,7 @@
         <span>Stats for&nbsp;</span>
         <bnb-period-dropdown></bnb-period-dropdown>
       </div>
-      <div id="budgetTools">
+      <div id="budgetTools" hidden$="[[!canAdd]]">
         <paper-dropdown-menu id="categoryField" label="Category">
           <paper-listbox slot="dropdown-content" class="dropdown-content" selected="{{selectedCategory}}">
             <paper-item>Lighthouse</paper-item>
@@ -90,6 +94,10 @@
           items: {
             type: Array,
             value: []
+          },
+          canAdd: {
+            type: Boolean,
+            value: true
           },
           budget: {
             type: Number

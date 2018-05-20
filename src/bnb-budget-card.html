@@ -37,7 +37,7 @@
       <div class="card-content">
         <div class="budget-header">[[budgetInfo.name]]
           <div class="budget-header-buttons">
-            <paper-icon-button icon="close" on-tap="closeTapped"></paper-icon-button>
+            <paper-icon-button icon="close" hidden$="[[!canDelete]]" on-tap="closeTapped"></paper-icon-button>
           </div>
         </div>
         <bnb-budget id="chart" data="[[budgetInfo.data]]" model="[[budgetInfo.model]]" budget="[[budgetInfo.budget]]"></bnb-budget>
@@ -51,7 +51,11 @@
 
       static get properties() {
         return {
-          budgetInfo: Object
+          budgetInfo: Object,
+          canDelete: {
+            type: Boolean,
+            value: true
+          }
         }
       }
 
