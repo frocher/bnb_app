@@ -196,7 +196,7 @@
 
       _viewLoaded(shouldResetLayout) {
         this._ensureLazyLoaded();
-        this.$.analytics.sendPath(this.route);
+        this.$.analytics.sendPath(this.route.path);
 
         if (this.isLogged()) {
           this._loadCurrentViewData();
