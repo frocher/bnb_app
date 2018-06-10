@@ -4,9 +4,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "service-worker.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
     "start": "node ./start.js",
     "test": "echo \"Error: no test specified\" && exit 1"
