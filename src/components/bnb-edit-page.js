@@ -13,7 +13,7 @@ import '@polymer/paper-radio-group/paper-radio-group.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import { connect } from 'pwa-helpers';
 import { store } from '../store.js';
-import { updatePage } from '../actions/app.js';
+import { updatePage, updateRoute } from '../actions/app.js';
 import './bnb-collapse.js';
 import './bnb-common-styles.js';
 import './bnb-divider.js';
