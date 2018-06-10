@@ -1,8 +1,6 @@
 build
-test/temp
+server
 .sass-cache
-bower_components
 .tmp
-test/bower_components/
 .DS_Store
 node_modules
