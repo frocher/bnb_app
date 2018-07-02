@@ -1,4 +1,5 @@
-import moment from 'moment';
+import { addDays } from 'date-fns/esm';
+
 import { fetchCredentials } from '../common.js';
 
 // Initial state
@@ -22,7 +23,7 @@ const initial = {
   errors: [],
 
   // Selected period
-  period: {start: moment().subtract(30, 'days').toDate(), end: moment().toDate()},
+  period: {start: addDays(new Date(), -30), end: new Date()},
 
   // Loaded pages
   pages: undefined,

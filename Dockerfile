@@ -38,7 +38,6 @@ RUN rm "node-v$NODE_VERSION-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
 RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 # Install bower and gulp
-RUN npm install -g bower
 RUN npm install -g polymer-cli --unsafe-perm
 
 # Copy app
@@ -49,14 +48,11 @@ COPY . $APP_HOME
 
 # build app
 RUN npm install
-RUN bower install --production --allow-root
 RUN polymer build
 
 # clean
-RUN npm uninstall -g bower
 RUN npm uninstall -g polymer-cli
 RUN apt-get purge -y curl git gnupg
-
 
 EXPOSE 8080
 CMD ["npm","start"]

@@ -1,4 +1,4 @@
-export const BnbFormElement = (superClass) => class extends superClass {
+export const BnbFormElement = (baseElement) => class extends baseElement {
   /**
     * Validate or invalidate fields from an errors Array
     * @param {Array} newVal

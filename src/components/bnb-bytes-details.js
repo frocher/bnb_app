@@ -5,10 +5,10 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@vaadin/vaadin-grid/vaadin-grid.js';
 import '@vaadin/vaadin-grid/vaadin-grid-sorter.js';
 import { connect } from 'pwa-helpers';
+import { format } from 'date-fns/esm'
 import { store } from '../store.js';
 import { updateRoute } from '../actions/app.js';
 import { getRequestUrl } from '../common.js';
-import moment from 'moment';
 import './bnb-common-styles.js';
 import './bnb-grid-styles.js';
 
@@ -102,7 +102,7 @@ class BnbBytesDetails extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.page = state.app.page;
-    this.assetsDetails = state.app.assetsDetails;
+    this.assetsDetails = state.app.assets_details;
   }
 
   _backTapped() {
@@ -110,7 +110,7 @@ class BnbBytesDetails extends connect(store)(PolymerElement) {
   }
 
   _formatTime(time) {
-    return moment(time).format('lll');
+    return format(time, 'MMM dd, YYYY HH:mm');
   }
 
   _formatBytes(bytes) {

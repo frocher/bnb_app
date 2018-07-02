@@ -8,10 +8,11 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-material/paper-material.js';
 import '@polymer/paper-menu-button/paper-menu-button.js';
 import 'range-datepicker/range-datepicker.js';
+import { addDays, addMonths, addWeeks, format, endOfDay, endOfMonth, endOfWeek,
+  startOfDay, startOfMonth, startOfWeek } from 'date-fns/esm'
 import { connect } from 'pwa-helpers';
 import { store } from '../store.js';
 import { updatePeriod } from '../actions/app.js'
-import moment from 'moment';
 import './bnb-common-styles.js';
 
 
@@ -43,7 +44,7 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
       <paper-input id="endDate" label="Date to" value="[[dateTo]]" readonly on-tap="_handleOpenDropdown"></paper-input>
       <iron-dropdown id="rangeDropdown" horizontal-align="[[horizontalAlign]]">
         <paper-material slot="dropdown-content">
-          <range-datepicker date-from="{{startDate}}" date-to="{{endDate}}"></range-datepicker>
+          <range-datepicker date-from="{{startDate}}" date-to="{{endDate}}" month="06" year="2018"></range-datepicker>
         </paper-material>
       </iron-dropdown>
       <paper-menu-button horizontal-align="right">
@@ -77,8 +78,8 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
   }
 
   _stateChanged(state) {
-    this.dateFrom = moment(state.app.period.start, 'X').format('ll');
-    this.dateTo = moment(state.app.period.end, 'X').format('ll');
+    this.dateFrom = format(state.app.period.start, 'MMM dd, YYYY');
+    this.dateTo = format(state.app.period.end, 'MMM dd, YYYY');
   }
 
   _handleOpenDropdown() {
@@ -89,8 +90,8 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
     if (date) {
       this.$.rangeDropdown.close();
       let period = {
-        start: moment(this.startDate, 'X').toDate(),
-        end: moment(this.endDate, 'X').toDate()
+        start: new Date(this.startDate),
+        end: new Date(this.endDate)
       };
       store.dispatch(updatePeriod(period));
     }
@@ -100,38 +101,39 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
     let type = e.currentTarget.dataset.period;
     let startDate = undefined;
     let endDate = undefined;
+    let now = new Date();
     switch (type) {
       case 'today':
-        startDate = moment().startOf('day').toDate();
-        endDate = moment().endOf('day').toDate();
+        startDate = startOfDay(now);
+        endDate = endOfDay(now);
       break;
       case 'this_week':
-        startDate = moment().startOf('week').toDate();
-        endDate = moment().endOf('week').toDate();
+        startDate = startOfWeek(now);
+        endDate = endOfWeek(now);
       break;
       case 'this_month':
-        startDate = moment().startOf('month').toDate();
-        endDate = moment().endOf('month').toDate();
+        startDate = startOfMonth(now);
+        endDate = endOfMonth(now);
       break;
       case 'yesterday':
-        startDate = moment().add(-1, 'days').startOf('day').toDate();
-        endDate = moment().add(-1, 'days').endOf('day').toDate();
+        startDate = startOfDay(addDays(now, -1));
+        endDate = endOfDay(addDays(now, -1));
       break;
       case 'last_week':
-        startDate = moment().add(-1, 'weeks').startOf('week').toDate();
-        endDate = moment().add(-1, 'weeks').endOf('week').toDate();
+        startDate = startOfWeek(addWeeks(now, -1));
+        endDate = endOfWeek(addWeeks(now, -1));
       break;
       case 'last_month':
-        startDate = moment().add(-1, 'months').startOf('month').toDate();
-        endDate = moment().add(-1, 'months').endOf('month').toDate();
+        startDate = startOfMonth(addMonths(now, -1));
+        endDate = endOfMonth(addMonths(now, -1));
       break;
       case 'last_7_days':
-        startDate = moment().add(-7, 'days').startOf('day').toDate();
-        endDate = moment().endOf('day').toDate();
+        startDate = startOfDay(addDays(now, -7));
+        endDate = endOfDay(now);
       break;
       case 'last_30_days':
-        startDate = moment().add(-30, 'days').startOf('day').toDate();
-        endDate = moment().endOf('day').toDate();
+        startDate = startOfDay(addDays(now, -30));
+        endDate = endOfDay(now);
       break;
     }
     store.dispatch(updatePeriod({start:startDate, end:endDate}));

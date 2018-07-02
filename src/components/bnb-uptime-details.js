@@ -4,7 +4,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@vaadin/vaadin-grid/vaadin-grid.js';
 import '@vaadin/vaadin-grid/vaadin-grid-sorter.js';
-import moment from 'moment';
+import { format } from 'date-fns/esm';
 import { connect } from 'pwa-helpers';
 import { store } from '../store.js';
 import { updateRoute } from '../actions/app.js';
@@ -120,7 +120,7 @@ class BnbUptimeDetails extends connect(store)(PolymerElement) {
   }
 
   _formatTime(time) {
-    return moment(time).format('lll');
+    return format(time, 'MMM dd, YYYY HH:mm');
   }
 
   _statusClass(value) {

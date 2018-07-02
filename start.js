@@ -60,7 +60,7 @@ function launchPrplServer() {
   app.use('/omniauth', proxy(`${apiPath}/omniauth`));
 
   let config = JSON.parse(fs.readFileSync('build/polymer.json', 'utf8'));
-  app.get('/*', prpl.makeHandler('build', config));
+  app.get('/*', prpl.makeHandler('server/build', config));
 
   const port = normalizePort(process.env.PORT || '8080');
   app.listen(port);

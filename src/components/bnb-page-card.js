@@ -1,17 +1,13 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers';
-import {GestureEventListeners} from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
+import { GestureEventListeners } from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
 import '@polymer/paper-card/paper-card.js';
 import '@polymer/paper-ripple/paper-ripple.js';
+import { connect } from 'pwa-helpers';
 import { store } from '../store.js';
 import { getRequestUrl } from '../common.js';
 import { updateRoute } from '../actions/app.js';
 
-
-class BnbPageCardGestures extends GestureEventListeners(PolymerElement) {
-}
-
-class BnbPageCard extends connect(store)(BnbPageCardGestures) {
+class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) {
   static get template() {
     return html`
     <style>

@@ -191,7 +191,50 @@ class BnbApp extends connect(store)(PolymerElement) {
         // When a load failed, it triggered a 404 which means we need to
         // eagerly load the 404 page definition
         let cb = this._viewLoaded.bind(this, Boolean(oldView));
-        import('./bnb-' + view + '.js').then(cb);
+
+        switch (view) {
+          case 'add-page':
+            import('./bnb-add-page.js').then(cb);
+            break;
+          case 'bytes-details':
+            import('./bnb-bytes-details.js').then(cb);
+            break;
+          case 'edit-page':
+            import('./bnb-edit-page.js').then(cb);
+            break;
+          case 'edit-password':
+            import('./bnb-edit-password.js').then(cb);
+            break;
+          case 'forgot-password':
+            import('./bnb-forgot-password.js').then(cb);
+            break;
+          case 'lighthouse-details':
+            import('./bnb-lighthouse-details.js').then(cb);
+            break;
+          case 'members':
+            import('./bnb-members.js').then(cb);
+            break;
+          case 'page':
+            import('./bnb-page.js').then(cb);
+            break;
+          case 'performance-details':
+            import('./bnb-performance-details.js').then(cb);
+            break;
+          case 'requests-details':
+            import('./bnb-requests-details.js').then(cb);
+            break;
+          case 'signup':
+            import('./bnb-signup.js').then(cb);
+            break;
+          case 'uptime-details':
+            import('./bnb-uptime-details.js').then(cb);
+            break;
+          case 'user-preferences':
+            import('./bnb-user-preferences.js').then(cb);
+            break;
+          default:
+            this._pageLoaded(Boolean(oldPage));
+        }
       }
 
       // Restore scroll position
@@ -255,10 +298,6 @@ class BnbApp extends connect(store)(PolymerElement) {
     if (!this.loadComplete) {
       afterNextRender(this, () => {
         import('./lazy-resources.js').then(() => {
-          // Register service worker if supported.
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js', {scope: '/'});
-          }
           this._notifyNetworkStatus();
           this.loadComplete = true;
         });

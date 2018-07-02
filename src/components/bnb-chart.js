@@ -3,9 +3,6 @@ import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
 import { IronResizableBehavior } from '@polymer/iron-resizable-behavior/iron-resizable-behavior.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-spinner/paper-spinner.js';
-import '@polymer/paper-spinner/paper-spinner.js';
-import 'chart.js/dist/Chart.bundle.min.js';
-import 'chartjs-plugin-annotation/chartjs-plugin-annotation.js';
 import { isEqual, find } from 'lodash-es';
 
 class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
