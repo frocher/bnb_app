@@ -1,9 +1,8 @@
 export const BnbFormElement = (baseElement) => class extends baseElement {
   /**
     * Validate or invalidate fields from an errors Array
-    * @param {Array} newVal
     */
-  _errorsChanged(newVal) {
+  _errorsChanged() {
     if (this.errors) {
       for (let prop in this.errors) {
         if (this.errors.hasOwnProperty(prop)) {
@@ -16,4 +15,4 @@ export const BnbFormElement = (baseElement) => class extends baseElement {
       }
     }
   }
-}
+};

@@ -1,16 +1,16 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/app-layout/app-layout.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@vaadin/vaadin-grid/vaadin-grid.js';
-import '@vaadin/vaadin-grid/vaadin-grid-sorter.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/app-layout/app-layout';
+import '@polymer/iron-icons/iron-icons';
+import '@polymer/paper-icon-button/paper-icon-button';
+import '@vaadin/vaadin-grid/vaadin-grid';
+import '@vaadin/vaadin-grid/vaadin-grid-sorter';
 import { connect } from 'pwa-helpers';
-import { format } from 'date-fns/esm'
-import { store } from '../store.js';
-import { updateRoute } from '../actions/app.js';
-import { getRequestUrl } from '../common.js';
-import './bnb-common-styles.js';
-import './bnb-grid-styles.js';
+import { format } from 'date-fns/esm';
+import { store } from '../store';
+import { updateRoute } from '../actions/app';
+import { getRequestUrl } from '../common';
+import './bnb-common-styles';
+import './bnb-grid-styles';
 
 class BnbBytesDetails extends connect(store)(PolymerElement) {
   static get template() {
@@ -97,7 +97,7 @@ class BnbBytesDetails extends connect(store)(PolymerElement) {
     return {
       page: Object,
       assetsDetails: Object,
-    }
+    };
   }
 
   _stateChanged(state) {
@@ -106,7 +106,7 @@ class BnbBytesDetails extends connect(store)(PolymerElement) {
   }
 
   _backTapped() {
-    store.dispatch(updateRoute('page/' + this.page.id));
+    store.dispatch(updateRoute(`page/${this.page.id}`));
   }
 
   _formatTime(time) {
@@ -120,8 +120,8 @@ class BnbBytesDetails extends connect(store)(PolymerElement) {
   _computeUrl(key) {
     if (key) {
       let result = 'http://www.softwareishard.com/har/viewer/?inputUrl=';
-      result += window.location.protocol + '//' + window.location.host;
-      result += getRequestUrl('pages/' + this.page.id + '/assets/' + key);
+      result += `${window.location.protocol}//${window.location.host}`;
+      result += getRequestUrl(`pages/${this.page.id}/assets/${key}`);
       return result;
     }
     return '';

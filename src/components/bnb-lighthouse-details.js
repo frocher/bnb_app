@@ -1,16 +1,16 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/app-layout/app-layout.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@vaadin/vaadin-grid/vaadin-grid.js';
-import '@vaadin/vaadin-grid/vaadin-grid-sorter.js';
-import { format } from 'date-fns/esm'
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/app-layout/app-layout';
+import '@polymer/iron-icons/iron-icons';
+import '@polymer/paper-icon-button/paper-icon-button';
+import '@vaadin/vaadin-grid/vaadin-grid';
+import '@vaadin/vaadin-grid/vaadin-grid-sorter';
+import { format } from 'date-fns/esm';
 import { connect } from 'pwa-helpers';
-import { store } from '../store.js';
-import { updateRoute } from '../actions/app.js';
-import { getRequestUrl } from '../common.js';
-import './bnb-common-styles.js';
-import './bnb-grid-styles.js';
+import { store } from '../store';
+import { updateRoute } from '../actions/app';
+import { getRequestUrl } from '../common';
+import './bnb-common-styles';
+import './bnb-grid-styles';
 
 class BnbLighthouseDetails extends connect(store)(PolymerElement) {
   static get template() {
@@ -87,13 +87,11 @@ class BnbLighthouseDetails extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get is() { return 'bnb-lighthouse-details'; }
-
   static get properties() {
     return {
       page: Object,
-      lighthouseDetails: Object
-    }
+      lighthouseDetails: Object,
+    };
   }
 
   _stateChanged(state) {
@@ -102,7 +100,7 @@ class BnbLighthouseDetails extends connect(store)(PolymerElement) {
   }
 
   _backTapped() {
-    store.dispatch(updateRoute('page/' + this.page.id));
+    store.dispatch(updateRoute(`page/${this.page.id}`));
   }
 
   _formatTime(time) {
@@ -111,9 +109,9 @@ class BnbLighthouseDetails extends connect(store)(PolymerElement) {
 
   _computeUrl(key) {
     if (key) {
-      return getRequestUrl('pages/' + this.page.id + '/lighthouse/' + key);
+      return getRequestUrl(`pages/${this.page.id}/lighthouse/${key}`);
     }
     return '';
   }
 }
-window.customElements.define(BnbLighthouseDetails.is, BnbLighthouseDetails);
+window.customElements.define('bnb-lighthouse-details', BnbLighthouseDetails);

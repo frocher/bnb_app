@@ -1,9 +1,9 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-card/paper-card.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import './bnb-budget.js';
-import './bnb-common-styles.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/iron-icons/iron-icons';
+import '@polymer/paper-card/paper-card';
+import '@polymer/paper-icon-button/paper-icon-button';
+import './bnb-budget';
+import './bnb-common-styles';
 
 class BnbBudgetCard extends PolymerElement {
   static get template() {
@@ -47,20 +47,18 @@ class BnbBudgetCard extends PolymerElement {
     `;
   }
 
-  static get is() { return 'bnb-budget-card'; }
-
   static get properties() {
     return {
       budgetInfo: Object,
       canDelete: {
         type: Boolean,
-        value: true
-      }
-    }
+        value: true,
+      },
+    };
   }
 
   closeTapped() {
-    this.dispatchEvent(new CustomEvent('close', {detail: this.budgetInfo}));
+    this.dispatchEvent(new CustomEvent('close', { detail: this.budgetInfo }));
   }
 }
-window.customElements.define(BnbBudgetCard.is, BnbBudgetCard);
+window.customElements.define('bnb-budget-card', BnbBudgetCard);

@@ -1,6 +1,6 @@
 import { addDays } from 'date-fns/esm';
 
-import { fetchCredentials } from '../common.js';
+import { fetchCredentials } from '../common';
 
 // Initial state
 const initial = {
@@ -13,7 +13,7 @@ const initial = {
   // Text for message toast
   message: {
     text: '',
-    counter: 0
+    counter: 0,
   },
 
   // User credentials for API
@@ -23,7 +23,7 @@ const initial = {
   errors: [],
 
   // Selected period
-  period: {start: addDays(new Date(), -30), end: new Date()},
+  period: { start: addDays(new Date(), -30), end: new Date() },
 
   // Loaded pages
   pages: undefined,
@@ -44,40 +44,38 @@ const initial = {
   uptime_details: undefined,
 
   // Assets details of current page
-  assets_details: undefined
+  assets_details: undefined,
 };
 
 
-const app = (state, action) => {
-  state = state || initial;
-
+const app = (state = initial, action) => {
   switch (action.type) {
     case 'UPDATE_ROUTE':
       return Object.assign({}, state, {
-        route: action.route
+        route: action.route,
       });
 
     case 'ENVIRONMENT_FETCH_SUCCESS':
       return Object.assign({}, state, {
         analyticsKey: action.analyticsKey,
-        pushKey: action.pushKey
+        pushKey: action.pushKey,
       });
 
     case 'UPDATE_MESSAGE':
       return Object.assign({}, state, {
-        message: {text: action.message, counter: state.message.counter + 1}
+        message: { text: action.message, counter: state.message.counter + 1 },
       });
 
     case 'UPDATE_PERIOD':
       return Object.assign({}, state, {
-        period: action.period
+        period: action.period,
       });
 
     case 'SIGN_IN_SUCCESS':
       sessionStorage.setItem('credentials', JSON.stringify(action.credentials));
       return Object.assign({}, state, {
         credentials: action.credentials,
-        route: 'home'
+        route: 'home',
       });
 
     case 'ENVIRONMENT_FETCH_ERROR':
@@ -86,177 +84,176 @@ const app = (state, action) => {
     case 'PAGES_FETCH_ERROR':
     case 'PAGE_FETCH_ERROR':
     case 'PAGE_MEMBERS_FETCH_ERROR':
-    case 'PAGE_STATS_FETCH_ERROR':
-      let message = action.errors !== undefined ? action.errors[0] : 'Oops something went wrong.';
+    case 'PAGE_STATS_FETCH_ERROR': {
+      const message = action.errors !== undefined ? action.errors[0] : 'Oops something went wrong.';
       return Object.assign({}, state, {
-        message: {text: message, counter: state.message.counter + 1},
+        message: { text: message, counter: state.message.counter + 1 },
       });
+    }
 
     case 'SIGN_UP_SUCCESS':
       return Object.assign({}, state, {
-        message: {text: 'Sign up successful. An activation email has been sent to you.', counter: state.message.counter + 1},
+        message: { text: 'Sign up successful. An activation email has been sent to you.', counter: state.message.counter + 1 },
       });
 
     case 'SIGN_UP_ERROR':
       if (action.errors) {
         return Object.assign({}, state, {
-          errors: action.errors
+          errors: action.errors,
         });
       }
-      else {
-        return Object.assign({}, state, {
-          message: {text: 'Unknown error. Can\'t signup.', counter: state.message.counter + 1},
-        });
-      }
+      return Object.assign({}, state, {
+        message: { text: 'Unknown error. Can\'t signup.', counter: state.message.counter + 1 },
+      });
 
     case 'FORGOT_PASSWORD_SUCCESS':
     case 'FORGOT_PASSWORD_ERROR':
       return Object.assign({}, state, {
-        message: {text: action.message, counter: state.message.counter + 1},
+        message: { text: action.message, counter: state.message.counter + 1 },
       });
 
     case 'UPDATE_PASSWORD_SUCCESS':
       return Object.assign({}, state, {
-        message: {text: action.message, counter: state.message.counter + 1},
-        route: 'signin'
+        message: { text: action.message, counter: state.message.counter + 1 },
+        route: 'signin',
       });
 
     case 'UPDATE_PASSWORD_ERROR':
       return Object.assign({}, state, {
-        errors: action.errors
+        errors: action.errors,
       });
 
     case 'SIGN_OUT':
       sessionStorage.removeItem('credentials');
       return Object.assign({}, state, {
         credentials: null,
-        route: 'signin'
+        route: 'signin',
       });
 
     case 'USER_FETCH_SUCCESS':
       return Object.assign({}, state, {
-        user: action.user
+        user: action.user,
       });
 
     case 'USER_UPDATE_START':
       return Object.assign({}, state, {
-        errors: []
+        errors: [],
       });
 
     case 'USER_UPDATE_SUCCESS':
       return Object.assign({}, state, {
-        message: {text: 'User preferences have been updated', counter: state.message.counter + 1},
-        route: 'home'
+        message: { text: 'User preferences have been updated', counter: state.message.counter + 1 },
+        route: 'home',
       });
 
     case 'USER_UPDATE_ERROR':
       return Object.assign({}, state, {
-        errors: action.errors
+        errors: action.errors,
       });
 
     case 'PAGES_FETCH_SUCCESS':
       return Object.assign({}, state, {
-        pages: action.pages
+        pages: action.pages,
       });
 
     case 'PAGE_FETCH_SUCCESS':
       return Object.assign({}, state, {
-        page: action.page
+        page: action.page,
       });
 
     case 'PAGE_MEMBERS_FETCH_SUCCESS':
       return Object.assign({}, state, {
-        page_members: action.members
+        page_members: action.members,
       });
 
     case 'PAGE_STATS_START':
       return Object.assign({}, state, {
-        page_stats: null
+        page_stats: null,
       });
 
     case 'PAGE_STATS_FETCH_SUCCESS':
       return Object.assign({}, state, {
-        page_stats: action.stats
+        page_stats: action.stats,
       });
 
     case 'LIGHTHOUSE_DETAILS_START':
       return Object.assign({}, state, {
-        lighthouse_details: null
+        lighthouse_details: null,
       });
 
     case 'LIGHTHOUSE_DETAILS_FETCH_SUCCESS':
       return Object.assign({}, state, {
-        lighthouse_details: action.details
+        lighthouse_details: action.details,
       });
 
     case 'UPTIME_DETAILS_START':
       return Object.assign({}, state, {
-        uptime_details: null
+        uptime_details: null,
       });
 
     case 'UPTIME_DETAILS_FETCH_SUCCESS':
       return Object.assign({}, state, {
-        uptime_details: action.details
+        uptime_details: action.details,
       });
 
     case 'ASSETS_DETAILS_START':
       return Object.assign({}, state, {
-        assets_details: null
+        assets_details: null,
       });
 
     case 'ASSETS_DETAILS_FETCH_SUCCESS':
       return Object.assign({}, state, {
-        assets_details: action.details
+        assets_details: action.details,
       });
 
     case 'PAGE_CREATE_SUCCESS':
       return Object.assign({}, state, {
-        message: {text: 'Page has been created', counter: state.message.counter + 1},
-        route: 'home'
+        message: { text: 'Page has been created', counter: state.message.counter + 1 },
+        route: 'home',
       });
 
     case 'PAGE_UPDATE_SUCCESS':
       return Object.assign({}, state, {
-        message: {text: 'Page has been updated', counter: state.message.counter + 1},
+        message: { text: 'Page has been updated', counter: state.message.counter + 1 },
         page: action.page,
-        route: 'page/' + action.page.id
+        route: `page/${action.page.id}`,
       });
 
     case 'PAGE_DELETE_SUCCESS':
       return Object.assign({}, state, {
-        message: {text: 'Page has been deleted', counter: state.message.counter + 1},
+        message: { text: 'Page has been deleted', counter: state.message.counter + 1 },
         page: action.page,
-        route: 'home'
+        route: 'home',
       });
 
     case 'BUDGETS_FETCH_SUCCESS':
       return Object.assign({}, state, {
-        budgets: action.budgets
+        budgets: action.budgets,
       });
 
     case 'BUDGETS_CREATE_SUCCESS':
       return Object.assign({}, state, {
-        message: {text: 'Budget has been added', counter: state.message.counter + 1}
+        message: { text: 'Budget has been added', counter: state.message.counter + 1 },
       });
 
     case 'BUDGETS_DELETE_SUCCESS':
       return Object.assign({}, state, {
-        message: {text: 'Budget has been removed', counter: state.message.counter + 1}
+        message: { text: 'Budget has been removed', counter: state.message.counter + 1 },
       });
 
     case 'PAGE_MEMBER_CREATE_SUCCESS':
       return Object.assign({}, state, {
-        message: {text: 'Member has been added', counter: state.message.counter + 1}
+        message: { text: 'Member has been added', counter: state.message.counter + 1 },
       });
 
     case 'PAGE_MEMBER_UPDATE_SUCCESS':
       return Object.assign({}, state, {
-        message: {text: 'Member has been updated', counter: state.message.counter + 1}
+        message: { text: 'Member has been updated', counter: state.message.counter + 1 },
       });
 
     case 'PAGE_MEMBER_DELETE_SUCCESS':
       return Object.assign({}, state, {
-        message: {text: 'Member has been removed', counter: state.message.counter + 1}
+        message: { text: 'Member has been removed', counter: state.message.counter + 1 },
       });
 
     case 'BUDGET_CREATE_ERROR':
@@ -266,7 +263,7 @@ const app = (state, action) => {
     case 'PAGE_MEMBER_DELETE_ERROR':
     case 'SUBSCRIPTION_ERROR':
       return Object.assign({}, state, {
-        message: {text: action.message, counter: state.message.counter + 1}
+        message: { text: action.message, counter: state.message.counter + 1 },
       });
 
     case 'PAGE_CREATE_ERROR':
@@ -274,14 +271,12 @@ const app = (state, action) => {
     case 'PAGE_DELETE_ERROR':
       if (action.errors) {
         return Object.assign({}, state, {
-          errors: action.errors
+          errors: action.errors,
         });
       }
-      else {
-        return Object.assign({}, state, {
-          message: {text: 'Unknown error.', counter: state.message.counter + 1},
-        });
-      }
+      return Object.assign({}, state, {
+        message: { text: 'Unknown error.', counter: state.message.counter + 1 },
+      });
 
 
     default:

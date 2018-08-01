@@ -1,6 +1,6 @@
-import "./bnb-auth-form.js";
-import "./bnb-divider.js";
-import "./bnb-icons.js";
-import "./bnb-oauth.js";
-import "./bnb-snackbar.js";
-import "./bnb-404-warning.js";
+import './bnb-auth-form';
+import './bnb-divider';
+import './bnb-icons';
+import './bnb-oauth';
+import './bnb-snackbar';
+import './bnb-404-warning';

@@ -1,21 +1,22 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { afterNextRender } from '@polymer/polymer/lib/utils/render-status.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { afterNextRender } from '@polymer/polymer/lib/utils/render-status';
 import { connect } from 'pwa-helpers';
-import '@polymer/app-route/app-location.js';
-import '@polymer/app-route/app-route.js';
-import '@polymer/iron-pages/iron-pages.js';
-import '@polymer/paper-toast/paper-toast.js';
-import { store } from '../store.js';
-import { updateRoute, loadEnvironment, loadPages, loadPage, loadPageMembers, loadPageStats, loadBudgets,
-  loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails, loadUser } from '../actions/app.js';
-import { isLogged } from '../common.js';
-import './bnb-analytics.js';
-import './bnb-common-styles.js';
-import './bnb-home.js';
-import './bnb-signin.js';
+import '@polymer/app-route/app-location';
+import '@polymer/app-route/app-route';
+import '@polymer/iron-pages/iron-pages';
+import '@polymer/paper-toast/paper-toast';
+import { store } from '../store';
+import {
+  updateRoute, loadEnvironment, loadPages, loadPage, loadPageMembers, loadPageStats, loadBudgets,
+  loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails, loadUser,
+} from '../actions/app';
+import { isLogged } from '../common';
+import './bnb-analytics';
+import './bnb-common-styles';
+import './bnb-home';
+import './bnb-signin';
 
 class BnbApp extends connect(store)(PolymerElement) {
-
   static get template() {
     return html`
     <style>
@@ -96,48 +97,48 @@ class BnbApp extends connect(store)(PolymerElement) {
       routePath: {
         type: String,
         reflectToAttribute: true,
-        observer: '_routePathChanged'
+        observer: '_routePathChanged',
       },
 
       view: {
         type: String,
         reflectToAttribute: true,
-        observer: '_viewChanged'
+        observer: '_viewChanged',
       },
 
       message: {
         type: Object,
-        observer: '_messageChanged'
+        observer: '_messageChanged',
       },
 
       analyticsKey: {
-        type: String
+        type: String,
       },
 
       page: {
-        type: Object
+        type: Object,
       },
 
       page_stats: {
-        type: Object
+        type: Object,
       },
 
       period: {
         type: Object,
-        observer: '_periodChanged'
+        observer: '_periodChanged',
       },
 
       offline: {
         type: Boolean,
         value: false,
-        readOnly: true
-      }
+        readOnly: true,
+      },
     };
   }
 
-  static get observers() { return [
-    '_routeViewChanged(routeData.page)'
-  ]}
+  static get observers() {
+    return ['_routeViewChanged(routeData.page)'];
+  }
 
   _stateChanged(state) {
     this.routePath = state.app.route;
@@ -155,13 +156,13 @@ class BnbApp extends connect(store)(PolymerElement) {
     this.scrollPositions = new Map();
   }
 
-  _routePathChanged(path, oldPath) {
+  _routePathChanged(path) {
     // Store view scroll position
     if (this.scrollPositions) {
       this.scrollPositions.set(this.route.path, window.scrollY);
     }
 
-    window.history.pushState({}, null, '/' + path);
+    window.history.pushState({}, null, `/${path}`);
     window.dispatchEvent(new CustomEvent('location-changed'));
   }
 
@@ -190,7 +191,7 @@ class BnbApp extends connect(store)(PolymerElement) {
       } else {
         // When a load failed, it triggered a 404 which means we need to
         // eagerly load the 404 page definition
-        let cb = this._viewLoaded.bind(this, Boolean(oldView));
+        const cb = this._viewLoaded.bind(this, Boolean(oldView));
 
         switch (view) {
           case 'add-page':
@@ -233,21 +234,20 @@ class BnbApp extends connect(store)(PolymerElement) {
             import('./bnb-user-preferences.js').then(cb);
             break;
           default:
-            this._pageLoaded(Boolean(oldPage));
+            this._pageLoaded(Boolean(oldView));
         }
       }
 
       // Restore scroll position
       if (this.scrollPositions && this.scrollPositions.has(this.route.path)) {
         window.scroll(0, this.scrollPositions.get(this.route.path));
-      }
-      else {
+      } else {
         window.scroll(0, 0);
       }
     }
   }
 
-  _viewLoaded(shouldResetLayout) {
+  _viewLoaded() {
     this._ensureLazyLoaded();
     this.$.analytics.sendPath(this.route.path);
 
@@ -259,37 +259,30 @@ class BnbApp extends connect(store)(PolymerElement) {
   _loadCurrentViewData() {
     if (this.view === 'home') {
       store.dispatch(loadPages());
-    }
-    else if (this.view === 'user-preferences') {
+    } else if (this.view === 'user-preferences') {
       store.dispatch(loadUser());
-    }
-    else if (this.view === 'page') {
-      let pageId = Number(this.subroute.path.substring(1));
+    } else if (this.view === 'page') {
+      const pageId = Number(this.subroute.path.substring(1));
       store.dispatch(loadPage(pageId));
       store.dispatch(loadPageStats(pageId, this.period));
       store.dispatch(loadBudgets(pageId, this.period));
-    }
-    else if (this.view === 'edit-page') {
-      let pageId = Number(this.subroute.path.substring(1));
+    } else if (this.view === 'edit-page') {
+      const pageId = Number(this.subroute.path.substring(1));
       store.dispatch(loadPage(pageId));
-    }
-    else if (this.view === 'members') {
-      let pageId = Number(this.subroute.path.substring(1));
+    } else if (this.view === 'members') {
+      const pageId = Number(this.subroute.path.substring(1));
       store.dispatch(loadPage(pageId));
       store.dispatch(loadPageMembers(pageId));
-    }
-    else if (this.view === 'lighthouse-details' || this.view === 'performance-details') {
-      let pageId = Number(this.subroute.path.substring(1));
+    } else if (this.view === 'lighthouse-details' || this.view === 'performance-details') {
+      const pageId = Number(this.subroute.path.substring(1));
       store.dispatch(loadPage(pageId));
       store.dispatch(loadLighthouseDetails(pageId, this.period));
-    }
-    else if (this.view === 'uptime-details') {
-      let pageId = Number(this.subroute.path.substring(1));
+    } else if (this.view === 'uptime-details') {
+      const pageId = Number(this.subroute.path.substring(1));
       store.dispatch(loadPage(pageId));
       store.dispatch(loadUptimeDetails(pageId, this.period));
-    }
-    else if (this.view === 'requests-details' || this.view === 'bytes-details') {
-      let pageId = Number(this.subroute.path.substring(1));
+    } else if (this.view === 'requests-details' || this.view === 'bytes-details') {
+      const pageId = Number(this.subroute.path.substring(1));
       store.dispatch(loadAssetsDetails(pageId, this.period));
     }
   }
@@ -306,7 +299,7 @@ class BnbApp extends connect(store)(PolymerElement) {
   }
 
   _notifyNetworkStatus() {
-    let oldOffline = this.offline;
+    const oldOffline = this.offline;
     this._setOffline(!window.navigator.onLine);
     // Show the snackbar if the user is offline when starting a new session
     // or if the network status changed.
@@ -315,27 +308,27 @@ class BnbApp extends connect(store)(PolymerElement) {
         this._networkSnackbar = document.createElement('bnb-snackbar');
         this.root.appendChild(this._networkSnackbar);
       }
-      this._networkSnackbar.textContent = this.offline ?
-          'You are offline' : 'You are online';
+      this._networkSnackbar.textContent = this.offline
+        ? 'You are offline' : 'You are online';
       this._networkSnackbar.open();
     }
   }
 
-  _messageChanged(newVal, oldVal) {
+  _messageChanged(newVal) {
     if (newVal && newVal.text) {
-      let toast = this.$['message-toast'];
+      const toast = this.$['message-toast'];
       toast.show(newVal.text);
     }
   }
 
-  _periodChanged(newVal, oldVal) {
+  _periodChanged() {
     this._loadCurrentViewData();
   }
 
   _getUrlParameter(name) {
-    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    var results = regex.exec(location.search);
+    const replaced = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+    const regex = new RegExp(`[\\?&]${replaced}=([^&#]*)`);
+    const results = regex.exec(window.location.search);
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
   }
 
@@ -343,9 +336,7 @@ class BnbApp extends connect(store)(PolymerElement) {
    * Remove all query string from the url (and hash too)
    */
   _removeParameters() {
-    var newLocation = window.location.protocol + '//'+
-            window.location.host+
-            window.location.pathname;
+    const newLocation = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
     window.history.pushState('', document.title, newLocation);
   }
 }

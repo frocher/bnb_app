@@ -1,19 +1,19 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/polymer/lib/elements/dom-repeat.js';
-import '@polymer/app-layout/app-layout.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-pages/iron-pages.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-item/paper-item.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-menu-button/paper-menu-button.js';
-import '@polymer/paper-spinner/paper-spinner.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/polymer/lib/elements/dom-repeat';
+import '@polymer/app-layout/app-layout';
+import '@polymer/iron-icons/iron-icons';
+import '@polymer/iron-pages/iron-pages';
+import '@polymer/paper-icon-button/paper-icon-button';
+import '@polymer/paper-item/paper-item';
+import '@polymer/paper-listbox/paper-listbox';
+import '@polymer/paper-menu-button/paper-menu-button';
+import '@polymer/paper-spinner/paper-spinner';
 import { connect } from 'pwa-helpers';
-import { store } from '../store.js';
-import { updateRoute, signout } from '../actions/app.js';
-import './bnb-common-styles.js';
-import './bnb-divider.js';
-import './bnb-page-card.js';
+import { store } from '../store';
+import { updateRoute, signout } from '../actions/app';
+import './bnb-common-styles';
+import './bnb-divider';
+import './bnb-page-card';
 
 class BnbHome extends connect(store)(PolymerElement) {
   static get template() {
@@ -125,20 +125,17 @@ class BnbHome extends connect(store)(PolymerElement) {
       `;
   }
 
-
-  static get is() { return 'bnb-home'; }
-
   static get properties() {
     return {
       pages: {
         type: Array,
-        observer: '_pagesChanged'
+        observer: '_pagesChanged',
       },
       selectedSection: {
         type: Number,
-        value: 0
-      }
-    }
+        value: 0,
+      },
+    };
   }
 
   _stateChanged(state) {
@@ -146,8 +143,8 @@ class BnbHome extends connect(store)(PolymerElement) {
   }
 
   _sortPages(first, second) {
-    let a = first.name.toUpperCase();
-    let b = second.name.toUpperCase();
+    const a = first.name.toUpperCase();
+    const b = second.name.toUpperCase();
     return a.localeCompare(b);
   }
 
@@ -166,14 +163,12 @@ class BnbHome extends connect(store)(PolymerElement) {
   _pagesChanged() {
     if (this.pages === null || this.pages === undefined) {
       this.selectedSection = 0;
-    }
-    else if (this.pages.length === 0) {
+    } else if (this.pages.length === 0) {
       this.selectedSection = 1;
-    }
-    else {
+    } else {
       this.selectedSection = 2;
     }
   }
 }
 
-customElements.define(BnbHome.is, BnbHome);
+customElements.define('bnb-home', BnbHome);

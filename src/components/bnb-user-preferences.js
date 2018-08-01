@@ -1,19 +1,19 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/app-layout/app-layout.js';
-import '@polymer/iron-a11y-keys/iron-a11y-keys.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icons/social-icons.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-dialog/paper-dialog.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/app-layout/app-layout';
+import '@polymer/iron-a11y-keys/iron-a11y-keys';
+import '@polymer/iron-icons/iron-icons';
+import '@polymer/iron-icons/social-icons';
+import '@polymer/paper-button/paper-button';
+import '@polymer/paper-dialog/paper-dialog';
+import '@polymer/paper-input/paper-input';
+import '@polymer/paper-toggle-button/paper-toggle-button';
 import { connect } from 'pwa-helpers';
-import { store } from '../store.js';
-import { updateRoute, updateUser, saveSubscription } from '../actions/app.js';
-import './bnb-collapse.js';
-import './bnb-common-styles.js';
-import './bnb-divider.js';
-import { BnbFormElement } from './bnb-form-element.js';
+import { store } from '../store';
+import { updateRoute, updateUser, saveSubscription } from '../actions/app';
+import './bnb-collapse';
+import './bnb-common-styles';
+import './bnb-divider';
+import { BnbFormElement } from './bnb-form-element';
 
 class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
@@ -68,21 +68,19 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
     `;
   }
 
-  static get is() { return 'bnb-user-preferences'; }
-
   static get properties() {
     return {
       user: Object,
       target: Object,
       pushKey: {
         type: String,
-        observer: 'pushKeyChanged'
+        observer: 'pushKeyChanged',
       },
       errors: {
         type: Object,
-        observer: '_errorsChanged'
-      }
-    }
+        observer: '_errorsChanged',
+      },
+    };
   }
 
   _stateChanged(state) {
@@ -109,28 +107,24 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
 
     if (this.$.pushButton.checked) {
       this.askPermission()
-      .then(() => {
-        return this.subscribeUserToPush()
-      })
-      .then((subscription) => {
-        if (subscription) {
-          this.sendSubscriptionToBackEnd(subscription);
-        }
-
-        return subscription;
-      })
-      .then((subscription) => {
-        this.$.pushButton.disabled = false;
-        this.$.pushButton.checked = subscription !== null;
-      })
-      .catch((err) => {
-        this.getNotificationPermissionState().then((state) => {
-          this.$.pushButton.disabled = state === 'denied';
+        .then(() => this.subscribeUserToPush())
+        .then((subscription) => {
+          if (subscription) {
+            this.sendSubscriptionToBackEnd(subscription);
+          }
+          return subscription;
+        })
+        .then((subscription) => {
+          this.$.pushButton.disabled = false;
+          this.$.pushButton.checked = subscription !== null;
+        })
+        .catch(() => {
+          this.getNotificationPermissionState().then((state) => {
+            this.$.pushButton.disabled = state === 'denied';
+          });
+          this.$.pushButton.checked = false;
         });
-        this.$.pushButton.checked = false;
-      });
-    }
-    else {
+    } else {
       this.unsubscribeUserFromPush();
     }
   }
@@ -146,22 +140,21 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
   }
 
   closeTapped() {
-    if (this.$['name'].value !== this.user.name) {
+    if (this.$.name.value !== this.user.name) {
       this.$.discardDlg.open();
-    }
-    else {
+    } else {
       this.closePage();
     }
   }
 
   closePage() {
-    this.$['name'].invalid = false;
+    this.$.name.invalid = false;
     store.dispatch(updateRoute('home'));
   }
 
   saveTapped() {
-    this.$['name'].invalid = false;
-    let user = { name: this.$['name'].value };
+    this.$.name.invalid = false;
+    const user = { name: this.$.name.value };
     store.dispatch(updateUser(this.user.id, user));
   }
 
@@ -174,8 +167,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
       if (permissionResult) {
         permissionResult.then(resolve, reject);
       }
-    })
-    .then((permissionResult) => {
+    }).then((permissionResult) => {
       if (permissionResult !== 'granted') {
         throw new Error('We weren\'t granted permission.');
       }
@@ -184,10 +176,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
 
   getNotificationPermissionState() {
     if (navigator.permissions) {
-      return navigator.permissions.query({name: 'notifications'})
-      .then((result) => {
-        return result.state;
-      });
+      return navigator.permissions.query({ name: 'notifications' }).then(result => result.state);
     }
 
     return new Promise((resolve) => {
@@ -204,38 +193,32 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
   }
 
   subscribeUserToPush() {
-    return this.getSWRegistration()
-    .then((registration) => {
+    return this.getSWRegistration().then((registration) => {
       const subscribeOptions = {
         userVisibleOnly: true,
-        applicationServerKey: this.urlB64ToUint8Array(this.pushKey)
+        applicationServerKey: this.urlB64ToUint8Array(this.pushKey),
       };
 
       return registration.pushManager.subscribe(subscribeOptions);
-    })
-    .then((pushSubscription) => {
-      return pushSubscription;
-    });
+    }).then(pushSubscription => pushSubscription);
   }
 
   unsubscribeUserFromPush() {
     return this.getSWRegistration()
-      .then((registration) => {
-        return registration.pushManager.getSubscription();
-      })
+      .then(registration => registration.pushManager.getSubscription())
       .then((subscription) => {
         if (subscription) {
           return subscription.unsubscribe();
         }
+        return undefined;
       })
-      .then((subscription) =>  {
+      .then(() => {
         this.$.pushButton.disabled = false;
         this.$.pushButton.checked = false;
       })
       .catch((err) => {
         console.error('Failed to subscribe the user.', err);
-        this.getNotificationPermissionState()
-        .then((permissionState) => {
+        this.getNotificationPermissionState().then((permissionState) => {
           this.$.pushButton.disabled = permissionState === 'denied';
           this.$.pushButton.checked = false;
         });
@@ -251,12 +234,11 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
     const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; i++) {
+    for (let i = 0; i < rawData.length; i += 1) {
       outputArray[i] = rawData.charCodeAt(i);
     }
     return outputArray;
   }
-
 }
 
-window.customElements.define(BnbUserPreferences.is, BnbUserPreferences);
+window.customElements.define('bnb-user-preferences', BnbUserPreferences);

@@ -1,8 +1,7 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import './bnb-divider.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import './bnb-divider';
 
 class BnbValueChip extends PolymerElement {
-
   static get template() {
     return html`
     <style>
@@ -32,26 +31,24 @@ class BnbValueChip extends PolymerElement {
     `;
   }
 
-  static get is() { return 'bnb-value-chip'; }
-
   static get properties() {
     return {
       text: {
         type: String,
-        value: null
+        value: null,
       },
 
       value: {
         type: Number,
-        value: null
+        value: null,
       },
 
       suffix: {
         type: String,
-        value: null
-      }
-    }
+        value: null,
+      },
+    };
   }
 }
 
-window.customElements.define(BnbValueChip.is, BnbValueChip);
+window.customElements.define('bnb-value-chip', BnbValueChip);

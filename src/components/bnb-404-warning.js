@@ -1,8 +1,8 @@
 
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icon/iron-icon.js';
-import './bnb-anchor.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/iron-icons/iron-icons';
+import '@polymer/iron-icon/iron-icon';
+import './bnb-anchor';
 
 class Bnb404Warning extends PolymerElement {
   static get template() {
@@ -33,8 +33,6 @@ class Bnb404Warning extends PolymerElement {
     <bnb-anchor text="Go to the home page" path="/home"></bnb-anchor>
     `;
   }
-  static get is() { return 'bnb-404-warning'; }
 }
 
-customElements.define(Bnb404Warning.is, Bnb404Warning);
-
+customElements.define('bnb-404-warning', Bnb404Warning);

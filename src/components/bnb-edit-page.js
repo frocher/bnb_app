@@ -1,23 +1,23 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/app-layout/app-layout.js';
-import '@polymer/iron-a11y-keys/iron-a11y-keys.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icons/notification-icons.js';
-import '@polymer/iron-icons/social-icons.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-dialog/paper-dialog.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-radio-button/paper-radio-button.js';
-import '@polymer/paper-radio-group/paper-radio-group.js';
-import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/app-layout/app-layout';
+import '@polymer/iron-a11y-keys/iron-a11y-keys';
+import '@polymer/iron-icons/iron-icons';
+import '@polymer/iron-icons/notification-icons';
+import '@polymer/iron-icons/social-icons';
+import '@polymer/paper-button/paper-button';
+import '@polymer/paper-dialog/paper-dialog';
+import '@polymer/paper-icon-button/paper-icon-button';
+import '@polymer/paper-input/paper-input';
+import '@polymer/paper-radio-button/paper-radio-button';
+import '@polymer/paper-radio-group/paper-radio-group';
+import '@polymer/paper-toggle-button/paper-toggle-button';
 import { connect } from 'pwa-helpers';
-import { store } from '../store.js';
-import { updatePage, updateRoute } from '../actions/app.js';
-import './bnb-collapse.js';
-import './bnb-common-styles.js';
-import './bnb-divider.js';
-import { BnbFormElement } from './bnb-form-element.js';
+import { store } from '../store';
+import { updatePage, updateRoute } from '../actions/app';
+import './bnb-collapse';
+import './bnb-common-styles';
+import './bnb-divider';
+import { BnbFormElement } from './bnb-form-element';
 
 class BnbEditPage extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
@@ -102,17 +102,15 @@ class BnbEditPage extends connect(store)(BnbFormElement(PolymerElement)) {
     `;
   }
 
-  static get is() { return 'bnb-edit-page'; }
-
   static get properties() {
     return {
       page: Object,
       target: Object,
       errors: {
         type: Object,
-        observer: '_errorsChanged'
-      }
-    }
+        observer: '_errorsChanged',
+      },
+    };
   }
 
   _stateChanged(state) {
@@ -126,42 +124,41 @@ class BnbEditPage extends connect(store)(BnbFormElement(PolymerElement)) {
   }
 
   closeTapped() {
-    if (this.$['name'].value !== this.page.name || this.$['url'].value !== this.page.url) {
+    if (this.$.name.value !== this.page.name || this.$.url.value !== this.page.url) {
       this.$.discardDlg.open();
-    }
-    else {
+    } else {
       this.closePage();
     }
   }
 
   closePage() {
     this.validateFields();
-    store.dispatch(updateRoute('page/' + this.page.id));
+    store.dispatch(updateRoute(`page/${this.page.id}`));
   }
 
   saveTapped() {
     this.validateFields();
-    let page = {
-      name: this.$['name'].value,
-      url: this.$['url'].value,
+    const page = {
+      name: this.$.name.value,
+      url: this.$.url.value,
       uptime_keyword: this.$.uptimeKeyword.value,
       uptime_keyword_type: this.$.uptimeKeywordType.selected,
       mail_notify: this.$.mail_notify.checked,
       push_notify: this.$.push_notify.checked,
       slack_notify: this.$.slack_notify.checked,
       slack_webhook: this.$.slack_webhook.value,
-      slack_channel: this.$.slack_channel.value
-    }
+      slack_channel: this.$.slack_channel.value,
+    };
     store.dispatch(updatePage(this.page.id, page));
   }
 
   validateFields() {
-    this.$['name'].invalid = false;
-    this.$['url'].invalid = false;
+    this.$.name.invalid = false;
+    this.$.url.invalid = false;
     this.$.uptimeKeyword.invalid = false;
     this.$.slack_webhook.invalid = false;
     this.$.slack_channel.invalid = false;
   }
 }
 
-window.customElements.define(BnbEditPage.is, BnbEditPage);
+window.customElements.define('bnb-edit-page', BnbEditPage);

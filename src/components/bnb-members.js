@@ -1,18 +1,20 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/app-layout/app-layout.js';
-import '@polymer/iron-pages/iron-pages.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-item/paper-item.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@vaadin/vaadin-grid/vaadin-grid.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/app-layout/app-layout';
+import '@polymer/iron-pages/iron-pages';
+import '@polymer/paper-button/paper-button';
+import '@polymer/paper-dropdown-menu/paper-dropdown-menu';
+import '@polymer/paper-icon-button/paper-icon-button';
+import '@polymer/paper-input/paper-input';
+import '@polymer/paper-item/paper-item';
+import '@polymer/paper-listbox/paper-listbox';
+import '@vaadin/vaadin-grid/vaadin-grid';
 import { find } from 'lodash-es';
 import { connect } from 'pwa-helpers';
-import { store } from '../store.js';
-import { updateRoute, createPageMember, updatePageMember, deletePageMember } from '../actions/app.js';
-import './bnb-grid-styles.js';
+import { store } from '../store';
+import {
+  updateRoute, createPageMember, updatePageMember, deletePageMember,
+} from '../actions/app';
+import './bnb-grid-styles';
 
 class BnbMembers extends connect(store)(PolymerElement) {
   static get template() {
@@ -100,20 +102,18 @@ class BnbMembers extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get is() { return 'bnb-members'; }
-
   static get properties() {
     return {
       page: Object,
       members: {
         type: Array,
-        observer: '_membersChanged'
+        observer: '_membersChanged',
       },
       target: Object,
       activeMember: {
-        observer: '_activeMemberChanged'
-      }
-    }
+        observer: '_activeMemberChanged',
+      },
+    };
   }
 
   _stateChanged(state) {
@@ -131,48 +131,47 @@ class BnbMembers extends connect(store)(PolymerElement) {
     this.$.email.invalid = false;
     this.$.email.value = '';
     this.$.role.selected = -1;
-    store.dispatch(updateRoute('page/' + this.page.id));
+    store.dispatch(updateRoute(`page/${this.page.id}`));
   }
 
   emailChanged() {
-    let value = this.$.email.value;
-    let member = find(this.members, function(o) { return o.email === value; });
+    const email = this.$.email.value;
+    const member = find(this.members, o => o.email === email);
     if (!member) {
       this.$.buttons.selected = 0;
-    }
-    else {
+    } else {
       this.$.buttons.selected = 1;
     }
   }
 
   addTapped() {
     if (this.validateInputs()) {
-      let email = this.$.email.value;
-      let role = this.$.role.selected;
-      store.dispatch(createPageMember(this.page.id, {email: email, role:role}));
+      const email = this.$.email.value;
+      const role = this.$.role.selected;
+      store.dispatch(createPageMember(this.page.id, { email, role }));
     }
   }
 
   updateTapped() {
     if (this.validateInputs()) {
-      let email = this.$.email.value;
-      let role = this.$.role.selected;
-      let member = find(this.members, function(o) { return o.email === email; });
-      store.dispatch(updatePageMember(this.page.id, {id: member.id, email: email, role:role}));
+      const email = this.$.email.value;
+      const role = this.$.role.selected;
+      const member = find(this.members, o => o.email === email);
+      store.dispatch(updatePageMember(this.page.id, { id: member.id, email, role }));
     }
   }
 
   removeTapped() {
     if (this.validateInputs()) {
-      let email = this.$.email.value;
-      let member = find(this.members, function(o) { return o.email === email; });
+      const email = this.$.email.value;
+      const member = find(this.members, o => o.email === email);
       store.dispatch(deletePageMember(this.page.id, member.id));
     }
   }
 
   validateInputs() {
-    let emailOK = this.$.email.validate();
-    let roleOK = this.$.roleMenu.validate();
+    const emailOK = this.$.email.validate();
+    const roleOK = this.$.roleMenu.validate();
     return emailOK && roleOK;
   }
 
@@ -193,4 +192,4 @@ class BnbMembers extends connect(store)(PolymerElement) {
     return members || [];
   }
 }
-customElements.define(BnbMembers.is, BnbMembers);
+customElements.define('bnb-members', BnbMembers);

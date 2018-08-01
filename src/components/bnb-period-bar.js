@@ -1,7 +1,7 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/paper-card/paper-card.js';
-import './bnb-common-styles.js';
-import './bnb-period-dropdown.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/paper-card/paper-card';
+import './bnb-common-styles';
+import './bnb-period-dropdown';
 
 class BnbPeriodBar extends PolymerElement {
   static get template() {
@@ -22,6 +22,5 @@ class BnbPeriodBar extends PolymerElement {
     </paper-card>
     `;
   }
-  static get is() { return 'bnb-period-bar'; }
 }
-window.customElements.define(BnbPeriodBar.is, BnbPeriodBar);
+window.customElements.define('bnb-period-bar', BnbPeriodBar);

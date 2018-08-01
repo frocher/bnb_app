@@ -1,11 +1,11 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/polymer/lib/elements/dom-repeat.js';
-import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-card/paper-card.js';
-import '@polymer/paper-tabs/paper-tabs.js';
-import './bnb-chart.js';
-import './bnb-value-chip.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/polymer/lib/elements/dom-repeat';
+import '@polymer/iron-icon/iron-icon';
+import '@polymer/paper-button/paper-button';
+import '@polymer/paper-card/paper-card';
+import '@polymer/paper-tabs/paper-tabs';
+import './bnb-chart';
+import './bnb-value-chip';
 
 class BnbChartCard extends PolymerElement {
   static get template() {
@@ -60,38 +60,37 @@ class BnbChartCard extends PolymerElement {
     return {
       name: {
         type: String,
-        value: ''
+        value: '',
       },
       data: {
         type: Array,
-        value: function () {
+        value() {
           return [];
-        }
+        },
       },
       model: {
         type: Array,
-        value: function () {
+        value() {
           return [];
-        }
+        },
       },
       type: {
         type: String,
-        value: 'line'
+        value: 'line',
       },
       hasDetails: {
         type: Boolean,
-        value: false
-      }
-    }
+        value: false,
+      },
+    };
   }
 
   ready() {
     super.ready();
-    this._polyfillFind();
   }
 
   computeLabel(o) {
-    let item = this.model.find(function(i) { return i.name === o.key; });
+    const item = this.model.find(i => i.name === o.key);
     if (item) {
       return item.label;
     }
@@ -99,7 +98,7 @@ class BnbChartCard extends PolymerElement {
   }
 
   computeSuffix(o) {
-    let item = this.model.find(function(i) { return i.name === o.key; });
+    const item = this.model.find(i => i.name === o.key);
     if (item) {
       return item.suffix;
     }
@@ -108,37 +107,6 @@ class BnbChartCard extends PolymerElement {
 
   _detailsTapped() {
     this.dispatchEvent(new CustomEvent('details'));
-  }
-
-  _polyfillFind() {
-    if (!Array.prototype.find) {
-      Object.defineProperty(Array.prototype, 'find', {
-        value: function(predicate) {
-          if (!this) {
-            throw new TypeError('"this" is null or not defined');
-          }
-
-          var o = Object(this);
-          var len = o.length >>> 0;
-
-          if (typeof predicate !== 'function') {
-            throw new TypeError('predicate must be a function');
-          }
-
-          var thisArg = arguments[1];
-          var k = 0;
-
-          while (k < len) {
-            var kValue = o[k];
-            if (predicate.call(thisArg, kValue, k, o)) {
-              return kValue;
-            }
-            k++;
-          }
-          return undefined;
-        }
-      });
-    }
   }
 }
 customElements.define(BnbChartCard.is, BnbChartCard);

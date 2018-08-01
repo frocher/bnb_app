@@ -1,15 +1,15 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/app-layout/app-layout.js';
-import '@polymer/iron-a11y-keys/iron-a11y-keys.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-dialog/paper-dialog.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-input/paper-input.js';
-import { store } from '../store.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/app-layout/app-layout';
+import '@polymer/iron-a11y-keys/iron-a11y-keys';
+import '@polymer/paper-button/paper-button';
+import '@polymer/paper-dialog/paper-dialog';
+import '@polymer/paper-icon-button/paper-icon-button';
+import '@polymer/paper-input/paper-input';
 import { connect } from 'pwa-helpers';
-import { updateRoute, createPage } from '../actions/app.js';
-import './bnb-common-styles.js';
-import { BnbFormElement } from './bnb-form-element.js';
+import { store } from '../store';
+import { updateRoute, createPage } from '../actions/app';
+import './bnb-common-styles';
+import { BnbFormElement } from './bnb-form-element';
 
 class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
@@ -71,13 +71,13 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
       routePath: {
         type: String,
         reflectToAttribute: true,
-        observer: '_routePathChanged'
+        observer: '_routePathChanged',
       },
       errors: {
         type: Object,
-        observer: '_errorsChanged'
-      }
-    }
+        observer: '_errorsChanged',
+      },
+    };
   }
 
   _stateChanged(state) {
@@ -93,22 +93,21 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
   closeTapped() {
     if (this.pageName !== '' || this.url !== '') {
       this.$.discard_dlg.open();
-    }
-    else {
+    } else {
       this.closePage();
     }
   }
 
   createTapped() {
-    this.$['name'].invalid = false;
-    this.$['url'].invalid = false;
+    this.$.name.invalid = false;
+    this.$.url.invalid = false;
 
     store.dispatch(createPage(this.pageName, this.url, this.handleResponse, this.handleError));
   }
 
   clearFields() {
-    this.$['name'].invalid = false;
-    this.$['url'].invalid = false;
+    this.$.name.invalid = false;
+    this.$.url.invalid = false;
     this.pageName = '';
     this.url = '';
   }
@@ -118,7 +117,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
     store.dispatch(updateRoute('home'));
   }
 
-  _routePathChanged(newVal, oldVal) {
+  _routePathChanged(newVal) {
     if (newVal === 'add-page') {
       this.clearFields();
     }

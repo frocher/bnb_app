@@ -1,31 +1,15 @@
 {
   "entrypoint": "index.html",
   "shell": "src/components/bnb-app.js",
-  "fragments": [
-    "src/components/bnb-add-page.js",
-    "src/components/bnb-bytes-details.js",
-    "src/components/bnb-edit-page.js",
-    "src/components/bnb-edit-password.js",
-    "src/components/bnb-forgot-password.js",
-    "src/components/bnb-home.js",
-    "src/components/bnb-lighthouse-details.js",
-    "src/components/bnb-members.js",
-    "src/components/bnb-page.js",
-    "src/components/bnb-performance-details.js",
-    "src/components/bnb-requests-details.js",
-    "src/components/bnb-signin.js",
-    "src/components/bnb-signup.js",
-    "src/components/bnb-uptime-details.js",
-    "src/components/bnb-user-preferences.js",
-    "src/components/lazy-resources.js"
-  ],
   "sources": [
-    "src/**/*",
     "images/**/*"
   ],
   "extraDependencies": [
     "manifest.json",
     "push-handler.js",
+    "node_modules/chart.js/dist/Chart.bundle.min.js",
+    "node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js",
+    "node_modules/web-animations-js/web-animations-next.min.js",
     "node_modules/@webcomponents/webcomponentsjs/**"
   ],
   "builds": [
@@ -36,7 +20,9 @@
         "modules"
       ],
       "js": {
-        "minify": { "minify": {"exclude": ["*.min.js"]}}
+        "minify": {
+          "exclude": ["*.min.js"]
+        }
       },
       "css": {
         "minify": true
@@ -54,7 +40,9 @@
       ],
       "js": {
         "compile": "es2015",
-        "minify": { "minify": {"exclude": ["*.min.js"]}},
+        "minify": {
+          "exclude": ["*.min.js"]
+        },
         "transformModulesToAmd": true
       },
       "css": {

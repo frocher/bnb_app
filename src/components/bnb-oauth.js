@@ -1,11 +1,10 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { connect } from 'pwa-helpers';
-import '@polymer/iron-icon/iron-icon.js';
-import '@polymer/paper-button/paper-button.js';
-import { getRequestUrl } from '../common.js';
-import './bnb-common-styles.js';
-import './bnb-divider.js';
-import './bnb-icons.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/iron-icon/iron-icon';
+import '@polymer/paper-button/paper-button';
+import { getRequestUrl } from '../common';
+import './bnb-common-styles';
+import './bnb-divider';
+import './bnb-icons';
 
 class BnbOAuth extends PolymerElement {
   static get template() {
@@ -86,8 +85,8 @@ class BnbOAuth extends PolymerElement {
   }
 
   _callService(service) {
-    var origin = window.location.protocol + '//' + window.location.host;
-    var url = getRequestUrl('auth/' + service + '?auth_origin_url=' + origin);
+    const origin = `${window.location.protocol}//${window.location.host}`;
+    const url = getRequestUrl(`auth/${service}?auth_origin_url=${origin}`);
     window.location.replace(url);
   }
 }

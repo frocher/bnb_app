@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 
 class BnbAnchor extends PolymerElement {
   static get template() {
@@ -26,8 +26,8 @@ class BnbAnchor extends PolymerElement {
     return {
       text: String,
       path: String,
-      params: Object
-    }
+      params: Object,
+    };
   }
 }
 

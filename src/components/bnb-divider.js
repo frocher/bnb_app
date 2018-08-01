@@ -1,4 +1,4 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 
 class BnbDivider extends PolymerElement {
   static get template() {
@@ -17,6 +17,6 @@ class BnbDivider extends PolymerElement {
     </style>
     `;
   }
-  static get is() { return 'bnb-divider'; }
 }
-window.customElements.define(BnbDivider.is, BnbDivider);
+
+window.customElements.define('bnb-divider', BnbDivider);

@@ -1,11 +1,11 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { GestureEventListeners } from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import '@polymer/paper-card/paper-card.js';
-import '@polymer/paper-ripple/paper-ripple.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { GestureEventListeners } from '@polymer/polymer/lib/mixins/gesture-event-listeners';
+import '@polymer/paper-card/paper-card';
+import '@polymer/paper-ripple/paper-ripple';
 import { connect } from 'pwa-helpers';
-import { store } from '../store.js';
-import { getRequestUrl } from '../common.js';
-import { updateRoute } from '../actions/app.js';
+import { store } from '../store';
+import { getRequestUrl } from '../common';
+import { updateRoute } from '../actions/app';
 
 class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) {
   static get template() {
@@ -77,23 +77,21 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
     `;
   }
 
-  static get is() { return 'bnb-page-card'; }
-
   static get properties() {
     return {
       page: {
         type: Object,
-        value: null
-      }
-    }
+        value: null,
+      },
+    };
   }
 
-  _stateChanged(state) {
+  _stateChanged() {
     // Nothing to do
   }
 
-  cardTapped(e) {
-    store.dispatch(updateRoute('page/' + this.page.id));
+  cardTapped() {
+    store.dispatch(updateRoute(`page/${this.page.id}`));
   }
 
   urlTapped(e) {
@@ -101,7 +99,7 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
   }
 
   _computeScreenshotUrl(item) {
-    return getRequestUrl('pages/' + item.id + '/screenshot?style=thumb');
+    return getRequestUrl(`pages/${item.id}/screenshot?style=thumb`);
   }
 
   _computeHurt(item) {
@@ -111,4 +109,4 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
     return '';
   }
 }
-window.customElements.define(BnbPageCard.is, BnbPageCard);
+window.customElements.define('bnb-page-card', BnbPageCard);

@@ -1,13 +1,13 @@
-import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element';
+import '@polymer/iron-a11y-keys/iron-a11y-keys';
+import '@polymer/paper-button/paper-button';
+import '@polymer/paper-input/paper-input';
 import { connect } from 'pwa-helpers';
-import '@polymer/iron-a11y-keys/iron-a11y-keys.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-input/paper-input.js';
-import { getFullPath } from '../common.js';
-import { store } from '../store.js';
-import { signup } from '../actions/app.js';
-import { BnbFormElement } from './bnb-form-element.js';
-import './bnb-auth-form.js';
+import { getFullPath } from '../common';
+import { store } from '../store';
+import { signup } from '../actions/app';
+import { BnbFormElement } from './bnb-form-element';
+import './bnb-auth-form';
 
 class BnbSignUp extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
@@ -41,33 +41,32 @@ class BnbSignUp extends connect(store)(BnbFormElement(PolymerElement)) {
       </bnb-auth-form>
     `;
   }
-  static get is() { return 'bnb-signup'; }
 
   static get properties() {
     return {
       target: Object,
       fullname: {
         type: String,
-        value: ''
+        value: '',
       },
       email: {
         type: String,
-        value: ''
+        value: '',
       },
       password: {
         type: String,
-        value: ''
+        value: '',
       },
       password_confirmation: {
         type: String,
-        value: ''
+        value: '',
       },
       errors: {
         type: Object,
-        observer: '_errorsChanged'
+        observer: '_errorsChanged',
       },
-      signupButtons: Array
-    }
+      signupButtons: Array,
+    };
   }
 
   _stateChanged(state) {
@@ -77,16 +76,17 @@ class BnbSignUp extends connect(store)(BnbFormElement(PolymerElement)) {
   ready() {
     super.ready();
     this.target = this.$['signup-form'];
-    this.signupButtons = [{text:'Sign in', path:'/signin'}, {text:'Forgot your password', path:'/forgot-password'}];
+    this.signupButtons = [{ text: 'Sign in', path: '/signin' }, { text: 'Forgot your password', path: '/forgot-password' }];
   }
 
   signupSubmitTapped() {
-    this.$['name'].invalid = false;
-    this.$['email'].invalid = false;
-    this.$['password'].invalid = false;
-    this.$['password_confirmation'].invalid = false;
+    this.$.name.invalid = false;
+    this.$.email.invalid = false;
+    this.$.password.invalid = false;
+    this.$.password_confirmation.invalid = false;
 
-    store.dispatch(signup(this.fullname, this.email, this.password, this.password_confirmation, this._homeUrl()));
+    store.dispatch(signup(this.fullname, this.email, this.password,
+      this.password_confirmation, this._homeUrl()));
   }
 
   _homeUrl() {
@@ -94,4 +94,4 @@ class BnbSignUp extends connect(store)(BnbFormElement(PolymerElement)) {
   }
 }
 
-window.customElements.define(BnbSignUp.is, BnbSignUp);
+window.customElements.define('bnb-signup', BnbSignUp);

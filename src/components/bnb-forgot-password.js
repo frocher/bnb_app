@@ -1,13 +1,14 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-a11y-keys/iron-a11y-keys.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-input/paper-input.js';
-import './bnb-auth-form.js';
-import { store } from '../store.js';
-import { forgotPassword } from '../actions/app.js';
-import { getFullPath } from '../common.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/iron-a11y-keys/iron-a11y-keys';
+import '@polymer/paper-button/paper-button';
+import '@polymer/paper-input/paper-input';
+import './bnb-auth-form';
+import { connect } from 'pwa-helpers';
+import { store } from '../store';
+import { forgotPassword } from '../actions/app';
+import { getFullPath } from '../common';
 
-class BnbForgotPassword extends PolymerElement {
+class BnbForgotPassword extends connect(store)(PolymerElement) {
   static get template() {
     return html`
     <style>
@@ -30,23 +31,25 @@ class BnbForgotPassword extends PolymerElement {
     `;
   }
 
-  static get is() { return 'bnb-forgot-password'; }
-
   static get properties() {
     return {
       target: Object,
       forgotButtons: Array,
       email: {
         type: String,
-        value: ''
-      }
-    }
+        value: '',
+      },
+    };
+  }
+
+  _stateChanged() {
+    // nothing to do
   }
 
   ready() {
     super.ready();
     this.target = this.$['forgot-form'];
-    this.forgotButtons = [{text:'Sign up', path:'/signup'}, {text:'Sign in', path:'/signin'}];
+    this.forgotButtons = [{ text: 'Sign up', path: '/signup' }, { text: 'Sign in', path: '/signin' }];
   }
 
   submitTapped() {
@@ -55,4 +58,4 @@ class BnbForgotPassword extends PolymerElement {
   }
 }
 
-window.customElements.define(BnbForgotPassword.is, BnbForgotPassword);
+window.customElements.define('bnb-forgot-password', BnbForgotPassword);

@@ -1,8 +1,8 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/polymer/lib/elements/dom-repeat.js';
-import '@polymer/paper-card/paper-card.js';
-import './bnb-anchor.js';
-import './bnb-common-styles.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/polymer/lib/elements/dom-repeat';
+import '@polymer/paper-card/paper-card';
+import './bnb-anchor';
+import './bnb-common-styles';
 
 class BnbAuthForm extends PolymerElement {
   static get template() {
@@ -17,7 +17,7 @@ class BnbAuthForm extends PolymerElement {
         width: 70%;
         max-width: 380px;
         margin: 4em auto 1em auto;
-	      @apply --layout-self-center;
+        @apply --layout-self-center;
       }
 
       .links {
@@ -58,14 +58,12 @@ class BnbAuthForm extends PolymerElement {
     `;
   }
 
-  static get is() { return 'bnb-auth-form'; }
-
   static get properties() {
     return {
       title: String,
-      buttons: Array
-    }
+      buttons: Array,
+    };
   }
 }
 
-window.customElements.define(BnbAuthForm.is, BnbAuthForm);
+window.customElements.define('bnb-auth-form', BnbAuthForm);

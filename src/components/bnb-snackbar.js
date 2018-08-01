@@ -1,7 +1,6 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 
 class BnbSnackbar extends PolymerElement {
-
   static get template() {
     return html`
     <style>
@@ -45,8 +44,6 @@ class BnbSnackbar extends PolymerElement {
     `;
   }
 
-  static get is() { return 'bnb-snackbar'; }
-
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'alert');
@@ -67,7 +64,6 @@ class BnbSnackbar extends PolymerElement {
     this.setAttribute('aria-hidden', 'true');
     this.classList.remove('opened');
   }
-
 }
 
-customElements.define(BnbSnackbar.is, BnbSnackbar);
+customElements.define('bnb-snackbar', BnbSnackbar);

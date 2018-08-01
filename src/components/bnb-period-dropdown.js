@@ -1,19 +1,21 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-dropdown/iron-dropdown.js';
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-item/paper-item.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-material/paper-material.js';
-import '@polymer/paper-menu-button/paper-menu-button.js';
-import 'range-datepicker/range-datepicker.js';
-import { addDays, addMonths, addWeeks, format, endOfDay, endOfMonth, endOfWeek,
-  startOfDay, startOfMonth, startOfWeek } from 'date-fns/esm'
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/iron-dropdown/iron-dropdown';
+import '@polymer/iron-icons/iron-icons';
+import '@polymer/paper-icon-button/paper-icon-button';
+import '@polymer/paper-input/paper-input';
+import '@polymer/paper-item/paper-item';
+import '@polymer/paper-listbox/paper-listbox';
+import '@polymer/paper-material/paper-material';
+import '@polymer/paper-menu-button/paper-menu-button';
+import 'range-datepicker/range-datepicker';
+import {
+  addDays, addMonths, addWeeks, format, endOfDay, endOfMonth, endOfWeek,
+  startOfDay, startOfMonth, startOfWeek,
+} from 'date-fns/esm';
 import { connect } from 'pwa-helpers';
-import { store } from '../store.js';
-import { updatePeriod } from '../actions/app.js'
-import './bnb-common-styles.js';
+import { store } from '../store';
+import { updatePeriod } from '../actions/app';
+import './bnb-common-styles';
 
 
 class BnbPeriodDropdown extends connect(store)(PolymerElement) {
@@ -64,8 +66,6 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get is() { return 'bnb-period-dropdown'; }
-
   static get properties() {
     return {
       startDate: String,
@@ -73,8 +73,8 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
         type: String,
         notify: true,
         observer: '_endDateChanged',
-      }
-    }
+      },
+    };
   }
 
   _stateChanged(state) {
@@ -89,54 +89,54 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
   _endDateChanged(date) {
     if (date) {
       this.$.rangeDropdown.close();
-      let period = {
+      const period = {
         start: new Date(this.startDate),
-        end: new Date(this.endDate)
+        end: new Date(this.endDate),
       };
       store.dispatch(updatePeriod(period));
     }
   }
 
   _periodTapped(e) {
-    let type = e.currentTarget.dataset.period;
-    let startDate = undefined;
-    let endDate = undefined;
-    let now = new Date();
+    const type = e.currentTarget.dataset.period;
+    let startDate;
+    let endDate;
+    const now = new Date();
     switch (type) {
       case 'today':
         startDate = startOfDay(now);
         endDate = endOfDay(now);
-      break;
+        break;
       case 'this_week':
         startDate = startOfWeek(now);
         endDate = endOfWeek(now);
-      break;
+        break;
       case 'this_month':
         startDate = startOfMonth(now);
         endDate = endOfMonth(now);
-      break;
+        break;
       case 'yesterday':
         startDate = startOfDay(addDays(now, -1));
         endDate = endOfDay(addDays(now, -1));
-      break;
+        break;
       case 'last_week':
         startDate = startOfWeek(addWeeks(now, -1));
         endDate = endOfWeek(addWeeks(now, -1));
-      break;
+        break;
       case 'last_month':
         startDate = startOfMonth(addMonths(now, -1));
         endDate = endOfMonth(addMonths(now, -1));
-      break;
+        break;
       case 'last_7_days':
         startDate = startOfDay(addDays(now, -7));
         endDate = endOfDay(now);
-      break;
+        break;
       case 'last_30_days':
         startDate = startOfDay(addDays(now, -30));
         endDate = endOfDay(now);
-      break;
+        break;
     }
-    store.dispatch(updatePeriod({start:startDate, end:endDate}));
+    store.dispatch(updatePeriod({ start: startDate, end: endDate }));
   }
 }
-window.customElements.define(BnbPeriodDropdown.is, BnbPeriodDropdown);
+window.customElements.define('bnb-period-dropdown', BnbPeriodDropdown);

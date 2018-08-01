@@ -1,12 +1,12 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/paper-button/paper-button.js';
-import '@polymer/paper-card/paper-card.js';
-import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-input/paper-input.js';
-import '@polymer/paper-item/paper-item.js';
-import './bnb-common-styles.js';
-import './bnb-period-dropdown.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/paper-button/paper-button';
+import '@polymer/paper-card/paper-card';
+import '@polymer/paper-dropdown-menu/paper-dropdown-menu';
+import '@polymer/paper-listbox/paper-listbox';
+import '@polymer/paper-input/paper-input';
+import '@polymer/paper-item/paper-item';
+import './bnb-common-styles';
+import './bnb-period-dropdown';
 
 class BnbBudgetBar extends PolymerElement {
   static get template() {
@@ -83,23 +83,23 @@ class BnbBudgetBar extends PolymerElement {
       selectedCategory: {
         type: Number,
         value: 0,
-        observer: '_onSelectedItemChanged'
+        observer: '_onSelectedItemChanged',
       },
       selectedItem: {
-        type: Number
+        type: Number,
       },
       items: {
         type: Array,
-        value: []
+        value: [],
       },
       canAdd: {
         type: Boolean,
-        value: true
+        value: true,
       },
       budget: {
-        type: Number
-      }
-    }
+        type: Number,
+      },
+    };
   }
 
   _onSelectedItemChanged() {
@@ -107,18 +107,21 @@ class BnbBudgetBar extends PolymerElement {
       ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Average'],
       ['First byte', 'First paint', 'Speed index', 'Interactive'],
       ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'],
-      ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total']
-    ]
+      ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'],
+    ];
     this.items = data[this.selectedCategory];
     this.selectedItem = undefined;
   }
 
   _onAddTapped() {
-    let isItemValid = this.$.itemField.validate();
-    let isBudgetValid = this.$.budgetField.validate();
-    if ( isItemValid && isBudgetValid) {
-      let name = this.$.categoryField.value + '/' + this.$.itemField.value;
-      this.dispatchEvent(new CustomEvent('add', {detail: {name: name, category: this.selectedCategory, item: this.selectedItem, budget: this.budget}}));
+    const isItemValid = this.$.itemField.validate();
+    const isBudgetValid = this.$.budgetField.validate();
+    if (isItemValid && isBudgetValid) {
+      const name = `${this.$.categoryField.value}/${this.$.itemField.value}`;
+      const detail = {
+        name, category: this.selectedCategory, item: this.selectedItem, budget: this.budget,
+      };
+      this.dispatchEvent(new CustomEvent('add', { detail }));
     }
   }
 }

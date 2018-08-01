@@ -1,8 +1,8 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
-import { IronResizableBehavior } from '@polymer/iron-resizable-behavior/iron-resizable-behavior.js';
-import '@polymer/iron-pages/iron-pages.js';
-import '@polymer/paper-spinner/paper-spinner.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class';
+import { IronResizableBehavior } from '@polymer/iron-resizable-behavior/iron-resizable-behavior';
+import '@polymer/iron-pages/iron-pages';
+import '@polymer/paper-spinner/paper-spinner';
 import { isEqual, find } from 'lodash-es';
 
 class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
@@ -66,43 +66,41 @@ class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
     `;
   }
 
-  static get is() { return 'bnb-chart'; }
-
   static get properties() {
     return {
       chart: {
-        notify: true
+        notify: true,
       },
       data: {
         type: Object,
-        value: function () {
+        value() {
           return null;
-        }
+        },
       },
       model: {
         type: Array,
-        value: function () {
+        value() {
           return [];
-        }
+        },
       },
       symbol: {
         type: String,
-        value: ''
+        value: '',
       },
       type: {
         type: String,
-        value: 'line'
+        value: 'line',
       },
       selectedPage: {
         type: Number,
-        value: 0
-      }
-    }
+        value: 0,
+      },
+    };
   }
 
   static get observers() {
     return [
-      'updateChart(data.*)'
+      'updateChart(data.*)',
     ];
   }
 
@@ -122,17 +120,15 @@ class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
     if (this.data) {
       if (this.hasValues(this.data)) {
         this.selectedPage = 2;
-      }
-      else {
+      } else {
         this.selectedPage = 1;
       }
-    }
-    else {
+    } else {
       this.selectedPage = 0;
     }
 
     if (this.data && this.hasValues(this.data)) {
-      let chartData = this.createChartData();
+      const chartData = this.createChartData();
 
       if (this.chart) {
         if (!isEqual(this.oldData, this.data)) {
@@ -142,8 +138,7 @@ class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
 
           this.oldData = this.data;
         }
-      }
-      else {
+      } else {
         let chartType = 'line';
         switch (this.type) {
           case 'area':
@@ -155,19 +150,19 @@ class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
             break;
         }
 
-        let options = {
+        const options = {
           maintainAspectRatio: false,
           legend: {
             position: 'bottom',
             labels: {
-              fontColor: '#fff'
-            }
+              fontColor: '#fff',
+            },
           },
           tooltips: {
             position: 'nearest',
             mode: 'index',
             intersect: false,
-            callbacks: {}
+            callbacks: {},
           },
           scales: {
             xAxes: [{
@@ -176,71 +171,70 @@ class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
               time: {
                 unit: this.computeTickFormat(chartData),
                 displayFormats: {
-                  hour: 'MMM D hA'
-                }
+                  hour: 'MMM D hA',
+                },
               },
               ticks: {
-                fontColor: '#fff'
-              }
+                fontColor: '#fff',
+              },
             }],
             yAxes: [{
               stacked: this.type === 'area' || this.type === 'bar',
               ticks: {
                 fontColor: '#fff',
-                beginAtZero: true
-              }
-            }]
-          }
+                beginAtZero: true,
+              },
+            }],
+          },
         };
 
         if (this.type === 'area') {
-          options.tooltips.callbacks.footer = function(tooltipItems, data) {
-              let sum = 0;
-              tooltipItems.forEach(function(tooltipItem) {
-                  sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
-              });
-              return 'Total: ' + Math.round(sum);
-            };
-        }
-        else if (this.type === 'bar') {
-          options.tooltips.callbacks.footer = function(tooltipItems, data) {
-              let sum = 0;
-              tooltipItems.forEach(function(tooltipItem) {
-                  sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
-              });
-              return 'Average: ' + Math.round(sum/tooltipItems.length);
-            };
+          options.tooltips.callbacks.footer = function (tooltipItems, data) {
+            let sum = 0;
+            tooltipItems.forEach((tooltipItem) => {
+              sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
+            });
+            return `Total: ${Math.round(sum)}`;
+          };
+        } else if (this.type === 'bar') {
+          options.tooltips.callbacks.footer = function (tooltipItems, data) {
+            let sum = 0;
+            tooltipItems.forEach((tooltipItem) => {
+              sum += data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].y;
+            });
+            return `Average: ${Math.round(sum / tooltipItems.length)}`;
+          };
         }
 
-        let ctx = this.$.chart;
+        const ctx = this.$.chart;
         this.chart = new Chart(ctx, {
           type: chartType,
           data: chartData,
-          options: options
+          options,
         });
       }
     }
   }
 
   transparentize(color, opacity) {
-    let alpha = opacity === undefined ? 0.5 : 1 - opacity;
+    const alpha = opacity === undefined ? 0.5 : 1 - opacity;
     return Color(color).alpha(alpha).rgbString();
   }
 
   hasValues(data) {
     let resu = false;
-    for (let i = 0; i < data.length && !resu; i++) {
+    for (let i = 0; i < data.length && !resu; i += 1) {
       resu = data[i].values.length > 0;
     }
     return resu;
   }
 
   createChartData() {
-    let resu = {
-      datasets: []
+    const resu = {
+      datasets: [],
     };
-    for (let i = 0; i < this.model.length; i++) {
-      let dataset = {};
+    for (let i = 0; i < this.model.length; i += 1) {
+      const dataset = {};
       dataset.label = this.model[i].label;
       dataset.fill = i === 0 ? 'origin' : '-1';
       dataset.backgroundColor = this.transparentize(this.model[i].color);
@@ -252,12 +246,11 @@ class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
   }
 
   createValues(key) {
-    let item = find(this.data, function(i) { return i.key === key; });
-    let resu = [];
+    const item = find(this.data, i => i.key === key);
+    const resu = [];
     if (item) {
-      for (let i = 0; i < item.values.length; i++) {
-        let time = new Date(item.values[i].time);
-        resu.push( {x: time, y: item.values[i].value});
+      for (let i = 0; i < item.values.length; i += 1) {
+        resu.push({ x: new Date(item.values[i].time), y: item.values[i].value });
       }
     }
     return resu;
@@ -266,14 +259,14 @@ class BnbChart extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
   computeTickFormat(chartData) {
     let resu = 'day';
     if (chartData.datasets.length > 0) {
-      let dataset = chartData.datasets[0];
-      let first = dataset.data[0].x;
-      let last  = dataset.data[dataset.data.length-1].x;
-      if ( (last - first) < (7*24*60*60*1000)) {
+      const dataset = chartData.datasets[0];
+      const first = dataset.data[0].x;
+      const last = dataset.data[dataset.data.length - 1].x;
+      if ((last - first) < (7 * 24 * 60 * 60 * 1000)) {
         resu = 'hour';
       }
     }
     return resu;
   }
 }
-window.customElements.define(BnbChart.is, BnbChart);
+window.customElements.define('bnb-chart', BnbChart);

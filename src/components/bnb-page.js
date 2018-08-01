@@ -1,22 +1,24 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import '@polymer/app-layout/app-layout.js';
-import '@polymer/iron-pages/iron-pages.js';
-import '@polymer/paper-dialog/paper-dialog.js';
-import '@polymer/paper-icon-button/paper-icon-button.js';
-import '@polymer/paper-listbox/paper-listbox.js';
-import '@polymer/paper-menu-button/paper-menu-button.js';
-import '@polymer/paper-tabs/paper-tab.js';
-import '@polymer/paper-tabs/paper-tabs.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import '@polymer/app-layout/app-layout';
+import '@polymer/iron-pages/iron-pages';
+import '@polymer/paper-dialog/paper-dialog';
+import '@polymer/paper-icon-button/paper-icon-button';
+import '@polymer/paper-listbox/paper-listbox';
+import '@polymer/paper-menu-button/paper-menu-button';
+import '@polymer/paper-tabs/paper-tab';
+import '@polymer/paper-tabs/paper-tabs';
 import { connect } from 'pwa-helpers';
-import { store } from '../store.js';
-import { updateRoute, deletePage, createBudget, deleteBudget } from '../actions/app.js';
-import './bnb-common-styles.js';
-import './bnb-budget-bar.js';
-import './bnb-budget-card.js';
-import './bnb-chart-card.js';
-import './bnb-divider.js';
-import './bnb-icons.js';
-import './bnb-period-bar.js';
+import { store } from '../store';
+import {
+  updateRoute, deletePage, deletePageMember, createBudget, deleteBudget,
+} from '../actions/app';
+import './bnb-common-styles';
+import './bnb-budget-bar';
+import './bnb-budget-card';
+import './bnb-chart-card';
+import './bnb-divider';
+import './bnb-icons';
+import './bnb-period-bar';
 
 class BnbPage extends connect(store)(PolymerElement) {
   static get template() {
@@ -100,22 +102,19 @@ class BnbPage extends connect(store)(PolymerElement) {
     `;
   }
 
-
-  static get is() { return 'bnb-page'; }
-
   static get properties() {
     return {
       page: {
-        type: Object
+        type: Object,
       },
       stats: {
         type: Object,
-        observer: '_statsChanged'
+        observer: '_statsChanged',
       },
       selectedTab: {
         type: Number,
         reflectToAttribute: true,
-        value: 0
+        value: 0,
       },
       lighthouseModel: Object,
       performanceModel: Object,
@@ -125,9 +124,9 @@ class BnbPage extends connect(store)(PolymerElement) {
       budgets: Array,
       _budgets: {
         type: Array,
-        observer: '_budgetsChanged'
-      }
-    }
+        observer: '_budgetsChanged',
+      },
+    };
   }
 
   _stateChanged(state) {
@@ -140,40 +139,62 @@ class BnbPage extends connect(store)(PolymerElement) {
     super.ready();
 
     this.lighthouseModel = [
-      {name: 'pwa', color: '#4A148C', label: 'pwa'},
-      {name: 'performance', color: '#7B1FA2', label: 'performance'},
-      {name: 'accessibility', color: '#9C27B0', label: 'accessibility'},
-      {name: 'best_practices', color: '#BA68C8', label: 'best practices'},
-      {name: 'seo', color: '#E1BEE7', label: 'seo'}
+      { name: 'pwa', color: '#4A148C', label: 'pwa' },
+      { name: 'performance', color: '#7B1FA2', label: 'performance' },
+      { name: 'accessibility', color: '#9C27B0', label: 'accessibility' },
+      { name: 'best_practices', color: '#BA68C8', label: 'best practices' },
+      { name: 'seo', color: '#E1BEE7', label: 'seo' },
     ];
 
     this.performanceModel = [
-      {name: 'first_byte', color: '#E65100', label: 'first byte', suffix: 'ms'},
-      {name: 'first_paint', color: '#F57C00', label: 'first paint', suffix: 'ms'},
-      {name: 'speed_index', color: '#FF9800', label: 'speed index'},
-      {name: 'interactive', color: '#FFB74D', label: 'interactive', suffix: 'ms'}
+      {
+        name: 'first_byte', color: '#E65100', label: 'first byte', suffix: 'ms',
+      },
+      {
+        name: 'first_paint', color: '#F57C00', label: 'first paint', suffix: 'ms',
+      },
+      {
+        name: 'speed_index', color: '#FF9800', label: 'speed index',
+      },
+      {
+        name: 'interactive', color: '#FFB74D', label: 'interactive', suffix: 'ms',
+      },
     ];
 
     this.uptimeModel = [
-      {name: 'uptime', color: '#00C853', label: 'uptime', suffix: '%'}
+      {
+        name: 'uptime', color: '#00C853', label: 'uptime', suffix: '%',
+      },
     ];
 
     this.requestsModel = [
-      {name: 'html', color: '#01579B', label: 'html'},
-      {name: 'css', color: '#0288D1', label: 'css'},
-      {name: 'js', color: '#03A9F4', label: 'javascript'},
-      {name: 'image', color: '#4FC3F7', label: 'image'},
-      {name: 'font', color: '#81D4FA', label: 'font'},
-      {name: 'other', color: '#B3E5FC', label: 'other'}
+      { name: 'html', color: '#01579B', label: 'html' },
+      { name: 'css', color: '#0288D1', label: 'css' },
+      { name: 'js', color: '#03A9F4', label: 'javascript' },
+      { name: 'image', color: '#4FC3F7', label: 'image' },
+      { name: 'font', color: '#81D4FA', label: 'font' },
+      { name: 'other', color: '#B3E5FC', label: 'other' },
     ];
 
     this.bytesModel = [
-      {name: 'html', color: '#880E4F', label: 'html', suffix: 'kb'},
-      {name: 'css', color: '#C2185B', label: 'css', suffix: 'kb'},
-      {name: 'js', color: '#D81B60', label: 'javascript', suffix: 'kb'},
-      {name: 'image', color: '#EC407A', label: 'image', suffix: 'kb'},
-      {name: 'font', color: '#F48FB1', label: 'font', suffix: 'kb'},
-      {name: 'other', color: '#F8BBD0', label: 'other', suffix: 'kb'}
+      {
+        name: 'html', color: '#880E4F', label: 'html', suffix: 'kb',
+      },
+      {
+        name: 'css', color: '#C2185B', label: 'css', suffix: 'kb',
+      },
+      {
+        name: 'js', color: '#D81B60', label: 'javascript', suffix: 'kb',
+      },
+      {
+        name: 'image', color: '#EC407A', label: 'image', suffix: 'kb',
+      },
+      {
+        name: 'font', color: '#F48FB1', label: 'font', suffix: 'kb',
+      },
+      {
+        name: 'other', color: '#F8BBD0', label: 'other', suffix: 'kb',
+      },
     ];
 
     this.$.lighthouseChart.addEventListener('details', this.lightHouseChartDetailsTapped.bind(this));
@@ -188,8 +209,7 @@ class BnbPage extends connect(store)(PolymerElement) {
   _statsChanged() {
     if (this.stats) {
       this._updateBudgets();
-    }
-    else {
+    } else {
       this.budgets = [];
     }
   }
@@ -201,24 +221,20 @@ class BnbPage extends connect(store)(PolymerElement) {
   }
 
   _updateBudgets() {
-    let budgets = [];
+    const budgets = [];
     if (this._budgets) {
-      for (let i = 0; i < this._budgets.length; i++) {
-        let budget = this.createBudgetObject(this._budgets[i]);
-        budgets.push(budget);
+      for (let i = 0; i < this._budgets.length; i += 1) {
+        budgets.push(this.createBudgetObject(this._budgets[i]));
       }
-      budgets.sort( (a,b) => {
+      budgets.sort((a, b) => {
         if (a.category > b.category) {
           return 1;
         }
-        else if (a.category < b.category) {
+        if (a.category < b.category) {
           return -1;
         }
-        else {
-          return a.item > b.item ? 1 : -1;
-        }
+        return a.item > b.item ? 1 : -1;
       });
-
     }
     this.budgets = budgets;
   }
@@ -228,11 +244,11 @@ class BnbPage extends connect(store)(PolymerElement) {
   }
 
   editTapped() {
-    store.dispatch(updateRoute('edit-page/' + this.page.id));
+    store.dispatch(updateRoute(`edit-page/${this.page.id}`));
   }
 
   membersTapped() {
-    store.dispatch(updateRoute('members/' + this.page.id));
+    store.dispatch(updateRoute(`members/${this.page.id}`));
   }
 
   deleteTapped() {
@@ -243,32 +259,32 @@ class BnbPage extends connect(store)(PolymerElement) {
     store.dispatch(deletePage(this.page.id));
   }
 
-  leaveTapped(e) {
+  leaveTapped() {
     this.$.leaveDlg.open();
   }
 
-  leavePageTapped(e) {
+  leavePageTapped() {
     store.dispatch(deletePageMember(this.page.id, -1));
   }
 
-  lightHouseChartDetailsTapped(e) {
-    store.dispatch(updateRoute('lighthouse-details/' + this.page.id));
+  lightHouseChartDetailsTapped() {
+    store.dispatch(updateRoute(`lighthouse-details/${this.page.id}`));
   }
 
-  performanceChartDetailsTapped(e) {
-    store.dispatch(updateRoute('performance-details/' + this.page.id));
+  performanceChartDetailsTapped() {
+    store.dispatch(updateRoute(`performance-details/${this.page.id}`));
   }
 
-  uptimeChartDetailsTapped(e) {
-    store.dispatch(updateRoute('uptime-details/' + this.page.id));
+  uptimeChartDetailsTapped() {
+    store.dispatch(updateRoute(`uptime-details/${this.page.id}`));
   }
 
-  requestsChartDetailsTapped(e) {
-    store.dispatch(updateRoute('requests-details/' + this.page.id));
+  requestsChartDetailsTapped() {
+    store.dispatch(updateRoute(`requests-details/${this.page.id}`));
   }
 
-  bytesChartDetailsTapped(e) {
-    store.dispatch(updateRoute('bytes-details/' + this.page.id));
+  bytesChartDetailsTapped() {
+    store.dispatch(updateRoute(`bytes-details/${this.page.id}`));
   }
 
   handleAddBudget(e) {
@@ -277,12 +293,12 @@ class BnbPage extends connect(store)(PolymerElement) {
 
   createBudgetName(category, item) {
     const data = [
-      {name: 'Lighthouse', values: ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Average']},
-      {name: 'Performance', values: ['First byte', 'First paint', 'Speed index', 'Interactive']},
-      {name: 'Assets count', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total']},
-      {name: 'Assets size', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total']}
+      { name: 'Lighthouse', values: ['PWA', 'Performance', 'Accessibility', 'Best practices', 'SEO', 'Average'] },
+      { name: 'Performance', values: ['First byte', 'First paint', 'Speed index', 'Interactive'] },
+      { name: 'Assets count', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'] },
+      { name: 'Assets size', values: ['HTML', 'CSS', 'Javascript', 'Image', 'Font', 'Other', 'Total'] },
     ];
-    return data[category].name + '/' + data[category].values[item];
+    return `${data[category].name}/${data[category].values[item]}`;
   }
 
   createBudgetObject(src) {
@@ -312,20 +328,19 @@ class BnbPage extends connect(store)(PolymerElement) {
     if (src.item >= data.length) {
       switch (src.category) {
         case 0:
-          budgetModel = {label: 'average', color: '#D500F9'};
-          budgetData = {key: 'average', values: this.createAverageData(data)};
+          budgetModel = { label: 'average', color: '#D500F9' };
+          budgetData = { key: 'average', values: this.createAverageData(data) };
           break;
         case 2:
-          budgetModel = {label: 'total', color: '#00B0FF'};
-          budgetData = {key: 'total', values: this.createTotalData(data)};
+          budgetModel = { label: 'total', color: '#00B0FF' };
+          budgetData = { key: 'total', values: this.createTotalData(data) };
           break;
         case 3:
-          budgetModel = {label: 'total', color: '#FF80AB'};
-          budgetData = {key: 'total', values: this.createTotalData(data)};
+          budgetModel = { label: 'total', color: '#FF80AB' };
+          budgetData = { key: 'total', values: this.createTotalData(data) };
           break;
       }
-    }
-    else {
+    } else {
       budgetModel = model[src.item];
       budgetData = data[src.item];
     }
@@ -337,18 +352,17 @@ class BnbPage extends connect(store)(PolymerElement) {
       name: this.createBudgetName(src.category, src.item),
       model: budgetModel,
       data: budgetData,
-      budget: src.budget
+      budget: src.budget,
     };
   }
 
   createTotalData(data) {
-    let total = [];
-    for(let iSet = 0; iSet < data.length; iSet++) {
-      for(let iData = 0; iData < data[iSet].values.length; iData++) {
+    const total = [];
+    for (let iSet = 0; iSet < data.length; iSet += 1) {
+      for (let iData = 0; iData < data[iSet].values.length; iData += 1) {
         if (total[iData] === undefined) {
           total[iData] = JSON.parse(JSON.stringify(data[iSet].values[iData]));
-        }
-        else {
+        } else {
           total[iData].value = Math.round(total[iData].value + data[iSet].values[iData].value);
         }
       }
@@ -357,9 +371,9 @@ class BnbPage extends connect(store)(PolymerElement) {
   }
 
   createAverageData(data) {
-    let average = this.createTotalData(data);
+    const average = this.createTotalData(data);
     if (data.length > 0) {
-      for (let i = 0; i < average.length; i++) {
+      for (let i = 0; i < average.length; i += 1) {
         average[i].value = Math.round(average[i].value / data.length);
       }
     }
@@ -370,4 +384,4 @@ class BnbPage extends connect(store)(PolymerElement) {
     store.dispatch(deleteBudget(this.page.id, e.detail.id));
   }
 }
-window.customElements.define(BnbPage.is, BnbPage);
+window.customElements.define('bnb-page', BnbPage);

@@ -1,8 +1,8 @@
-import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
-import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class.js';
-import { IronResizableBehavior } from '@polymer/iron-resizable-behavior/iron-resizable-behavior.js';
-import '@polymer/iron-pages/iron-pages.js';
-import '@polymer/paper-spinner/paper-spinner.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { mixinBehaviors } from '@polymer/polymer/lib/legacy/class';
+import { IronResizableBehavior } from '@polymer/iron-resizable-behavior/iron-resizable-behavior';
+import '@polymer/iron-pages/iron-pages';
+import '@polymer/paper-spinner/paper-spinner';
 
 class BnbBudget extends mixinBehaviors([IronResizableBehavior], PolymerElement) {
   static get template() {
@@ -65,28 +65,26 @@ class BnbBudget extends mixinBehaviors([IronResizableBehavior], PolymerElement) 
     `;
   }
 
-  static get is() { return 'bnb-budget'; }
-
   static get properties() {
     return {
       chart: {
-        notify: true
+        notify: true,
       },
       data: {
-        type: Object
+        type: Object,
       },
       model: {
-        type: Object
+        type: Object,
       },
       budget: {
-        type: Number
-      }
-    }
+        type: Number,
+      },
+    };
   }
 
   static get observers() {
     return [
-      'updateChart(data.*)'
+      'updateChart(data.*)',
     ];
   }
 
@@ -132,36 +130,34 @@ class BnbBudget extends mixinBehaviors([IronResizableBehavior], PolymerElement) 
     if (this.data) {
       if (this.hasValues(this.data)) {
         this.selectedPage = 2;
-      }
-      else {
+      } else {
         this.selectedPage = 1;
       }
-    }
-    else {
+    } else {
       this.selectedPage = 0;
     }
 
     if (this.data && this.hasValues(this.data)) {
-      let chartData = this.createChartData();
+      const chartData = this.createChartData();
 
       if (this.chart) {
         this.chart.destroy();
         this.chart = undefined;
       }
 
-      let options = {
+      const options = {
         maintainAspectRatio: false,
         legend: {
           position: 'bottom',
           labels: {
-            fontColor: '#fff'
-          }
+            fontColor: '#fff',
+          },
         },
         tooltips: {
           position: 'nearest',
           mode: 'index',
           intersect: false,
-          callbacks: {}
+          callbacks: {},
         },
         scales: {
           xAxes: [{
@@ -169,19 +165,19 @@ class BnbBudget extends mixinBehaviors([IronResizableBehavior], PolymerElement) 
             time: {
               unit: this.computeTickFormat(chartData),
               displayFormats: {
-                hour: 'MMM D hA'
-              }
+                hour: 'MMM D hA',
+              },
             },
             ticks: {
-              fontColor: '#fff'
-            }
+              fontColor: '#fff',
+            },
           }],
           yAxes: [{
             ticks: {
               fontColor: '#fff',
-              beginAtZero: true
-            }
-          }]
+              beginAtZero: true,
+            },
+          }],
         },
         annotation: {
           annotations: [{
@@ -193,23 +189,23 @@ class BnbBudget extends mixinBehaviors([IronResizableBehavior], PolymerElement) 
             borderWidth: 2,
             label: {
               content: this.budget,
-              enabled: true
-            }
-          }]
-        }
-      }
+              enabled: true,
+            },
+          }],
+        },
+      };
 
-      let ctx = this.$.chart;
+      const ctx = this.$.chart;
       this.chart = new Chart(ctx, {
         type: 'line',
         data: chartData,
-        options: options
+        options,
       });
     }
   }
 
   transparentize(color, opacity) {
-    let alpha = opacity === undefined ? 0.5 : 1 - opacity;
+    const alpha = opacity === undefined ? 0.5 : 1 - opacity;
     return Color(color).alpha(alpha).rgbString();
   }
 
@@ -218,10 +214,10 @@ class BnbBudget extends mixinBehaviors([IronResizableBehavior], PolymerElement) 
   }
 
   createChartData() {
-    let resu = {
-      datasets: []
+    const resu = {
+      datasets: [],
     };
-    let dataset = {};
+    const dataset = {};
     dataset.label = this.model.label;
     dataset.backgroundColor = this.transparentize(this.model.color);
     dataset.borderColor = this.model.color;
@@ -231,11 +227,10 @@ class BnbBudget extends mixinBehaviors([IronResizableBehavior], PolymerElement) 
     return resu;
   }
 
-  createValues(key) {
-    let resu = [];
-    for (let i = 0; i < this.data.values.length; i++) {
-      let time = new Date(this.data.values[i].time);
-      resu.push( {x: time, y: this.data.values[i].value});
+  createValues() {
+    const resu = [];
+    for (let i = 0; i < this.data.values.length; i += 1) {
+      resu.push({ x: new Date(this.data.values[i].time), y: this.data.values[i].value });
     }
     return resu;
   }
@@ -243,11 +238,11 @@ class BnbBudget extends mixinBehaviors([IronResizableBehavior], PolymerElement) 
   computeTickFormat(chartData) {
     let resu = 'day';
     if (chartData.datasets.length > 0) {
-      let dataset = chartData.datasets[0];
+      const dataset = chartData.datasets[0];
       if (dataset.data.length > 0) {
-        let first = dataset.data[0].x;
-        let last  = dataset.data[dataset.data.length-1].x;
-        if ( (last - first) < (7*24*60*60*1000)) {
+        const first = dataset.data[0].x;
+        const last = dataset.data[dataset.data.length - 1].x;
+        if ((last - first) < (7 * 24 * 60 * 60 * 1000)) {
           resu = 'hour';
         }
       }
@@ -255,6 +250,4 @@ class BnbBudget extends mixinBehaviors([IronResizableBehavior], PolymerElement) 
     return resu;
   }
 }
-window.customElements.define(BnbBudget.is, BnbBudget);
-
-
+window.customElements.define('bnb-budget', BnbBudget);

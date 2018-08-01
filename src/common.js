@@ -9,14 +9,14 @@ function baseUrl() {
 * Build a query string from a params object.
 */
 function getQueryString(params) {
-  let queryParts = [];
+  const queryParts = [];
 
   for (let param in params) {
-    let value = params[param];
+    const value = params[param];
     param = window.encodeURIComponent(param);
 
     if (value !== null) {
-      param += '=' + window.encodeURIComponent(value);
+      param += `=${window.encodeURIComponent(value)}`;
     }
 
     queryParts.push(param);
@@ -26,15 +26,16 @@ function getQueryString(params) {
 }
 
 export function getFullPath(path) {
-  var full = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
-  return full + '/' + path;
+  const port = window.location.port ? `:${window.location.port}` : '';
+  const full = `${window.location.protocol}//${window.location.hostname}${port}`;
+  return `${full}/${path}`;
 }
 
 /**
  * Load credentials from session storage
  */
 export function fetchCredentials() {
-  let credentials = sessionStorage.getItem('credentials');
+  const credentials = sessionStorage.getItem('credentials');
   if (credentials) {
     return JSON.parse(credentials);
   }
@@ -46,11 +47,11 @@ export function fetchCredentials() {
   * Store credentials in session storage.
   */
 export function storeCredentials(accessToken, uid, client) {
-  let credentials = {
+  const credentials = {
     'access-token': accessToken,
-    uid: uid,
-    client: client,
-    'token-type': 'Bearer'
+    uid,
+    client,
+    'token-type': 'Bearer',
   };
 
   sessionStorage.setItem('credentials', JSON.stringify(credentials));
@@ -60,9 +61,9 @@ export function storeCredentials(accessToken, uid, client) {
   * Build an absolute URL from a partial url and query parameters
   */
 export function getRequestUrl(url, params) {
-  let queryString = getQueryString(params);
+  const queryString = getQueryString(params);
   if (queryString) {
-    return baseUrl() + url + '?' + queryString;
+    return `${baseUrl() + url}?${queryString}`;
   }
   return baseUrl() + url;
 }
@@ -81,7 +82,7 @@ export function isLogged() {
   * @param {Object} parameters
   */
 export function getResource(rq) {
-  let xhr = new XMLHttpRequest();
+  const xhr = new XMLHttpRequest();
 
   xhr.addEventListener('load', (e) => {
     rq.onLoad.call(this, e);
@@ -90,8 +91,7 @@ export function getResource(rq) {
   xhr.addEventListener('error', (e) => {
     if (rq.onError) {
       rq.onError.call(this, e);
-    }
-    else {
+    } else {
       this.dispatch('updateMessage', 'Network failure. Try again.');
     }
   });
@@ -100,7 +100,7 @@ export function getResource(rq) {
 
   let headers = fetchCredentials() || {};
   if (rq.headers) {
-    headers = Object.assign(headers, rq.headers)
+    headers = Object.assign(headers, rq.headers);
   }
   for (let header in headers) {
     if (headers[header]) {
