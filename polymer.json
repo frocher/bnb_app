@@ -32,27 +32,6 @@
       },
       "bundle": true,
       "addServiceWorker": true
-    },
-    {
-      "name": "es6-bundled",
-      "browserCapabilities": [
-        "es2015"
-      ],
-      "js": {
-        "compile": "es2015",
-        "minify": {
-          "exclude": ["*.min.js"]
-        },
-        "transformModulesToAmd": true
-      },
-      "css": {
-        "minify": true
-      },
-      "html": {
-        "minify": true
-      },
-      "bundle": true,
-      "addServiceWorker": true
     }
   ],
   "moduleResolution": "node",

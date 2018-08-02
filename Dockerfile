@@ -49,7 +49,7 @@ COPY . $APP_HOME
 
 # build app
 RUN npm install
-RUN NODE_OPTIONS="--max-old-space-size=8192" npm run build:prpl-server
+RUN NODE_OPTIONS="--max-old-space-size=2000" npm run build:prpl-server
 
 # clean
 RUN npm uninstall -g polymer-cli
