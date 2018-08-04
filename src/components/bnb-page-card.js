@@ -69,7 +69,7 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
       <div class="card-content">
         <div class$="[[_computeHurt(page)]]"></div>
         <h2>[[page.name]]</h2>
-        <a href="[[page.url]]" on-tap="urlTapped" target="_blank" title="Open url in a new tab">[[page.url]]</a>
+        <a href="[[page.url]]" on-tap="urlTapped" target="_blank" title="Open url in a new tab" rel="noopener">[[page.url]]</a>
       </div>
       <paper-ripple></paper-ripple>
 
