@@ -56,4 +56,4 @@ RUN npm uninstall -g polymer-cli
 RUN apt-get purge -y curl git gnupg
 
 EXPOSE 8080
-CMD ["npm","start"]
+CMD ["npm","run", "serve:prpl-server"]
