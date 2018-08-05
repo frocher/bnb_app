@@ -10,7 +10,7 @@ import {
   updateRoute, loadEnvironment, loadPages, loadPage, loadPageMembers, loadPageStats, loadBudgets,
   loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails, loadUser,
 } from '../actions/app';
-import { isLogged } from '../common';
+import { isLogged, storeCredentials } from '../common';
 import './bnb-analytics';
 import './bnb-common-styles';
 import './bnb-home';
@@ -170,7 +170,7 @@ class BnbApp extends connect(store)(PolymerElement) {
     // Check if we find credentials in parameters (used for omniauth)
     // if true : store credentials and remove them from the query string
     if (this._getUrlParameter('auth_token')) {
-      this.storeCredentials(this._getUrlParameter('auth_token'), this._getUrlParameter('uid'), this._getUrlParameter('client_id'));
+      storeCredentials(this._getUrlParameter('auth_token'), this._getUrlParameter('uid'), this._getUrlParameter('client_id'));
       this._removeParameters();
     }
 
