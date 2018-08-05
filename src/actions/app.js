@@ -19,23 +19,6 @@ export const updatePeriod = period => ({
   period,
 });
 
-export const loadEnvironment = () => (dispatch) => {
-  dispatch((dispatch) => {
-    getResource({
-      url: getRequestUrl('/environment', {}),
-      method: 'GET',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch('fetchEnvironmentSuccess', response);
-        } else {
-          dispatch('fetchEnvironmentKeyError', response.errors);
-        }
-      },
-    });
-  });
-};
-
 export const fetchEnvironmentSuccess = keys => ({
   type: 'ENVIRONMENT_FETCH_SUCCESS',
   analyticsKey: keys.GOOGLE_ANALYTICS_KEY,
@@ -46,6 +29,23 @@ export const fetchEnvironmentError = message => ({
   type: 'ENVIRONMENT_FETCH_ERROR',
   message,
 });
+
+export const loadEnvironment = () => (dispatch) => {
+  dispatch((dispatch) => {
+    getResource({
+      url: getRequestUrl('/environment', {}),
+      method: 'GET',
+      onLoad(e) {
+        const response = JSON.parse(e.target.responseText);
+        if (e.target.status === 200) {
+          dispatch(fetchEnvironmentSuccess(response));
+        } else {
+          dispatch(fetchEnvironmentError(response.errors));
+        }
+      },
+    });
+  });
+};
 
 // ***** Authentication
 

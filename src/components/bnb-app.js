@@ -152,7 +152,7 @@ class BnbApp extends connect(store)(PolymerElement) {
   ready() {
     super.ready();
     this.removeAttribute('unresolved');
-    loadEnvironment();
+    store.dispatch(loadEnvironment());
     this.scrollPositions = new Map();
   }
 
@@ -234,7 +234,7 @@ class BnbApp extends connect(store)(PolymerElement) {
             import('./bnb-user-preferences.js').then(cb);
             break;
           default:
-            this._pageLoaded(Boolean(oldView));
+            this._viewLoaded(Boolean(oldView));
         }
       }
 
