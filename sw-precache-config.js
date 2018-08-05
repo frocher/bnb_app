@@ -1,14 +1,17 @@
 module.exports = {
-  navigateFallbackWhitelist: [/^\/nothing\//],
   staticFileGlobs: [
     'manifest.json',
-    'bower_components/webcomponentsjs/*.js',
-    'images/*'
+    'images/*',
+    'src/**/*',
   ],
   importScripts: [
     'push-handler.js'
   ],
   runtimeCaching: [
+    {
+      urlPattern: /\/@webcomponents\/webcomponentsjs\//,
+      handler: 'fastest'
+    },
     {
       urlPattern: /\/data\/images\/.*/,
       handler: 'cacheFirst',
