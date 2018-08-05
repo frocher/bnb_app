@@ -7,6 +7,7 @@ function launchPolyserve(isDev) {
   const apiPath = process.env.API || 'http://localhost:3000/';
   const options = [
     'serve',
+    '--hostname=0.0.0.0',
     '--compile=never',
     '--proxy-path=api',
     `--proxy-target=${apiPath}`];
