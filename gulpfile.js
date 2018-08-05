@@ -9,35 +9,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 
 const gulp = require('gulp');
-const rename = require('gulp-rename');
-const replace = require('gulp-replace');
-const del = require('del');
+const workbox = require('workbox-build');
 
-/**
- * Cleans the prpl-server build in the server directory.
- */
-gulp.task('prpl-server:clean', () => {
-  return del('server/build');
+const dist = `${__dirname}/build/esm-bundled`;
+
+gulp.task('generate-service-worker', () => {
+  return workbox.injectManifest({
+    globDirectory: dist,
+    globPatterns: [
+      '**/*.{html,js}',
+      'manifest.json'
+    ],
+    swSrc: `${__dirname}/sw.js`,
+    swDest: `${dist}/service-worker.js`
+  }).then(({warnings}) => {
+    // In case there are any warnings from workbox-build, log them.
+    for (const warning of warnings) {
+      console.warn(warning);
+    }
+    console.info('Service worker generation completed.');
+  }).catch((error) => {
+    console.warn('Service worker generation failed:', error);
+  });
 });
-
-/**
- * Copies the prpl-server build to the server directory while renaming the
- * node_modules directory so services like App Engine will upload it.
- */
-gulp.task('prpl-server:build', () => {
-  const pattern = 'node_modules';
-  const replacement = 'node_assets';
-
-  return gulp.src('build/**')
-    .pipe(rename(((path) => {
-      path.basename = path.basename.replace(pattern, replacement);
-      path.dirname = path.dirname.replace(pattern, replacement);
-    })))
-    .pipe(replace(pattern, replacement))
-    .pipe(gulp.dest('server/build'));
-});
-
-gulp.task('prpl-server', gulp.series(
-  'prpl-server:clean',
-  'prpl-server:build'
-));

@@ -6,7 +6,6 @@
   ],
   "extraDependencies": [
     "manifest.json",
-    "push-handler.js",
     "node_modules/chart.js/dist/Chart.bundle.min.js",
     "node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js",
     "node_modules/web-animations-js/web-animations-next.min.js",
@@ -31,7 +30,7 @@
         "minify": true
       },
       "bundle": true,
-      "addServiceWorker": true
+      "addServiceWorker": false
     }
   ],
   "moduleResolution": "node",
