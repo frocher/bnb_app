@@ -5,11 +5,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node ./start.js -- --dev",
-    "build": "npm run build:prpl-server && npm run build:static",
-    "build:prpl-server": "polymer build --auto-base-path && gulp prpl-server",
-    "build:static": "polymer build",
-    "serve:prpl-server": "node ./start.js",
-    "serve:static": "polymer serve --port 5000 build/es5-bundled",
+    "build": "polymer build",
+    "serve": "node ./start.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": "frocher/bnb_app",
@@ -56,18 +53,12 @@
     "chartjs": "^0.3.24",
     "chartjs-plugin-annotation": "^0.5.7",
     "command-line-args": "^4.0.7",
-    "compression": "^1.7.0",
     "date-fns": "^2.0.0-alpha.10",
-    "express": "~4.15.2",
-    "http-proxy-middleware": "^0.17.4",
     "lodash-es": "^4.17.10",
-    "morgan": "~1.8.1",
     "pwa-helpers": "^0.8.2",
     "range-datepicker": "github:frocher/range-datepicker#p3",
     "redux": "^3.7.0",
     "redux-thunk": "^2.2.0",
-    "reselect": "^3.0.1",
-    "superagent": "^3.8.1",
     "web-animations-js": "^2.3.1"
   },
   "devDependencies": {
@@ -79,7 +70,6 @@
     "gulp": "^4.0.0",
     "gulp-rename": "^1.2.3",
     "gulp-replace": "^1.0.0",
-    "polymer-cli": "^1.7.0",
-    "prpl-server": "^1.2.0"
+    "polymer-cli": "^1.7.0"
   }
 }

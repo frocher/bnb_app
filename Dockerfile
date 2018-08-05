@@ -49,11 +49,11 @@ COPY . $APP_HOME
 
 # build app
 RUN npm install
-RUN NODE_OPTIONS="--max-old-space-size=2000" npm run build:prpl-server
+RUN NODE_OPTIONS="--max-old-space-size=2000" npm run build
 
 # clean
 RUN npm uninstall -g polymer-cli
 RUN apt-get purge -y curl git gnupg
 
 EXPOSE 8080
-CMD ["npm","run", "serve:prpl-server"]
+CMD ["npm","run", "serve"]
