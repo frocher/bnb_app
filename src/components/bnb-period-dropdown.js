@@ -46,7 +46,7 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
       <paper-input id="endDate" label="Date to" value="[[dateTo]]" readonly on-tap="_handleOpenDropdown"></paper-input>
       <iron-dropdown id="rangeDropdown" horizontal-align="[[horizontalAlign]]">
         <paper-material slot="dropdown-content">
-          <range-datepicker date-from="{{startDate}}" date-to="{{endDate}}" month="06" year="2018"></range-datepicker>
+          <range-datepicker date-from="{{startDate}}" date-to="{{endDate}}"></range-datepicker>
         </paper-material>
       </iron-dropdown>
       <paper-menu-button horizontal-align="right">
