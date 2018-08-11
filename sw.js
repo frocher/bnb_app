@@ -10,6 +10,21 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
+  /\/web-animations-js\//,
+  workbox.strategies.staleWhileRevalidate()
+);
+
+workbox.routing.registerRoute(
+  /\/chartjs\/dist\//,
+  workbox.strategies.staleWhileRevalidate()
+);
+
+workbox.routing.registerRoute(
+  /\/chartjs-plugin-annotation\//,
+  workbox.strategies.staleWhileRevalidate()
+);
+
+workbox.routing.registerRoute(
   /\/images\/.*/,
   workbox.strategies.staleWhileRevalidate()
 );
