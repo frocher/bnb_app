@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node ./start.js -- --dev",
     "build": "polymer build && gulp generate-service-worker",
-    "serve": "node ./start.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "node ./start.js"
   },
   "repository": "frocher/bnb_app",
   "author": "Fred Rocher",
