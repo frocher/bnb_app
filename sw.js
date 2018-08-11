@@ -5,33 +5,24 @@ workbox.skipWaiting();
 workbox.clientsClaim();
 
 workbox.routing.registerRoute(
-  /\/@webcomponents\/webcomponentsjs\//,
-  workbox.strategies.staleWhileRevalidate()
+  /.*\.js/,
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: 'js-cache'
+  })
 );
 
 workbox.routing.registerRoute(
-  /\/web-animations-js\//,
-  workbox.strategies.staleWhileRevalidate()
-);
-
-workbox.routing.registerRoute(
-  /\/chartjs\/dist\//,
-  workbox.strategies.staleWhileRevalidate()
-);
-
-workbox.routing.registerRoute(
-  /\/chartjs-plugin-annotation\//,
-  workbox.strategies.staleWhileRevalidate()
-);
-
-workbox.routing.registerRoute(
-  /\/images\/.*/,
-  workbox.strategies.staleWhileRevalidate()
+  /.*\.(?:png|jpg|jpeg|svg|gif)/,
+  workbox.strategies.staleWhileRevalidate({
+    cacheName: 'image-cache'
+  })
 );
 
 workbox.routing.registerRoute(
   /\/api\//,
-  workbox.strategies.networkFirst()
+  workbox.strategies.networkFirst({
+    cacheName: 'api-cache'
+  })
 );
 
 workbox.routing.registerRoute(
