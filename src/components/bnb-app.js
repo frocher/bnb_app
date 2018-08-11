@@ -154,6 +154,12 @@ class BnbApp extends connect(store)(PolymerElement) {
     this.removeAttribute('unresolved');
     store.dispatch(loadEnvironment());
     this.scrollPositions = new Map();
+
+    // listen for online/offline
+    afterNextRender(this, () => {
+      window.addEventListener('online', e => this._notifyNetworkStatus(e));
+      window.addEventListener('offline', e => this._notifyNetworkStatus(e));
+    });
   }
 
   _routePathChanged(path) {

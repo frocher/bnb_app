@@ -1,4 +1,7 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
+import { flush } from '@polymer/polymer/lib/legacy/polymer.dom';
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
+import { timeOut } from '@polymer/polymer/lib/utils/async';
 
 class BnbSnackbar extends PolymerElement {
   static get template() {
@@ -51,17 +54,13 @@ class BnbSnackbar extends PolymerElement {
   }
 
   open() {
-    Polymer.dom.flush();
-    this.removeAttribute('aria-hidden');
+    flush();
     this.offsetHeight && this.classList.add('opened');
-    this._closeDebouncer = Polymer.Debouncer.debounce(this._closeDebouncer,
-      Polymer.Async.timeOut.after(4000), () => {
-        this.close();
-      });
+    this._closeDebouncer = Debouncer.debounce(this._closeDebouncer,
+      timeOut.after(4000), this.close.bind(this));
   }
 
   close() {
-    this.setAttribute('aria-hidden', 'true');
     this.classList.remove('opened');
   }
 }
