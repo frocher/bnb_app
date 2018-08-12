@@ -48,6 +48,9 @@ class BnbApp extends connect(store)(PolymerElement) {
         --range-datepicker-cell-selected: var(--google-blue-300);
         --range-datepicker-cell-hovered: var(--google-blue-500);
 
+        --app-nav-background-color: var(--primary-background-color);
+        --app-nav-text-color: var(--secondary-text-color);
+
         background-color: var(--primary-background-color);
         @apply --layout-fit;
         @apply --layout-vertical;
