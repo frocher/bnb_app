@@ -299,7 +299,7 @@ class BnbApp extends connect(store)(PolymerElement) {
   _ensureLazyLoaded() {
     if (!this.loadComplete) {
       afterNextRender(this, () => {
-        import('./lazy-resources.js').then(() => {
+        import('./lazy-resources.js').then(async () => {
           this._notifyNetworkStatus();
           this.loadComplete = true;
         });
