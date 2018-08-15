@@ -1,8 +1,6 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element';
 
 class BnbAnalytics extends PolymerElement {
-  static get is() { return 'bnb-analytics'; }
-
   static get properties() {
     return {
       key: {
@@ -24,7 +22,7 @@ class BnbAnalytics extends PolymerElement {
     }
   }
 }
-window.customElements.define(BnbAnalytics.is, BnbAnalytics);
+window.customElements.define('bnb-analytics', BnbAnalytics);
 
 /* eslint-disable */
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
