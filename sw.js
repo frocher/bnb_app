@@ -1,3 +1,4 @@
+/* global clients */
 /* global importScripts */
 /* global registration */
 /* global workbox */
@@ -59,5 +60,12 @@ self.addEventListener('push', (event) => {
   event.waitUntil(handlePushEvent(event));
 });
 
+self.addEventListener('notificationclick', (e) => {
+  const { notification, action } = e;
+  if (action !== 'close') {
+    clients.openWindow(notification.data.url);
+  }
+  notification.close();
+});
 
 workbox.precaching.precacheAndRoute([]);
