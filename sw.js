@@ -62,7 +62,7 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (e) => {
   const { notification, action } = e;
-  if (action !== 'close') {
+  if (action !== 'close' && notification.data && notification.data.url) {
     clients.openWindow(notification.data.url);
   }
   notification.close();
