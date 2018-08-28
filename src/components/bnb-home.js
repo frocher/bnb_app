@@ -44,11 +44,23 @@ class BnbHome extends connect(store)(PolymerElement) {
       }
 
       #withData > .item {
-        -webkit-flex: 1 calc(25% - 30px);
-        flex: 1 calc(25% - 30px);
-        max-width: calc(25% - 30px);
+        -webkit-flex: 1 calc(20% - 30px);
+        flex: 1 calc(20% - 30px);
+        max-width: calc(20% - 30px);
         margin: 10px;
         text-decoration: none;
+      }
+
+      @media (max-width: 1600px) {
+        #withData {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+        #withData > .item {
+          -webkit-flex: 1 calc(25% - 30px);
+          flex: 1 calc(25% - 30px);
+          max-width: calc(25% - 30px);
+        }
       }
 
       @media (max-width: 1200px) {
@@ -60,8 +72,6 @@ class BnbHome extends connect(store)(PolymerElement) {
           -webkit-flex: 1 calc(33% - 20px);
           flex: 1 calc(33% - 20px);
           max-width: calc(33% - 20px);
-          margin: 10px;
-          text-decoration: none;
         }
       }
 
@@ -74,8 +84,6 @@ class BnbHome extends connect(store)(PolymerElement) {
           -webkit-flex: 1 calc(50% - 20px);
           flex: 1 calc(50% - 20px);
           max-width: calc(50% - 20px);
-          margin: 10px;
-          text-decoration: none;
         }
       }
 
@@ -89,7 +97,6 @@ class BnbHome extends connect(store)(PolymerElement) {
           flex: 1 calc(100% - 10px);
           max-width: calc(100% - 10px);
           margin: 5px;
-          text-decoration: none;
         }
       }
       </style>
