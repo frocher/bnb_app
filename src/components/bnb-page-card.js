@@ -18,6 +18,23 @@ class BnbPageCard extends connect(store)(GestureEventListeners(PolymerElement)) 
         height: 100%;
       }
 
+      :host {
+        --paper-card-header: {
+          height: 0;
+          overflow: hidden;
+          padding-top: calc(3 / 4 * 100%);
+          background: white;
+          position: relative;
+        };
+        --paper-card-header-image: {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+        };
+      }
+
       .card-content h2 {
         margin: 0;
         white-space: nowrap;
