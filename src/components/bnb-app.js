@@ -3,9 +3,7 @@ import { afterNextRender } from '@polymer/polymer/lib/utils/render-status';
 import { connect } from 'pwa-helpers';
 import '@polymer/app-route/app-location';
 import '@polymer/app-route/app-route';
-import '@polymer/neon-animation/neon-animated-pages';
-import '@polymer/neon-animation/animations/fade-in-animation';
-import '@polymer/neon-animation/animations/fade-out-animation';
+import '@polymer/iron-pages/iron-pages';
 import '@polymer/paper-toast/paper-toast';
 import { store } from '../store';
 import {
@@ -72,14 +70,12 @@ class BnbApp extends connect(store)(PolymerElement) {
 
     <bnb-analytics id="analytics" key="[[analyticsKey]]"></bnb-analytics>
 
-    <neon-animated-pages
+    <iron-pages
         class="view"
         selected="[[view]]"
         attr-for-selected="name"
         selected-attribute="visible"
-        fallback-selection="404"
-        entry-animation="fade-in-animation"
-        exit-animation="fade-out-animation">
+        fallback-selection="404">
       <bnb-add-page            name="add-page"            class="view"></bnb-add-page>
       <bnb-bytes-details       name="bytes-details"       class="view"></bnb-bytes-details>
       <bnb-home                name="home"                class="view"></bnb-home>
@@ -96,7 +92,7 @@ class BnbApp extends connect(store)(PolymerElement) {
       <bnb-uptime-details      name="uptime-details"      class="view"></bnb-uptime-details>
       <bnb-user-preferences    name="user-preferences"    class="view"></bnb-user-preferences>
       <bnb-404-warning         name="404"                 class="view"></bnb-404-warning>
-    </neon-animated-pages>
+    </iron-pages>
 
     <paper-toast id="message-toast" duration="4000"></paper-toast>
     `;
