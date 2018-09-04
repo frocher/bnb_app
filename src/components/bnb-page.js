@@ -61,10 +61,7 @@ class BnbPage extends connect(store)(PolymerElement) {
 
       <div id="content" class="fit">
         <div id="charts">
-          <iron-pages
-              selected="[[selectedTab]]"
-              entry-animation="slide-from-right-animation"
-              exit-animation="slide-left-animation">
+          <iron-pages selected="[[selectedTab]]">
             <bnb-page-stats></bnb-page-stats>
             <bnb-page-budget></bnb-page-budget>
           </iron-pages>
