@@ -1,5 +1,4 @@
-build
-server
+dist
 .sass-cache
 .tmp
 .DS_Store

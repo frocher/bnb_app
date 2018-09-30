@@ -5,7 +5,9 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node ./start.js -- --dev",
-    "build": "polymer build && gulp generate-service-worker",
+    "build": "webpack",
+    "build:prod": "webpack --env.NODE_ENV=production --optimize-minimize",
+    "dev": "webpack-dev-server --hot --inline",
     "serve": "node ./start.js"
   },
   "repository": "frocher/bnb_app",
@@ -60,15 +62,29 @@
     "web-animations-js": "^2.3.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-syntax-object-rest-spread": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-es2015": "^7.0.0-beta.53",
     "babel-eslint": "^8.2.6",
-    "del": "^3.0.0",
+    "babel-loader": "^8.0.4",
+    "clean-webpack-plugin": "^0.1.19",
+    "copy-webpack-plugin": "^4.5.2",
+    "ejs-loader": "^0.3.1",
     "eslint": "^5.6.1",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "gulp": "^4.0.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-replace": "^1.0.0",
-    "polymer-cli": "^1.8.0",
-    "workbox-build": "^3.6.2"
+    "express": "^4.16.3",
+    "express-history-api-fallback": "^2.2.1",
+    "express-http-proxy": "^1.4.0",
+    "html-webpack-exclude-assets-plugin": "0.0.7",
+    "html-webpack-plugin": "^3.2.0",
+    "script-ext-html-webpack-plugin": "^2.0.1",
+    "serve-static": "^1.13.2",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "workbox-build": "^3.6.2",
+    "workbox-webpack-plugin": "^3.6.2"
   }
 }

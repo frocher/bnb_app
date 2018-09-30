@@ -4,8 +4,6 @@
 /* global workbox */
 /* eslint no-restricted-globals: ["off", "self"] */
 
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/3.4.1/workbox-sw.js');
-
 // Note: Ignore the error that Glitch raises about workbox being undefined.
 workbox.skipWaiting();
 workbox.clientsClaim();

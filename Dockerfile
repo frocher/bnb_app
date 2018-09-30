@@ -38,9 +38,6 @@ RUN tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-compon
 RUN rm "node-v$NODE_VERSION-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
 RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-# Install bower and gulp
-RUN npm install -g polymer-cli --unsafe-perm
-
 # Copy app
 ENV APP_HOME /myapp
 RUN mkdir $APP_HOME
@@ -49,10 +46,9 @@ COPY . $APP_HOME
 
 # build app
 RUN npm install
-RUN NODE_OPTIONS="--max-old-space-size=2000" npm run build
+RUN npm run build:prod
 
 # clean
-RUN npm uninstall -g polymer-cli
 RUN apt-get purge -y curl git gnupg
 
 EXPOSE 8080

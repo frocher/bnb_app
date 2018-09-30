@@ -66,11 +66,11 @@
     </script>
 
 
-    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-    <script src="node_modules/web-animations-js/web-animations-next.min.js" async></script>
-    <script src="node_modules/chart.js/dist/Chart.bundle.min.js" defer></script>
-    <script src="node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js" defer></script>
-    <script type="module" src="src/components/bnb-app.js"></script>
+    <script src="<%= htmlWebpackPlugin.options.paths.webcomponents %>"></script>
+    <script src="<%= htmlWebpackPlugin.options.paths.webanimations %>" defer></script>
+    <script src="<%= htmlWebpackPlugin.options.paths.chartjs %>" defer></script>
+    <script src="<%= htmlWebpackPlugin.options.paths.chartjsannotation %>" defer></script>
+    <script type="module" src="<%= htmlWebpackPlugin.files.chunks["main"].entry %>"></script>
     <noscript>Please enable JavaScript to view this website.</noscript>
   </body>
 </html>
