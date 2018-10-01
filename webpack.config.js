@@ -66,11 +66,15 @@ const copyStatics = {
     context: resolve('.'),
     to: OUTPUT_PATH
   }, {
-    from: resolve('./index.html'),
+    from: './src/robots.txt',
+    context: resolve('.'),
+    to: OUTPUT_PATH
+  }, {
+    from: resolve('./src/index.html'),
     to: OUTPUT_PATH,
     flatten: true
   }, {
-    from: resolve('./manifest.json'),
+    from: resolve('./src/manifest.json'),
     to: OUTPUT_PATH,
     flatten: true
   }]
@@ -83,7 +87,7 @@ const renderHtmlPlugins = () =>
   [
     new HtmlWebpackPlugin({
       filename: resolve(OUTPUT_PATH, 'index.html'),
-      template: `!!ejs-loader!${resolve('./index.html')}`,
+      template: `!!ejs-loader!${resolve('./src/index.html')}`,
       minify: ENV === 'production' && {
         collapseWhitespace: true,
         removeScriptTypeAttributes: true,
@@ -117,7 +121,7 @@ const buildPlugins = [
     [].concat(copyStatics.copyWebcomponents, copyStatics.copyOthers)
   ),
   new InjectManifest({
-    swSrc: './sw.js',
+    swSrc: './src/sw.js',
     swDest: join(OUTPUT_PATH, 'service-worker.js')
   }),
   new CleanWebpackPlugin([OUTPUT_PATH], {verbose: true})
