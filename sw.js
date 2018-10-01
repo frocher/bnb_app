@@ -66,4 +66,4 @@ self.addEventListener('notificationclick', (e) => {
   notification.close();
 });
 
-workbox.precaching.precacheAndRoute([]);
+workbox.precaching.precacheAndRoute(self.__precacheManifest || []);
