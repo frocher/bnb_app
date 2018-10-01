@@ -1,41 +1,22 @@
 # \<Botnbot\>
 
 
-## Install the Polymer-CLI
+## Developing
 
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
-
-## Viewing Your Application
-
-You can use either
+Start the webpack-dev-server on localhost http://localhost:8081 with hot-reload
 
 ```
-npm start -- --dev
+npm run dev
 ```
-
-or
-
-```
-polymer serve --proxy-path=api --proxy-target=http://localhost:3000/
-```
-
 
 ## Building Your Application
 
 ```
-$ polymer build
+$ npm run build:prod
 ```
 
-This will create builds of your application in the `build/` directory, optimized to be served in production. You can then serve the built versions :
+This will create builds of your application in the `dist/` directory, optimized to be served in production. You can then serve the built version :
 
 ```
-$ npm start
+$ npm run serve
 ```
-
-## Running Tests
-
-```
-$ polymer test
-```
-
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
