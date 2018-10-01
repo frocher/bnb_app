@@ -84,6 +84,7 @@
     "serve-static": "^1.13.2",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
+    "webpack-dev-server": "^3.1.9",
     "workbox-build": "^3.6.2",
     "workbox-webpack-plugin": "^3.6.2"
   }
