@@ -77,10 +77,6 @@ class BnbUptimeDetails extends connect(store)(PolymerElement) {
               </div>
             </template>
           </vaadin-grid-column>
-          <vaadin-grid-column width="60px" flex-grow="0">
-            <template class="header">Code</template>
-            <template><div class="center">[[item.error_code]]</div></template>
-          </vaadin-grid-column>
           <vaadin-grid-column flex-grow="1">
             <template class="header">Message</template>
             <template>[[item.error_message]]</template>
