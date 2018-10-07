@@ -134,7 +134,7 @@ module.exports = {
   entry: './src/components/bnb-app.js',
   output: {
     path: OUTPUT_PATH,
-    filename: 'bundle.js'
+    filename: '[name].[contenthash].bundle.js'
   },
   devtool: 'cheap-source-map',
   module: {
