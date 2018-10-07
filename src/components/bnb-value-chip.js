@@ -25,7 +25,7 @@ class BnbValueChip extends PolymerElement {
         font-size: 16px;
       }
     </style>
-    <h3>[[value]]<span style="font-size:smaller">[[suffix]]</span></h3>
+    <h3>[[computeValue(value)]]<span style="font-size:smaller">[[suffix]]</span></h3>
     <p>[[text]]</p>
     <bnb-divider></bnb-divider>
     `;
@@ -48,6 +48,10 @@ class BnbValueChip extends PolymerElement {
         value: null,
       },
     };
+  }
+
+  computeValue(value) {
+    return Math.round(this.value);
   }
 }
 
