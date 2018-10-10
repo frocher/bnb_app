@@ -54,7 +54,7 @@
     "date-fns": "^2.0.0-alpha.22",
     "lodash-es": "^4.17.11",
     "pwa-helpers": "^0.8.4",
-    "range-datepicker": "github:frocher/range-datepicker#p3",
+    "range-datepicker": "github:frocher/range-datepicker#master",
     "redux": "^3.7.0",
     "redux-thunk": "^2.3.0",
     "web-animations-js": "^2.3.1"

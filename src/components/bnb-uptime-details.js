@@ -114,7 +114,7 @@ class BnbUptimeDetails extends connect(store)(PolymerElement) {
   }
 
   _formatTime(time) {
-    return format(time, 'MMM dd, YYYY HH:mm');
+    return format(time, 'MMM dd, yyyy HH:mm');
   }
 
   _statusClass(value) {

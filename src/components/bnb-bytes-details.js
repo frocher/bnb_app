@@ -110,7 +110,7 @@ class BnbBytesDetails extends connect(store)(PolymerElement) {
   }
 
   _formatTime(time) {
-    return format(time, 'MMM dd, YYYY HH:mm');
+    return format(time, 'MMM dd, yyyy HH:mm');
   }
 
   _formatBytes(bytes) {
