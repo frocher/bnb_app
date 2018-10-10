@@ -48,7 +48,7 @@ class BnbChartCard extends PolymerElement {
         <bnb-chart id="chart" type="[[type]]" data="[[data]]" model="[[model]]"></bnb-chart>
       </div>
       <div class="card-actions" hidden$='[[!hasDetails]]'>
-        <paper-button on-tap="_detailsTapped"><iron-icon icon="icons:toc"></iron-icon>Details</paper-button>
+        <paper-button on-tap="_detailsTapped"><iron-icon icon="bnb:toc"></iron-icon>Details</paper-button>
       </div>
     </paper-card>
     `;

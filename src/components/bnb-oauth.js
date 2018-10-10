@@ -4,7 +4,7 @@ import '@polymer/paper-button/paper-button';
 import { getRequestUrl } from '../common';
 import './bnb-common-styles';
 import './bnb-divider';
-import './bnb-icons';
+import './bnb-oauth-icons';
 
 class BnbOAuth extends PolymerElement {
   static get template() {

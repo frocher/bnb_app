@@ -40,10 +40,10 @@ class BnbPage extends connect(store)(PolymerElement) {
     <app-header-layout fullbleed>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
-          <paper-icon-button icon="arrow-back" on-tap="backTapped"></paper-icon-button>
+          <paper-icon-button icon="bnb:arrow-back" on-tap="backTapped"></paper-icon-button>
           <span main-title>[[page.name]]</span>
           <paper-menu-button horizontal-align="right">
-            <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
+            <paper-icon-button icon="bnb:more-vert" slot="dropdown-trigger"></paper-icon-button>
             <paper-listbox slot="dropdown-content">
               <paper-item on-tap="editTapped" hidden$="{{!page.can_edit}}">Settings</paper-item>
               <paper-item on-tap="membersTapped">Members</paper-item>

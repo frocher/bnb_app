@@ -1,8 +1,8 @@
 
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/iron-icons/iron-icons';
 import '@polymer/iron-icon/iron-icon';
 import './bnb-anchor';
+import './bnb-icons';
 
 class Bnb404Warning extends PolymerElement {
   static get template() {
@@ -27,7 +27,7 @@ class Bnb404Warning extends PolymerElement {
     </style>
 
     <div>
-      <iron-icon icon="error"></iron-icon>
+      <iron-icon icon="bnb:error"></iron-icon>
       <h1>Sorry, we couldn't find that page</h1>
     </div>
     <bnb-anchor text="Go to the home page" path="/home"></bnb-anchor>

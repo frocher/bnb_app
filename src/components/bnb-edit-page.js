@@ -1,9 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/app-layout/app-layout';
 import '@polymer/iron-a11y-keys/iron-a11y-keys';
-import '@polymer/iron-icons/iron-icons';
-import '@polymer/iron-icons/notification-icons';
-import '@polymer/iron-icons/social-icons';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-dialog/paper-dialog';
 import '@polymer/paper-icon-button/paper-icon-button';
@@ -18,6 +15,7 @@ import './bnb-collapse';
 import './bnb-common-styles';
 import './bnb-divider';
 import { BnbFormElement } from './bnb-form-element';
+import './bnb-icons';
 
 class BnbEditPage extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
@@ -55,7 +53,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(PolymerElement)) {
     <app-header-layout fullbleed>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
-          <paper-icon-button icon="close" on-tap="closeTapped"></paper-icon-button>
+          <paper-icon-button icon="bnb:close" on-tap="closeTapped"></paper-icon-button>
           <span class="title">Edit page</span>
           <span class="flex"></span>
           <paper-button on-tap="saveTapped">Save</paper-button>
@@ -63,12 +61,12 @@ class BnbEditPage extends connect(store)(BnbFormElement(PolymerElement)) {
       </app-header>
       <div id="content" class="fit">
         <div id="container">
-          <bnb-collapse icon="icons:info" header="General">
+          <bnb-collapse icon="bnb:info" header="General">
             <paper-input id="name" label="Page name" value="[[page.name]]" autofocus="true"></paper-input>
             <paper-input id="url" label="URL" value="[[page.url]]"></paper-input>
           </bnb-collapse>
           <bnb-divider></bnb-divider>
-          <bnb-collapse icon="icons:timeline" header="Uptime check">
+          <bnb-collapse icon="bnb:timeline" header="Uptime check">
             <paper-input id="uptimeKeyword" value="[[page.uptime_keyword]]" label="Keyword"></paper-input>
             <paper-radio-group id="uptimeKeywordType" selected="[[page.uptime_keyword_type]]">
               <paper-radio-button name="presence">Presence</paper-radio-button>
@@ -76,7 +74,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(PolymerElement)) {
             </paper-radio-group>
           </bnb-collapse>
           <bnb-divider></bnb-divider>
-          <bnb-collapse icon="notification:sms" header="Notifications">
+          <bnb-collapse icon="bnb:sms" header="Notifications">
             <paper-toggle-button id="mail_notify" checked="[[page.mail_notify]]">by mail</paper-toggle-button>
             <paper-toggle-button id="push_notify" checked="[[page.push_notify]]">by push</paper-toggle-button>
             <paper-toggle-button id="slack_notify" checked="{{page.slack_notify}}">by Slack</paper-toggle-button>

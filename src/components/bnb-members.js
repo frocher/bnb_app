@@ -15,6 +15,7 @@ import {
   updateRoute, createPageMember, updatePageMember, deletePageMember,
 } from '../actions/app';
 import './bnb-grid-styles';
+import './bnb-icons';
 
 class BnbMembers extends connect(store)(PolymerElement) {
   static get template() {
@@ -47,7 +48,7 @@ class BnbMembers extends connect(store)(PolymerElement) {
     <app-header-layout fullbleed>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
-          <paper-icon-button icon="arrow-back" on-tap="closeTapped"></paper-icon-button>
+          <paper-icon-button icon="bnb:arrow-back" on-tap="closeTapped"></paper-icon-button>
           <span class="title">Members</span>
         </app-toolbar>
       </app-header>

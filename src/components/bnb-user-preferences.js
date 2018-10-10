@@ -1,8 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/app-layout/app-layout';
 import '@polymer/iron-a11y-keys/iron-a11y-keys';
-import '@polymer/iron-icons/iron-icons';
-import '@polymer/iron-icons/social-icons';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-dialog/paper-dialog';
 import '@polymer/paper-input/paper-input';
@@ -14,6 +12,7 @@ import './bnb-collapse';
 import './bnb-common-styles';
 import './bnb-divider';
 import { BnbFormElement } from './bnb-form-element';
+import './bnb-icons';
 
 class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
@@ -41,7 +40,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
     <app-header-layout fullbleed>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
-          <paper-icon-button icon="close" on-tap="closeTapped"></paper-icon-button>
+          <paper-icon-button icon="bnb:close" on-tap="closeTapped"></paper-icon-button>
           <span class="title">User preferences</span>
           <span class="flex"></span>
           <paper-button on-tap="saveTapped">Save</paper-button>
@@ -49,7 +48,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
       </app-header>
       <div id="content" class="fit">
         <div id="container">
-          <bnb-collapse icon="icons:info" header="General" opened>
+          <bnb-collapse icon="bnb:info" header="General" opened>
             <paper-input id="name" label="Name" value="[[user.name]]" autofocus="true"></paper-input>
             <paper-toggle-button id="pushButton" disabled="[[!isNotificationsEnabled()]]">Send me notifications on this device</paper-toggle-button>
           </bnb-collapse>

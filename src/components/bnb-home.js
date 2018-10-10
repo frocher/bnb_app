@@ -1,7 +1,6 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/polymer/lib/elements/dom-repeat';
 import '@polymer/app-layout/app-layout';
-import '@polymer/iron-icons/iron-icons';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-item/paper-item';
@@ -13,6 +12,7 @@ import { store } from '../store';
 import { updateRoute, signout } from '../actions/app';
 import './bnb-common-styles';
 import './bnb-divider';
+import './bnb-icons';
 import './bnb-page-card';
 
 class BnbHome extends connect(store)(PolymerElement) {
@@ -105,9 +105,9 @@ class BnbHome extends connect(store)(PolymerElement) {
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
           <div main-title>All pages</div>
-          <paper-icon-button icon="add" on-tap="_addTapped"></paper-icon-button>
+          <paper-icon-button icon="bnb:add" on-tap="_addTapped"></paper-icon-button>
           <paper-menu-button horizontal-align="right">
-            <paper-icon-button icon="more-vert" slot="dropdown-trigger"></paper-icon-button>
+            <paper-icon-button icon="bnb:more-vert" slot="dropdown-trigger"></paper-icon-button>
             <paper-listbox slot="dropdown-content">
               <paper-item on-tap="_preferencesTapped">User preferences</paper-item>
               <bnb-divider></bnb-divider>

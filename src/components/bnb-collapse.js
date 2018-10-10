@@ -1,10 +1,10 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/iron-icon/iron-icon';
-import '@polymer/iron-icons/iron-icons';
 import '@polymer/iron-collapse/iron-collapse';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-styles/paper-styles';
 import './bnb-common-styles';
+import './bnb-icons';
 
 class BnbCollapse extends PolymerElement {
   static get template() {
@@ -84,7 +84,7 @@ class BnbCollapse extends PolymerElement {
   }
 
   _computeToggleIcon(opened) {
-    return opened ? 'icons:expand-less' : 'icons:expand-more';
+    return opened ? 'bnb:expand-less' : 'bnb:expand-more';
   }
 }
 window.customElements.define('bnb-collapse', BnbCollapse);

@@ -1,6 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/iron-dropdown/iron-dropdown';
-import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-item/paper-item';
@@ -16,6 +15,7 @@ import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updatePeriod } from '../actions/app';
 import './bnb-common-styles';
+import './bnb-icons';
 
 
 class BnbPeriodDropdown extends connect(store)(PolymerElement) {
@@ -50,7 +50,7 @@ class BnbPeriodDropdown extends connect(store)(PolymerElement) {
         </paper-material>
       </iron-dropdown>
       <paper-menu-button horizontal-align="right">
-        <paper-icon-button icon="arrow-drop-down" slot="dropdown-trigger"></paper-icon-button>
+        <paper-icon-button icon="bnb:arrow-drop-down" slot="dropdown-trigger"></paper-icon-button>
         <paper-listbox slot="dropdown-content" attr-for-selected="data-period">
           <paper-item on-tap="_periodTapped" data-period="today">Today</paper-item>
           <paper-item on-tap="_periodTapped" data-period="this_week">This week</paper-item>

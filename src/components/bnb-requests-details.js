@@ -1,6 +1,5 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/app-layout/app-layout';
-import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@vaadin/vaadin-grid/vaadin-grid';
 import '@vaadin/vaadin-grid/vaadin-grid-sorter';
@@ -11,6 +10,7 @@ import { updateRoute } from '../actions/app';
 import { getRequestUrl } from '../common';
 import './bnb-common-styles';
 import './bnb-grid-styles';
+import './bnb-icons';
 
 class BnbRequestsDetails extends connect(store)(PolymerElement) {
   static get template() {
@@ -40,7 +40,7 @@ class BnbRequestsDetails extends connect(store)(PolymerElement) {
     <app-header-layout fullbleed>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
-          <paper-icon-button icon="arrow-back" on-tap="_backTapped"></paper-icon-button>
+          <paper-icon-button icon="bnb:arrow-back" on-tap="_backTapped"></paper-icon-button>
           <span>[[page.name]]</span>
         </app-toolbar>
       </app-header>
@@ -81,7 +81,7 @@ class BnbRequestsDetails extends connect(store)(PolymerElement) {
             <template class="header"></template>
             <template>
               <a href="[[_computeUrl(item.time_key)]]" title="Show HAR" target="_blank">
-                <paper-icon-button icon="visibility"></paper-icon-button>
+                <paper-icon-button icon="bnb:visibility"></paper-icon-button>
               </a>
             </template>
           </vaadin-grid-column>

@@ -1,9 +1,9 @@
 import { PolymerElement, html } from '@polymer/polymer/polymer-element';
-import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-card/paper-card';
 import '@polymer/paper-icon-button/paper-icon-button';
 import './bnb-budget';
 import './bnb-common-styles';
+import './bnb-icons';
 
 class BnbBudgetCard extends PolymerElement {
   static get template() {
@@ -38,7 +38,7 @@ class BnbBudgetCard extends PolymerElement {
       <div class="card-content">
         <div class="budget-header">[[budgetInfo.name]]
           <div class="budget-header-buttons">
-            <paper-icon-button icon="close" hidden$="[[!canDelete]]" on-tap="closeTapped"></paper-icon-button>
+            <paper-icon-button icon="bnb:close" hidden$="[[!canDelete]]" on-tap="closeTapped"></paper-icon-button>
           </div>
         </div>
         <bnb-budget id="chart" data="[[budgetInfo.data]]" model="[[budgetInfo.model]]" budget="[[budgetInfo.budget]]"></bnb-budget>

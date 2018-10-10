@@ -36,7 +36,7 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
     <app-header-layout fullbleed>
       <app-header slot="header" fixed condenses shadow>
         <app-toolbar>
-          <paper-icon-button icon="close" on-tap="closeTapped"></paper-icon-button>
+          <paper-icon-button icon="bnb:close" on-tap="closeTapped"></paper-icon-button>
           <span class="title">New page</span>
           <span class="flex"></span>
           <paper-button on-tap="createTapped">Create</paper-button>
