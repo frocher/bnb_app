@@ -172,6 +172,7 @@ module.exports = {
   plugins,
   devServer: {
     contentBase: OUTPUT_PATH,
+    historyApiFallback: true,
     compress: true,
     overlay: {
       errors: true
