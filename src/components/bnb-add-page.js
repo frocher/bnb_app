@@ -5,6 +5,8 @@ import '@polymer/paper-button/paper-button';
 import '@polymer/paper-dialog/paper-dialog';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-input/paper-input';
+import '@polymer/paper-radio-button/paper-radio-button';
+import '@polymer/paper-radio-group/paper-radio-group';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
 import { updateRoute, createPage } from '../actions/app';
@@ -46,6 +48,10 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
         <div id="container">
           <paper-input id="name" label="Page name" value="{{pageName}}" autofocus="true"></paper-input>
           <paper-input id="url" label="URL" value="{{url}}"></paper-input>
+          <paper-radio-group id="device" selected="mobile">
+            <paper-radio-button name="mobile">Mobile</paper-radio-button>
+            <paper-radio-button name="desktop">Desktop</paper-radio-button>
+          </paper-radio-group>
         </div>
       </div>
     </app-header-layout>
@@ -102,7 +108,15 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
     this.$.name.invalid = false;
     this.$.url.invalid = false;
 
-    store.dispatch(createPage(this.pageName, this.url, this.handleResponse, this.handleError));
+    store.dispatch(
+      createPage(
+        this.pageName,
+        this.url,
+        this.$.device.selected,
+        this.handleResponse,
+        this.handleError,
+      ),
+    );
   }
 
   clearFields() {

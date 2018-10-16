@@ -64,6 +64,10 @@ class BnbEditPage extends connect(store)(BnbFormElement(PolymerElement)) {
           <bnb-collapse icon="bnb:info" header="General">
             <paper-input id="name" label="Page name" value="[[page.name]]" autofocus="true"></paper-input>
             <paper-input id="url" label="URL" value="[[page.url]]"></paper-input>
+            <paper-radio-group id="device" selected="[[page.device]]">
+              <paper-radio-button name="mobile">Mobile</paper-radio-button>
+              <paper-radio-button name="desktop">Desktop</paper-radio-button>
+            </paper-radio-group>
           </bnb-collapse>
           <bnb-divider></bnb-divider>
           <bnb-collapse icon="bnb:timeline" header="Uptime check">
@@ -139,6 +143,7 @@ class BnbEditPage extends connect(store)(BnbFormElement(PolymerElement)) {
     const page = {
       name: this.$.name.value,
       url: this.$.url.value,
+      device: this.$.device.selected,
       uptime_keyword: this.$.uptimeKeyword.value,
       uptime_keyword_type: this.$.uptimeKeywordType.selected,
       mail_notify: this.$.mail_notify.checked,

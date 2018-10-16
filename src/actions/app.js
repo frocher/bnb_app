@@ -343,10 +343,10 @@ export const createPageError = errors => ({
   errors,
 });
 
-export const createPage = (name, url) => (dispatch) => {
+export const createPage = (name, url, device) => (dispatch) => {
   dispatch((dispatch) => {
     getResource({
-      url: getRequestUrl('/pages', { name, url }),
+      url: getRequestUrl('/pages', { name, url, device }),
       method: 'POST',
       onLoad(e) {
         const response = JSON.parse(e.target.responseText);
