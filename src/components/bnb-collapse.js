@@ -12,11 +12,16 @@ class BnbCollapse extends PolymerElement {
     <style include="bnb-common-styles">
       .header {
         min-height: 48px;
+        padding-left: 4px;
         cursor: pointer;
         color: var(--primary-text-color);
         @apply --layout-horizontal;
         @apply --layout-center-center;
         @apply --paper-font-subhead;
+      }
+
+      .header:hover {
+        background-color: rgba(255, 255, 255, 0.1);
       }
 
       .icon {
