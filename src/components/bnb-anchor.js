@@ -4,19 +4,18 @@ class BnbAnchor extends PolymerElement {
   static get template() {
     return html`
     <style>
-      #anchor {
+      a {
         cursor:pointer;
         text-decoration: none;
-
         color: var(--secondary-text-color);
       }
 
-      #anchor:hover {
+      a:hover {
         text-decoration: underline;
       }
 
     </style>
-    <a id="anchor" href="[[path]]">[[text]]</a>
+    <a href="[[path]]">[[text]]</a>
     `;
   }
 
