@@ -91,8 +91,6 @@ class BnbBytesDetails extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get is() { return 'bnb-bytes-details'; }
-
   static get properties() {
     return {
       page: Object,
@@ -128,4 +126,4 @@ class BnbBytesDetails extends connect(store)(PolymerElement) {
   }
 }
 
-window.customElements.define(BnbBytesDetails.is, BnbBytesDetails);
+window.customElements.define('bnb-bytes-details', BnbBytesDetails);

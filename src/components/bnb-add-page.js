@@ -66,9 +66,6 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
     `;
   }
 
-
-  static get is() { return 'bnb-add-page'; }
-
   static get properties() {
     return {
       target: Object,
@@ -137,4 +134,4 @@ class BnbAddPage extends connect(store)(BnbFormElement(PolymerElement)) {
     }
   }
 }
-window.customElements.define(BnbAddPage.is, BnbAddPage);
+window.customElements.define('bnb-add-page', BnbAddPage);

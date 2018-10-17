@@ -98,8 +98,6 @@ class BnbApp extends connect(store)(PolymerElement) {
     `;
   }
 
-  static get is() { return 'bnb-app'; }
-
   static get properties() {
     return {
       routePath: {
@@ -355,4 +353,4 @@ class BnbApp extends connect(store)(PolymerElement) {
   }
 }
 
-customElements.define(BnbApp.is, BnbApp);
+customElements.define('bnb-app', BnbApp);

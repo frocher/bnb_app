@@ -20,8 +20,6 @@ class BnbAnchor extends PolymerElement {
     `;
   }
 
-  static get is() { return 'bnb-anchor'; }
-
   static get properties() {
     return {
       text: String,
@@ -31,4 +29,4 @@ class BnbAnchor extends PolymerElement {
   }
 }
 
-window.customElements.define(BnbAnchor.is, BnbAnchor);
+window.customElements.define('bnb-anchor', BnbAnchor);

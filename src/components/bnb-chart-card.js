@@ -54,8 +54,6 @@ class BnbChartCard extends PolymerElement {
     `;
   }
 
-  static get is() { return 'bnb-chart-card'; }
-
   static get properties() {
     return {
       name: {
@@ -109,4 +107,4 @@ class BnbChartCard extends PolymerElement {
     this.dispatchEvent(new CustomEvent('details'));
   }
 }
-customElements.define(BnbChartCard.is, BnbChartCard);
+customElements.define('bnb-chart-card', BnbChartCard);

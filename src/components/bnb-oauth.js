@@ -70,8 +70,6 @@ class BnbOAuth extends PolymerElement {
     `;
   }
 
-  static get is() { return 'bnb-oauth'; }
-
   facebookTapped() {
     this._callService('facebook');
   }
@@ -91,4 +89,4 @@ class BnbOAuth extends PolymerElement {
   }
 }
 
-window.customElements.define(BnbOAuth.is, BnbOAuth);
+window.customElements.define('bnb-oauth', BnbOAuth);

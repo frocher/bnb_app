@@ -76,8 +76,6 @@ class BnbBudgetBar extends PolymerElement {
     `;
   }
 
-  static get is() { return 'bnb-budget-bar'; }
-
   static get properties() {
     return {
       selectedCategory: {
@@ -125,4 +123,4 @@ class BnbBudgetBar extends PolymerElement {
     }
   }
 }
-window.customElements.define(BnbBudgetBar.is, BnbBudgetBar);
+window.customElements.define('bnb-budget-bar', BnbBudgetBar);
