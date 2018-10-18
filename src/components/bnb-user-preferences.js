@@ -13,6 +13,7 @@ import './bnb-common-styles';
 import './bnb-divider';
 import { BnbFormElement } from './bnb-form-element';
 import './bnb-icons';
+import './bnb-install-button';
 
 class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) {
   static get template() {
@@ -53,6 +54,7 @@ class BnbUserPreferences extends connect(store)(BnbFormElement(PolymerElement)) 
             <paper-toggle-button id="pushButton" disabled="[[!isNotificationsEnabled()]]">Send me notifications on this device</paper-toggle-button>
           </bnb-collapse>
           <bnb-divider></bnb-divider>
+          <bnb-install-button></bnb-install-button>
         </div>
       </div>
     </app-header-layout>
