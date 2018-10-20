@@ -21,6 +21,8 @@ class BnbPerformanceDetails extends connect(store)(PolymerElement) {
       }
 
       #content {
+        display: flex;
+        justify-content: center;
         padding: 8px;
       }
 
@@ -34,6 +36,7 @@ class BnbPerformanceDetails extends connect(store)(PolymerElement) {
 
       vaadin-grid {
         height: calc(100vh - 80px);
+        max-width: 800px;
       }
     </style>
 
