@@ -161,6 +161,11 @@ class BnbApp extends connect(store)(PolymerElement) {
     store.dispatch(loadEnvironment());
     this.scrollPositions = new Map();
 
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      store.dispatch(showInstallPrompt(e));
+    });
+
     // listen for online/offline
     afterNextRender(this, () => {
       window.addEventListener('online', e => this._notifyNetworkStatus(e));

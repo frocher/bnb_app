@@ -2,12 +2,16 @@ import { getRequestUrl, getResource } from '../common';
 
 // ***** App
 
+export const showInstallPrompt = event => ({
+  type: 'SHOW_INSTALL_PROMPT',
+  event,
+});
+
 export const updateRoute = route => ({
   type: 'UPDATE_ROUTE',
   route,
   errors: [],
 });
-
 
 export const updateMessage = message => ({
   type: 'UPDATE_MESSAGE',

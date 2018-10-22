@@ -50,6 +50,11 @@ const initial = {
 
 const app = (state = initial, action) => {
   switch (action.type) {
+    case 'SHOW_INSTALL_PROMPT':
+      return Object.assign({}, state, {
+        promptEvent: action.event,
+      });
+
     case 'UPDATE_ROUTE':
       return Object.assign({}, state, {
         route: action.route,
