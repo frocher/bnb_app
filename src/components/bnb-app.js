@@ -8,7 +8,7 @@ import '@polymer/paper-toast/paper-toast';
 import { store } from '../store';
 import {
   updateRoute, loadEnvironment, loadPages, loadPage, loadPageMembers, loadPageStats, loadBudgets,
-  loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails, loadUser,
+  loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails, loadUser, showInstallPrompt,
 } from '../actions/app';
 import { isLogged, storeCredentials } from '../common';
 import './bnb-analytics';
