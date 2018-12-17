@@ -27,6 +27,7 @@ export const fetchEnvironmentSuccess = keys => ({
   type: 'ENVIRONMENT_FETCH_SUCCESS',
   analyticsKey: keys.GOOGLE_ANALYTICS_KEY,
   pushKey: keys.PUSH_KEY,
+  stripeKey: keys.STRIPE_KEY,
 });
 
 export const fetchEnvironmentError = message => ({
@@ -45,6 +46,33 @@ export const loadEnvironment = () => (dispatch) => {
           dispatch(fetchEnvironmentSuccess(response));
         } else {
           dispatch(fetchEnvironmentError(response.errors));
+        }
+      },
+    });
+  });
+};
+
+export const fetchSubscriptionPlansSuccess = plans => ({
+  type: 'PLANS_FETCH_SUCCESS',
+  plans,
+});
+
+export const fetchSubscriptionPlansError = message => ({
+  type: 'PLANS_FETCH_ERROR',
+  message,
+});
+
+export const loadSubscriptionPlans = () => (dispatch) => {
+  dispatch((dispatch) => {
+    getResource({
+      url: getRequestUrl('/plans', {}),
+      method: 'GET',
+      onLoad(e) {
+        const response = JSON.parse(e.target.responseText);
+        if (e.target.status === 200) {
+          dispatch(fetchSubscriptionPlansSuccess(response));
+        } else {
+          dispatch(fetchSubscriptionPlansError(response.errors));
         }
       },
     });
@@ -195,92 +223,6 @@ export const signout = () => ({
   type: 'SIGN_OUT',
 });
 
-// ***** User management
-
-export const fetchUserSuccess = user => ({
-  type: 'USER_FETCH_SUCCESS',
-  user,
-});
-
-export const fetchUserError = message => ({
-  type: 'USER_FETCH_ERROR',
-  message,
-});
-
-export const loadUser = () => (dispatch) => {
-  dispatch((dispatch) => {
-    getResource({
-      url: getRequestUrl('/users/-1', {}),
-      method: 'GET',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(fetchUserSuccess(response));
-        } else {
-          dispatch(fetchUserError(response.errors));
-        }
-      },
-    });
-  });
-};
-
-export const updateUserStart = () => ({
-  type: 'USER_FETCH_START',
-});
-
-export const updateUserSuccess = user => ({
-  type: 'USER_UPDATE_SUCCESS',
-  user,
-});
-
-export const updateUserError = errors => ({
-  type: 'USER_UPDATE_ERROR',
-  errors,
-});
-
-export const updateUser = (id, user) => (dispatch) => {
-  dispatch((dispatch) => {
-    dispatch(updateUserStart());
-    getResource({
-      url: getRequestUrl(`/users/${id}`, user),
-      method: 'PUT',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(updateUserSuccess(response));
-        } else {
-          dispatch(updateUserError(response.errors));
-        }
-      },
-    });
-  });
-};
-
-export const saveSubscriptionSuccess = () => ({
-  type: 'SUBSCRIPTION_SUCCESS',
-});
-
-export const saveSubscriptionError = errors => ({
-  type: 'SUBSCRIPTION_ERROR',
-  errors,
-});
-
-export const saveSubscription = subscription => (dispatch) => {
-  dispatch((dispatch) => {
-    getResource({
-      url: getRequestUrl('/users/-1/save-subscription', { subscription: JSON.stringify(subscription) }),
-      method: 'POST',
-      onLoad(e) {
-        const response = JSON.parse(e.target.responseText);
-        if (e.target.status === 200) {
-          dispatch(saveSubscriptionSuccess());
-        } else {
-          dispatch(saveSubscriptionError(response.errors));
-        }
-      },
-    });
-  });
-};
 
 // ***** Pages management
 
@@ -390,7 +332,6 @@ export const updatePage = (id, page) => (dispatch) => {
     });
   });
 };
-
 
 export const deletePageSuccess = page => ({
   type: 'PAGE_DELETE_SUCCESS',
