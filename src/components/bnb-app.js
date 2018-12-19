@@ -6,12 +6,11 @@ import '@polymer/app-route/app-route';
 import '@polymer/iron-pages/iron-pages';
 import '@polymer/paper-toast/paper-toast';
 import { store } from '../store';
-import {
-  updateRoute, loadEnvironment, loadSubscriptionPlans, loadPageStats, loadBudgets,
-  loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails, showInstallPrompt,
-} from '../actions/app';
+import { updateRoute, loadEnvironment, loadSubscriptionPlans, showInstallPrompt } from '../actions/app';
+import { loadBudgets } from '../actions/budgets';
 import { loadPageMembers } from '../actions/members';
 import { loadPages, loadPage } from '../actions/pages';
+import { loadPageStats, loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails } from '../actions/stats';
 import { loadStripeSubscription, loadUser } from '../actions/user';
 import { isLogged, storeCredentials } from '../common';
 import './bnb-analytics';
