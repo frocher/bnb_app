@@ -7,10 +7,10 @@ import '@polymer/iron-pages/iron-pages';
 import '@polymer/paper-toast/paper-toast';
 import { store } from '../store';
 import {
-  updateRoute, loadEnvironment, loadSubscriptionPlans, loadPageMembers,
-  loadPageStats, loadBudgets, loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails,
-  showInstallPrompt,
+  updateRoute, loadEnvironment, loadSubscriptionPlans, loadPageStats, loadBudgets,
+  loadLighthouseDetails, loadAssetsDetails, loadUptimeDetails, showInstallPrompt,
 } from '../actions/app';
+import { loadPageMembers } from '../actions/members';
 import { loadPages, loadPage } from '../actions/pages';
 import { loadStripeSubscription, loadUser } from '../actions/user';
 import { isLogged, storeCredentials } from '../common';
