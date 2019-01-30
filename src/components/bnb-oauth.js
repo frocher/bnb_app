@@ -18,7 +18,18 @@ class BnbOAuth extends PolymerElement {
         padding-left: 2px;
       }
 
-      bnb-divider {
+      iron-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 6px;
+      }
+
+      .buttons {
+        display: flex;
+      }
+
+      .buttons paper-button {
+        flex-grow: 1;
       }
 
       .title {
@@ -33,16 +44,20 @@ class BnbOAuth extends PolymerElement {
       }
 
       .facebook {
-        background-color: var(--paper-indigo-500);
+        background-color: #3C5A99;
+        font-weight: bold;
       }
 
       .github {
-        background-color: var(--paper-grey-200);
-        color: black;
+        background-color: #333;
+        color: white;
+        font-weight: bold;
       }
 
       .google {
-        background-color: var(--paper-red-500);
+        background-color: #fff;
+        color: var(--paper-grey-600);
+        font-weight: bold;
       }
     </style>
     <div class="layout vertical center-justified">
@@ -52,17 +67,17 @@ class BnbOAuth extends PolymerElement {
         <span>or log in using</span>
         <bnb-divider class="flex"></bnb-divider>
       </div>
-      <div class="layout horizontal center-justified center">
-        <paper-button on-tap="facebookTapped" class="facebook">
+      <div class="buttons">
+        <paper-button on-tap="facebookTapped" class="facebook" title="Sign in with Facebook">
           <iron-icon icon="oauth:facebook"></iron-icon>
           <span>Facebook</span>
         </paper-button>
-        <paper-button on-tap="githubTapped" class="github">
+        <paper-button on-tap="githubTapped" class="github" title="Sign in with GitHub">
           <iron-icon icon="oauth:github"></iron-icon>
-          <span>Github</span>
+          <span>GitHub</span>
         </paper-button>
-        <paper-button on-tap="googleTapped" class="google">
-          <iron-icon icon="oauth:gplus"></iron-icon>
+        <paper-button on-tap="googleTapped" class="google" title="Sign in with Google">
+          <iron-icon icon="oauth:google"></iron-icon>
           <span>Google</span>
         </paper-button>
       </div>

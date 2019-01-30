@@ -51,7 +51,7 @@ class BnbValueChip extends PolymerElement {
   }
 
   computeValue(value) {
-    return Math.round(this.value);
+    return this.value;
   }
 }
 
