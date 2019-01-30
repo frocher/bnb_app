@@ -33,7 +33,7 @@ class BnbOAuth extends PolymerElement {
       }
 
       .facebook {
-        background-color: var(--paper-indigo-500);
+        background-color: #3C5A99;
       }
 
       .github {
