@@ -588,6 +588,7 @@ export const loadPageStats = (pageId, period) => (dispatch) => {
       onLoad(e) {
         const response = JSON.parse(e.target.responseText);
         if (e.target.status === 200) {
+          _updateCount(response.lighthouse);
           _updateUptime(response.uptime[0]);
           _updateCount(response.performance);
           _updateBytes(response.bytes);
