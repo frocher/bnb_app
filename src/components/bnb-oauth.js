@@ -14,10 +14,6 @@ class BnbOAuth extends PolymerElement {
         text-transform:none;
       }
 
-      paper-button span {
-        padding-left: 2px;
-      }
-
       iron-icon {
         width: 24px;
         height: 24px;
@@ -58,6 +54,16 @@ class BnbOAuth extends PolymerElement {
         background-color: #fff;
         color: var(--paper-grey-600);
         font-weight: bold;
+      }
+
+      @media (max-width: 500px) {
+        paper-button {
+          font-size: 10px;
+        }
+
+        iron-icon {
+          display: none;
+        }
       }
     </style>
     <div class="layout vertical center-justified">
