@@ -21,6 +21,10 @@ class BnbHome extends connect(store)(PolymerElement) {
     return html`
     <style include="bnb-common-styles">
 
+      paper-listbox {
+        line-height: 0;
+      }
+
       paper-item {
         cursor: pointer;
       }
@@ -111,6 +115,7 @@ class BnbHome extends connect(store)(PolymerElement) {
             <paper-icon-button icon="bnb:more-vert" slot="dropdown-trigger"></paper-icon-button>
             <paper-listbox slot="dropdown-content">
               <paper-item on-tap="_preferencesTapped">User preferences</paper-item>
+              <paper-item on-tap="_accountTapped" hidden$="[[!canSubscribe]]">Account</paper-item>
               <bnb-divider></bnb-divider>
               <paper-item on-tap="_signoutTapped">Log out</paper-item>
             </paper-listbox>
@@ -135,6 +140,7 @@ class BnbHome extends connect(store)(PolymerElement) {
 
   static get properties() {
     return {
+      canSubscribe: Boolean,
       pages: {
         type: Array,
         observer: '_pagesChanged',
@@ -148,6 +154,7 @@ class BnbHome extends connect(store)(PolymerElement) {
 
   _stateChanged(state) {
     this.pages = state.app.pages;
+    this.canSubscribe = state.app.stripeKey !== undefined;
   }
 
   _sortPages(first, second) {

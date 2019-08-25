@@ -2,9 +2,10 @@ import { PolymerElement, html } from '@polymer/polymer/polymer-element';
 import '@polymer/polymer/lib/elements/dom-repeat';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-card/paper-card';
+import '@polymer/paper-dialog/paper-dialog';
 import { connect } from 'pwa-helpers';
 import { store } from '../store';
-import { createStripeSubscription } from '../actions/user';
+import { createStripeSubscription, updateStripeSubscription, deleteStripeSubscription } from '../actions/user';
 import './bnb-common-styles';
 
 class BnbSubscriptions extends connect(store)(PolymerElement) {
@@ -22,9 +23,9 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
       }
 
       .plans {
+        display: grid;
+        grid-template-columns: 25% 25% 25% 25%;
         padding: 8px;
-        @apply --layout-horizontal;
-        @apply --layout-center-justified;
       }
 
       .card-header {
@@ -48,17 +49,18 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
         margin-top: 8px;
       }
 
-      @media (max-width: 400px) {
+      @media (max-width: 850px) {
         .plans {
-          @apply --layout-vertical;
+          grid-template-columns: 50% 50%;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .plans {
+          grid-template-columns: 100%;
         }
       }
     </style>
-
-    <p hidden$="[[!_isFreePlan(currentPlan)]]">
-      You are currently using the free plan that limits you to 3 pages and 3 team members by page.
-      You can increase these limits by upgrading to one of the plans below.
-    </p>
 
     <div class="plans">
       <template is="dom-repeat" items="[[plans]]">
@@ -88,6 +90,39 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
         </paper-card>
       </template>
     </div>
+
+    <paper-dialog id="downgradeDlg" modal>
+    <p>You are downgrading your current plan.
+      If you have more pages than the future plan allows, you will not loose your current data
+      but the monitoring for the more recent pages will be stopped.
+      Are you sure to downgrade ?</p>
+    <div class="buttons">
+      <paper-button dialog-dismiss autofocus>No</paper-button>
+      <paper-button dialog-confirm on-tap="_confirmDowngradeTapped">Yes, sure !</paper-button>
+    </div>
+    </paper-dialog>
+
+    <paper-dialog id="upgradeDlg" modal>
+    <p>Thank you for choosing a better plan. Can you please confirm your choice to upgrade your subscription ?</p>
+    <div class="buttons">
+      <paper-button dialog-dismiss>No</paper-button>
+      <paper-button dialog-confirm autofocus on-tap="_confirmUpgradeTapped">Yes, I confirm</paper-button>
+    </div>
+    </paper-dialog>
+
+    <paper-dialog id="freePlanDlg" modal>
+    <p>You have chosen to go back to free plan.
+      If you have more pages than the free plan allows, you will not loose your current data
+      but the monitoring for the more recent pages will be stopped.
+      Are you sure to downgrade to free plan ?
+      If you confirm, your paiement informations will be deleted and there will be no more billing.
+    </p>
+    <div class="buttons">
+      <paper-button dialog-dismiss autofocus>No</paper-button>
+      <paper-button dialog-confirm on-tap="_confirmFreePlanTapped">Yes, I confirm !</paper-button>
+    </div>
+    </paper-dialog>
+
     `;
   }
 
@@ -115,13 +150,6 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
     return value < 0 ? 'infinite' : value;
   }
 
-  _isFreePlan(plan) {
-    if (!plan) {
-      return false;
-    }
-    return plan.pages === 3;
-  }
-
   _computeHideSubscribe(item, plan) {
     if (item && plan) {
       return plan.pages === item.pages;
@@ -130,13 +158,36 @@ class BnbSubscriptions extends connect(store)(PolymerElement) {
   }
 
   _subscribeTapped(e) {
-    this.selectedPlan = e.model.item.id;
-    const config = {
-      amount: e.model.item.amount * 100,
-      key: this.stripeKey,
-      name: e.model.item.name,
-    };
-    this.checkout.open(config);
+    this.selectedPlan = e.model.item;
+
+    if (this.selectedPlan.id !== -1) {
+      if (this.currentPlan.planId === -1) {
+        const config = {
+          amount: e.model.item.amount * 100,
+          key: this.stripeKey,
+          name: e.model.item.name,
+        };
+        this.checkout.open(config);
+      } else if (this.currentPlan.pages > this.selectedPlan.pages) {
+        this.$.downgradeDlg.open();
+      } else {
+        this.$.upgradeDlg.open();
+      }
+    } else {
+      this.$.freePlanDlg.open();
+    }
+  }
+
+  _confirmDowngradeTapped() {
+    store.dispatch(updateStripeSubscription(this.selectedPlan));
+  }
+
+  _confirmUpgradeTapped() {
+    store.dispatch(updateStripeSubscription(this.selectedPlan));
+  }
+
+  _confirmFreePlanTapped() {
+    store.dispatch(deleteStripeSubscription());
   }
 
   _initCheckout() {
